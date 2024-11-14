@@ -3,14 +3,14 @@ import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-dev
 import style from './AppHeader.module.css';
 
 
-type BtnPops = {
-    type: "secondary" | "primary" | "error" | "success" | "disabled"
-    icon?: string
-    text?: string
-    className?: string
-}
+// type BtnPops = {
+//     type: "secondary" | "primary" | "error" | "success" | "disabled"
+//     icon?: string
+//     text?: string
+//     className?: string
+// }
 
-function Button(props: BtnPops){
+function Button(props){
 
     let Icon;
     switch(props.icon) {
@@ -23,6 +23,8 @@ function Button(props: BtnPops){
         case 'profile':
             Icon = <ProfileIcon className={style.icon} type={props.type}/>;
             break;
+        default:
+            Icon = null;
     }
 
     return (
@@ -31,8 +33,8 @@ function Button(props: BtnPops){
             <span className={`text text_type_main-default ${style[props.type]}`}>{props.text}</span>
         </button>
     )
-}
 
+}
 
 function AppHeader(){
     return(

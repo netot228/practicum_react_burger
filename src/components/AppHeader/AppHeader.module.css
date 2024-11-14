@@ -5,6 +5,7 @@
     justify-content: center;
     height: 88px;
     background: var(--background);
+    flex-shrink: 0;
 }
 .button {
     display: inline-flex;

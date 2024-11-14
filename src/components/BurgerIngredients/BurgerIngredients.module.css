@@ -1,0 +1,15 @@
+.wrapper {
+    position: relative;
+    width: 600px;
+    height: 100%;
+}
+
+.switcher {
+    display: flex;
+}
+
+.container {
+    overflow: hidden;
+    height: calc(100% - 200px);
+    padding: 0 16px 40px;
+}
