@@ -39,20 +39,17 @@ function Button(props){
 function AppHeader(){
     return(
         <header className={style.header}>
-            <div className={style.wrapper}>
-
-                <div className={style.header_item}>
+            <nav className={style.navigator}>
+                <div>
                     <Button text="Конструктор" icon="burger" type="primary"/>
                     <Button text="Лента заказов" icon="list" type="secondary"/>
                 </div>
 
-                <div className={style.header_item}>
+                <div>
                     <Button text="Личный кабинет" icon="profile" type="secondary"/>
                 </div>
-
-                <Logo className={style.logo} />
-
-            </div>
+            </nav>
+            <Logo className={style.logo} />
         </header>
     )
 }

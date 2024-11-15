@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import { Counter, CurrencyIcon, Tab, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './BurgerIngredients.module.css';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 
 // type BurgerProps = {
@@ -23,21 +23,31 @@ const Ingredient = (ingredient) => {
     return(
         <figure className={style.ingredient}>
             <img src={ingredient.image} alt={ingredient.name} />
-            <p className={style.ingredient_price}>
+            <p className={`${style.ingredient_price} text_type_digits-default`}>
                 {ingredient.price}
                 <CurrencyIcon className={style.ingredient_icon} type="primary" />
             </p>
-            <figcaption className={style.ingredient_name}>
+            <figcaption className={`${style.ingredient_name} text_type_main-default`}>
                 {ingredient.name}
             </figcaption>
+            {ingredient.qnt &&  <Counter count={ingredient.qnt} size="default" extraClass="m-1" />}
         </figure>
     )
 }
 
 const TabContent = (props) => {
+    let children = props.ingredients.map(el=>{
+        if(el.type === props.value) {
+            return <Ingredient key={el._id} name={el.name} price={el.price} image={el.image} qnt={el.qnt}/>
+        }
+        return false;
+    })
     return (
         <ul className={style.tabcontent}>
-            {props.children}
+            <li className={`text_type_main-medium ${style.tabcontent_title}`}>
+                {props.title}
+            </li>
+            {children}
         </ul>
     )
 }
@@ -46,32 +56,10 @@ function BurgerIngredients(props){
 
     let [currentType, setCurrentType] = useState('bun');
 
-
-    let bunList = props.ingredients.map(el=>{
-        if(el.type === 'bun') {
-            return <Ingredient key={el._id} name={el.name} price={el.price} image={el.image} />
-        }
-        return false;
-    })
-
-    let sauceList = props.ingredients.map(el=>{
-        if(el.type === 'sauce') {
-            return <Ingredient key={el._id} name={el.name} price={el.price} image={el.image} />
-        }
-        return false;
-    })
-
-    let mainList = props.ingredients.map(el=>{
-        if(el.type === 'main') {
-            return <Ingredient key={el._id} name={el.name} price={el.price} image={el.image} />
-        }
-        return false;
-    })
-
     return(
         <section className={style.wrapper}>
-            <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
-            <div className={`${style.switcher} mb-10`}>
+            <div className={`text text_type_main-large ${style.title}`}>Соберите бургер</div>
+            <div className={style.switcher}>
                 <Tab value="bun" active={currentType === 'bun'} onClick={setCurrentType}>
                     Булки
                 </Tab>
@@ -83,27 +71,15 @@ function BurgerIngredients(props){
                 </Tab>
             </div>
 
-            <div className={`${style.container} custom-scroll`}>
+            <div className={`${style.container} `}>
 
-                <TabContent value="bun" title="Булки">
-                    {bunList}
-                </TabContent>
-
-                <TabContent value="sauce" title="Соусы">
-                    {sauceList}
-                </TabContent>
-
-                <TabContent value="main" title="Начинки">
-                    {mainList}
-                </TabContent>
+                <TabContent value="bun" title="Булки" ingredients={props.ingredients}></TabContent>
+                <TabContent value="sauce" title="Соусы" ingredients={props.ingredients}></TabContent>
+                <TabContent value="main" title="Начинки" ingredients={props.ingredients}></TabContent>
 
             </div>
         </section>
     )
-}
-
-BurgerIngredients.propTypes = {
-
 }
 
 export default BurgerIngredients;

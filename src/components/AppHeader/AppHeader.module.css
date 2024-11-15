@@ -24,7 +24,6 @@
     color: var(--text-inactive-color)
 }
 
-
 .icon {
     display: inline-block;
     width: 24px;
@@ -32,7 +31,7 @@
     margin-right: 8px;
 }
 
-.wrapper {
+.navigator {
     position: relative;
     width: 1280px;
     display: flex;
