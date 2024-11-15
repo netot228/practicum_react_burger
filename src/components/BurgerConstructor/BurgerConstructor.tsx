@@ -3,10 +3,15 @@ import React from 'react';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './BurgerConstructor.module.css';
 
+import {IngredientData} from '../../utils/types';
 
-function BurgerConstructor(props){
+interface BurgerConstructorProps {
+    ingredients: IngredientData[]
+}
 
-    let currentBun = props.ingredients.find(el=>el.type==='bun');
+function BurgerConstructor(props:BurgerConstructorProps){
+
+    let currentBun: IngredientData | undefined = props.ingredients.find(el=>el.type==='bun');
 
     let ingredientsList = props.ingredients.map(el=>{
         if(el.type !== 'bun') {
@@ -28,26 +33,30 @@ function BurgerConstructor(props){
 
     return(
         <section className={style.wrapper}>
-            <ConstructorElement
-                text={currentBun.name}
-                price={currentBun.price}
-                thumbnail={currentBun.image}
-                type="top"
-                isLocked={true}
-                extraClass={`${style.bun} ${style.topbun}`}
-            />
+            {currentBun !== undefined &&
+                <ConstructorElement
+                    text={currentBun.name}
+                    price={currentBun.price}
+                    thumbnail={currentBun.image}
+                    type="top"
+                    isLocked={true}
+                    extraClass={`${style.bun} ${style.topbun}`}
+                />
+            }
             <ul className={style.container}>
                 {ingredientsList}
             </ul>
-            <ConstructorElement
-                key={2}
-                text={currentBun.name}
-                price={currentBun.price}
-                thumbnail={currentBun.image}
-                type="bottom"
-                isLocked={true}
-                extraClass={`${style.bun} ${style.btmbun}`}
-            />
+            {currentBun !== undefined &&
+                <ConstructorElement
+                    key={2}
+                    text={currentBun.name}
+                    price={currentBun.price}
+                    thumbnail={currentBun.image}
+                    type="bottom"
+                    isLocked={true}
+                    extraClass={`${style.bun} ${style.btmbun}`}
+                />
+            }
 
             <div className={style.confirm_order}>
                 <span className={`${style.confirm_order_total} text_type_digits-medium`}>{total}</span>

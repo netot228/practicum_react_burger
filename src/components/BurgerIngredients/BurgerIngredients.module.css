@@ -70,6 +70,13 @@
     align-items: center;
     width: 272px;
     flex-shrink: 0;
+    cursor: pointer;
+    transform: scale(1);
+    transition: all 0.5s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
 
     & img {
         display: inline-block;

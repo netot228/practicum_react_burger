@@ -3,45 +3,49 @@ import React, { useState } from 'react';
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './BurgerIngredients.module.css';
 
-// import PropTypes from 'prop-types';
+import {IngredientData} from '../../utils/types';
 
 
-// type BurgerProps = {
-//     ingredients: object[]
-// }
-// type IngredientData = {
-//     // type?: string,
-//     // name: any,
-//     // image: any,
-//     // price: any,
-//     // quantity?: number
+interface BurgerProps {
+    ingredients: IngredientData[]
+}
 
-//     image: string,
-// }
+interface TabContentData {
+    ingredients: IngredientData[]
+    value: string
+    title: string
+}
 
-const Ingredient = (ingredient) => {
+interface IngredientProps {
+    data: IngredientData
+    key?: string|number
+}
+
+const Ingredient = (props:IngredientProps) => {
     return(
         <figure className={style.ingredient}>
-            <img src={ingredient.image} alt={ingredient.name} />
+            <img src={props.data.image} alt={props.data.name} />
             <p className={`${style.ingredient_price} text_type_digits-default`}>
-                {ingredient.price}
+                {props.data.price}
                 <CurrencyIcon className={style.ingredient_icon} type="primary" />
             </p>
             <figcaption className={`${style.ingredient_name} text_type_main-default`}>
-                {ingredient.name}
+                {props.data.name}
             </figcaption>
-            {ingredient.qnt &&  <Counter count={ingredient.qnt} size="default" extraClass="m-1" />}
+            {props.data.qnt &&  <Counter count={props.data.qnt} size="default" extraClass="m-1" />}
         </figure>
     )
 }
 
-const TabContent = (props) => {
+const TabContent = (props:TabContentData) => {
+
     let children = props.ingredients.map(el=>{
         if(el.type === props.value) {
-            return <Ingredient key={el._id} name={el.name} price={el.price} image={el.image} qnt={el.qnt}/>
+            return <Ingredient key={el._id} data={el}/>
         }
         return false;
     })
+
     return (
         <ul className={style.tabcontent}>
             <li className={`text_type_main-medium ${style.tabcontent_title}`}>
@@ -52,9 +56,10 @@ const TabContent = (props) => {
     )
 }
 
-function BurgerIngredients(props){
+function BurgerIngredients(props:BurgerProps){
 
     let [currentType, setCurrentType] = useState('bun');
+
 
     return(
         <section className={style.wrapper}>
@@ -71,7 +76,7 @@ function BurgerIngredients(props){
                 </Tab>
             </div>
 
-            <div className={`${style.container} `}>
+            <div className={`${style.container}`}>
 
                 <TabContent value="bun" title="Булки" ingredients={props.ingredients}></TabContent>
                 <TabContent value="sauce" title="Соусы" ingredients={props.ingredients}></TabContent>
