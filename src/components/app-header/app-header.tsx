@@ -1,16 +1,16 @@
 import React from 'react';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import style from './AppHeader.module.css';
+import style from './app-header.module.css';
 
 
-// type BtnPops = {
-//     type: "secondary" | "primary" | "error" | "success" | "disabled"
-//     icon?: string
-//     text?: string
-//     className?: string
-// }
+type BtnPops = {
+    type: "secondary" | "primary" | "error" | "success" | "disabled"
+    icon?: string
+    text?: string
+    className?: string
+}
 
-function Button(props){
+function Button(props:BtnPops){
 
     let Icon;
     switch(props.icon) {
