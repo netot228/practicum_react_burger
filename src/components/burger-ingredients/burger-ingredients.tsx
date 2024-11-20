@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './burger-ingredients.module.css';
@@ -60,18 +60,22 @@ function BurgerIngredients(props:BurgerProps){
 
     let [currentType, setCurrentType] = useState('bun');
 
+    let tabHandle = (e: any) => {
+        console.dir(e);
+        setCurrentType(e.target)
+    }
 
     return(
         <section className={style.wrapper}>
             <div className={`text text_type_main-large ${style.title}`}>Соберите бургер</div>
             <div className={style.switcher}>
-                <Tab value="bun" active={currentType === 'bun'} onClick={setCurrentType}>
+                <Tab value="bun" active={currentType === 'bun'} onClick={tabHandle}>
                     Булки
                 </Tab>
-                <Tab value="sauce" active={currentType === 'sauce'} onClick={setCurrentType}>
+                <Tab value="sauce" active={currentType === 'sauce'} onClick={tabHandle}>
                     Соусы
                 </Tab>
-                <Tab value="main" active={currentType === 'main'} onClick={setCurrentType}>
+                <Tab value="main" active={currentType === 'main'} onClick={tabHandle}>
                     Начинки
                 </Tab>
             </div>
