@@ -21,6 +21,7 @@
     overflow: auto;
     scrollbar-width: unset !important;
     scrollbar-color: unset !important;
+
 }
 
 .container::-webkit-scrollbar {
@@ -73,6 +74,7 @@
     cursor: pointer;
     transform: scale(1);
     transition: all 0.5s ease;
+
 
     &:hover {
         transform: scale(1.05);

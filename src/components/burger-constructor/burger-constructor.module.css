@@ -15,6 +15,7 @@
     gap: 16px;
     scrollbar-width: unset !important;
     scrollbar-color: unset !important;
+    scroll-snap-type: y mandatory;
 }
 
 .container::-webkit-scrollbar {
@@ -38,6 +39,7 @@
 }
 
 .item {
+    scroll-snap-align: start;
     display: inline-flex;
     flex-flow: row;
     align-items: center;
