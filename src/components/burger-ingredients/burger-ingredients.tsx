@@ -1,9 +1,15 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './burger-ingredients.module.css';
 
 import {IngredientData} from '../../utils/types';
+
+import { createPortal } from 'react-dom';
+
+import Modal from '../modal/modal';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+
 
 
 interface BurgerProps {
@@ -14,6 +20,7 @@ interface TabContentData {
     ingredients: IngredientData[]
     value: string
     title: string
+    // ref: any
 }
 
 interface IngredientProps {
@@ -22,8 +29,21 @@ interface IngredientProps {
 }
 
 const Ingredient = (props:IngredientProps) => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showIngredient = ()=>{
+        setIsModalOpen(!isModalOpen);
+    }
+
+    const closeModal = ()=>{
+        
+        setIsModalOpen(false)
+    }
+    
+
     return(
-        <figure className={style.ingredient}>
+        <figure className={style.ingredient} onClick={showIngredient}>
             <img src={props.data.image} alt={props.data.name} />
             <p className={`${style.ingredient_price} text_type_digits-default`}>
                 {props.data.price}
@@ -33,11 +53,20 @@ const Ingredient = (props:IngredientProps) => {
                 {props.data.name}
             </figcaption>
             {props.data.qnt &&  <Counter count={props.data.qnt} size="default" extraClass="m-1" />}
+
+            {isModalOpen && createPortal(
+                <Modal onClose={closeModal} title='Детали ингредиента'>
+                    {/* {console.dir(props)} */}
+                    <IngredientDetails  {...props.data} />
+                </Modal>
+                ,
+                document.body
+            )}
         </figure>
     )
 }
 
-const TabContent = (props:TabContentData) => {
+const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedRef<HTMLLIElement>) => {
 
     let children = props.ingredients.map(el=>{
         if(el.type === props.value) {
@@ -47,22 +76,38 @@ const TabContent = (props:TabContentData) => {
     })
 
     return (
-        <ul className={style.tabcontent}>
-            <li className={`text_type_main-medium ${style.tabcontent_title}`}>
+        <ul  className={style.tabcontent}>
+            <li ref={ref} className={`text_type_main-medium ${style.tabcontent_title}`}>
                 {props.title}
             </li>
             {children}
         </ul>
     )
-}
+})
 
 function BurgerIngredients(props:BurgerProps){
 
     let [currentType, setCurrentType] = useState('bun');
+    
+    const bunRef    = useRef<HTMLLIElement>(null);
+    const sauceRef  = useRef<HTMLLIElement>(null);
+    const mainRef   = useRef<HTMLLIElement>(null);
 
-    let tabHandle = (e: any) => {
-        console.dir(e);
-        setCurrentType(e.target)
+    let tabHandle = (e:any) => {
+        setCurrentType(e);
+        let scrollingRef: any;
+        switch(e){
+            case 'bun':
+                scrollingRef = bunRef;
+                break;
+            case 'sauce':
+                scrollingRef = sauceRef;
+                break;
+            case 'main':
+                scrollingRef = mainRef;
+                break;
+        }
+        scrollingRef && scrollingRef.current.scrollIntoView({ block: "start", behavior: "smooth" })
     }
 
     return(
@@ -82,9 +127,9 @@ function BurgerIngredients(props:BurgerProps){
 
             <div className={`${style.container}`}>
 
-                <TabContent value="bun" title="Булки" ingredients={props.ingredients}></TabContent>
-                <TabContent value="sauce" title="Соусы" ingredients={props.ingredients}></TabContent>
-                <TabContent value="main" title="Начинки" ingredients={props.ingredients}></TabContent>
+                <TabContent ref={bunRef}  value="bun" title="Булки" ingredients={props.ingredients}></TabContent>
+                <TabContent ref={sauceRef}  value="sauce" title="Соусы" ingredients={props.ingredients}></TabContent>
+                <TabContent ref={mainRef}  value="main" title="Начинки" ingredients={props.ingredients}></TabContent>
 
             </div>
         </section>

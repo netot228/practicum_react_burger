@@ -39,7 +39,7 @@ function App(){
     }, [])
 
     return (
-        <div className={style.App}>
+        <div className={style.app}>
             <AppHeader />
             <main className={style.mainarea}>
                 <BurgerIngredients ingredients={state.data}/>

@@ -1,6 +1,7 @@
-.App {
+.app {
     position: relative;
     width: 100%;
+    min-width: var(--content-width);
     height: 100vh;
     background: var(--background-alt);
     padding: 40px;
@@ -10,6 +11,7 @@
 .mainarea {
     position: relative;
     width: var(--content-width);
+    min-width: var(--content-width);
     height: calc(100vh - 80px - 88px);
     display: flex;
     flex-flow: row;

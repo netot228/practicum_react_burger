@@ -41,7 +41,7 @@ html * {
   scrollbar-width: unset !important;
   scrollbar-color: unset !important;
 }
-@media screen and (max-width: 1280px){
+@media screen and (max-width: 1000px){
   :root{
     --content-width: 100%;
   }
