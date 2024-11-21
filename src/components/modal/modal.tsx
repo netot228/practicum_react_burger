@@ -1,32 +1,56 @@
-import React, { useRef, useState } from 'react';
-
+import { useEffect } from 'react';
 import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-
+import { createPortal } from 'react-dom';
 import style from './modal.module.css';
 import ModalOverlay from '../modal-overlay/modal-overlay';
 
-interface ModalProps {
-    onClose: () => void
-    children: any
-    title: string
-}
+import { ModalProps } from '../../utils/types';
+
 
 function Modal(props: ModalProps){
+
+    const closeModal = props.onClose;
+
+    const keyBoardHandler = (e:KeyboardEvent) => {
+
+        if(e.key==='Escape'){
+            closeModal();
+        }
+
+    }
+
+    useEffect(
+        ()=>{
+            document.addEventListener('keydown', keyBoardHandler)
+            return  ()=>{
+                document.removeEventListener('keydown', keyBoardHandler)
+            }
+        }, []
+    )
+
     return(
-        <ModalOverlay className={style.modal} /*onClose={props.onClose}*/>
 
-            <div className={style.wrapper}>
-                <h4 className={`text_type_main-large ${style.title}`}>
-                    {props.title}
-                    <CloseIcon className={style.close} onClick={props.onClose} type="primary" />
-                </h4>
+        createPortal(
+            <div className={style.modal} >
+                <ModalOverlay className={style.modal_overlay} onClose={closeModal} />
+                <div className={style.wrapper}>
+                    <h4 className={`text_type_main-large ${style.title}`}>
+                        <span>
+                            {props.title}
+                        </span>
+                        <button onClick={closeModal}>
+                            <CloseIcon className={style.close} type="primary" />
+                        </button>
+                    </h4>
 
-                <div className={style.content}>
-                    {props.children}
+                    <div className={style.content}>
+                        {props.children}
+                    </div>
                 </div>
-            </div>
-               
-        </ModalOverlay>
+            </div>,
+            document.body
+        )
+
     )
 }
 

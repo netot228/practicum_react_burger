@@ -5,7 +5,7 @@ import style from './burger-ingredients.module.css';
 
 import {IngredientData} from '../../utils/types';
 
-import { createPortal } from 'react-dom';
+
 
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
@@ -36,33 +36,30 @@ const Ingredient = (props:IngredientProps) => {
         setIsModalOpen(!isModalOpen);
     }
 
-    const closeModal = ()=>{
-        
-        setIsModalOpen(false)
-    }
-    
-
     return(
-        <figure className={style.ingredient} onClick={showIngredient}>
-            <img src={props.data.image} alt={props.data.name} />
-            <p className={`${style.ingredient_price} text_type_digits-default`}>
-                {props.data.price}
-                <CurrencyIcon className={style.ingredient_icon} type="primary" />
-            </p>
-            <figcaption className={`${style.ingredient_name} text_type_main-default`}>
-                {props.data.name}
-            </figcaption>
-            {props.data.qnt &&  <Counter count={props.data.qnt} size="default" extraClass="m-1" />}
+        <>
+            <figure className={style.ingredient} onClick={showIngredient}>
+                <img src={props.data.image} alt={props.data.name} />
+                <p className={`${style.ingredient_price} text_type_digits-default`}>
+                    {props.data.price}
+                    <CurrencyIcon className={style.ingredient_icon} type="primary" />
+                </p>
+                <figcaption className={`${style.ingredient_name} text_type_main-default`}>
+                    {props.data.name}
+                </figcaption>
+                {props.data.qnt &&  <Counter count={props.data.qnt} size="default" extraClass="m-1" />}
 
-            {isModalOpen && createPortal(
-                <Modal onClose={closeModal} title='Детали ингредиента'>
-                    {/* {console.dir(props)} */}
+            </figure>
+
+            {isModalOpen &&
+
+                <Modal title='Детали ингредиента' onClose={showIngredient} >
                     <IngredientDetails  {...props.data} />
                 </Modal>
-                ,
-                document.body
-            )}
-        </figure>
+
+            }
+        </>
+
     )
 }
 
@@ -88,14 +85,14 @@ const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedR
 function BurgerIngredients(props:BurgerProps){
 
     let [currentType, setCurrentType] = useState('bun');
-    
+
     const bunRef    = useRef<HTMLLIElement>(null);
     const sauceRef  = useRef<HTMLLIElement>(null);
     const mainRef   = useRef<HTMLLIElement>(null);
 
-    let tabHandle = (e:any) => {
+    let tabHandle = (e:string) => {
         setCurrentType(e);
-        let scrollingRef: any;
+        let scrollingRef: React.RefObject<HTMLLIElement> | undefined;
         switch(e){
             case 'bun':
                 scrollingRef = bunRef;
@@ -107,7 +104,7 @@ function BurgerIngredients(props:BurgerProps){
                 scrollingRef = mainRef;
                 break;
         }
-        scrollingRef && scrollingRef.current.scrollIntoView({ block: "start", behavior: "smooth" })
+        scrollingRef && scrollingRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })
     }
 
     return(
@@ -125,13 +122,14 @@ function BurgerIngredients(props:BurgerProps){
                 </Tab>
             </div>
 
-            <div className={`${style.container}`}>
+            {props.ingredients.length>0 &&
+                <div className={`${style.container}`}>
+                    <TabContent ref={bunRef}  value="bun" title="Булки" ingredients={props.ingredients}></TabContent>
+                    <TabContent ref={sauceRef}  value="sauce" title="Соусы" ingredients={props.ingredients}></TabContent>
+                    <TabContent ref={mainRef}  value="main" title="Начинки" ingredients={props.ingredients}></TabContent>
+                </div>
+            }
 
-                <TabContent ref={bunRef}  value="bun" title="Булки" ingredients={props.ingredients}></TabContent>
-                <TabContent ref={sauceRef}  value="sauce" title="Соусы" ingredients={props.ingredients}></TabContent>
-                <TabContent ref={mainRef}  value="main" title="Начинки" ingredients={props.ingredients}></TabContent>
-
-            </div>
         </section>
     )
 }

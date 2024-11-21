@@ -1,3 +1,4 @@
+
 export interface IngredientData {
     _id: string|number
     type: string
@@ -11,5 +12,12 @@ export interface IngredientData {
     carbohydrates?: number
     calories?: number
     image_large?: string
-    __v?: number 
+    __v?: number
+}
+
+export interface ModalProps {
+    title?: string
+    children?: React.ReactNode
+    onClose: () => void
+    className?: string
 }

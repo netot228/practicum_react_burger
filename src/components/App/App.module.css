@@ -4,7 +4,6 @@
     min-width: var(--content-width);
     height: 100vh;
     background: var(--background-alt);
-    padding: 40px;
     display: flex;
     flex-flow: column;
 }
@@ -12,10 +11,10 @@
     position: relative;
     width: var(--content-width);
     min-width: var(--content-width);
-    height: calc(100vh - 80px - 88px);
+    height: calc(100vh - 88px);
     display: flex;
     flex-flow: row;
     align-items: stretch;
     justify-content: space-between;
-    margin: auto;
+    margin: 0 auto;
 }

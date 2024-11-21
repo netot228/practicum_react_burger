@@ -24,7 +24,7 @@ function IngredientDetails(props:IngredientData){
     return (
         <figure className={style.ingredient} >
             <img src={props.image_large ? props.image_large : props.image } alt={props.name}  className={style.image}/>
-            
+
             <figcaption className={`${style.caption} text_type_main-medium`}>
                 {props.name}
             </figcaption>
