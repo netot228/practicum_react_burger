@@ -1,14 +1,11 @@
 import {useState} from 'react';
-import { createPortal } from 'react-dom';
-
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-
-import style from './burger-constructor.module.css';
-
-import {IngredientData} from '../../utils/types';
 
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
+
+import style from './burger-constructor.module.css';
+import {IngredientData} from '../../utils/types';
 
 interface BurgerConstructorProps {
     ingredients: IngredientData[]
@@ -16,9 +13,9 @@ interface BurgerConstructorProps {
 
 function BurgerConstructor(props:BurgerConstructorProps){
 
-    let currentBun: IngredientData | undefined = props.ingredients.find(el=>el.type==='bun');
+    const currentBun: IngredientData | undefined = props.ingredients.find(el=>el.type==='bun');
 
-    let ingredientsList = props.ingredients.map(el=>{
+    const ingredientsList = props.ingredients.map(el=>{
         if(el.type !== 'bun') {
             return  <li key={el._id} className={style.item}>
                         <DragIcon className={style.drug_btn} type="primary" />
@@ -34,7 +31,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
         return false;
     })
 
-    let total = props.ingredients.reduce((total, el)=>total+el.price, 0);
+    const total = props.ingredients.reduce((total, el)=>total+el.price, 0);
 
     const [isOrdered, setIsOrdered] = useState(false);
     const confirmOrder = ()=>{

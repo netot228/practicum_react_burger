@@ -1,7 +1,5 @@
-import React from 'react';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './app-header.module.css';
-
 
 type BtnPops = {
     type: "secondary" | "primary" | "error" | "success" | "disabled"

@@ -7,6 +7,9 @@ import ModalOverlay from '../modal-overlay/modal-overlay';
 import { ModalProps } from '../../utils/types';
 
 
+const modalsRoot = document.getElementById('modals') as HTMLElement;
+
+
 function Modal(props: ModalProps){
 
     const closeModal = props.onClose;
@@ -48,7 +51,7 @@ function Modal(props: ModalProps){
                     </div>
                 </div>
             </div>,
-            document.body
+            modalsRoot
         )
 
     )

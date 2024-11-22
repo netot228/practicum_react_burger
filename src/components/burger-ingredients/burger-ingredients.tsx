@@ -1,15 +1,11 @@
-import React, { useRef, useState } from 'react';
-
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import style from './burger-ingredients.module.css';
-
-import {IngredientData} from '../../utils/types';
-
-
 
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 
+import style from './burger-ingredients.module.css';
+import {IngredientData} from '../../utils/types';
 
 
 interface BurgerProps {
@@ -20,7 +16,6 @@ interface TabContentData {
     ingredients: IngredientData[]
     value: string
     title: string
-    // ref: any
 }
 
 interface IngredientProps {
@@ -30,9 +25,14 @@ interface IngredientProps {
 
 const Ingredient = (props:IngredientProps) => {
 
+    console.log(` Ingredient render`);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showIngredient = ()=>{
+
+        console.log(` showIngredientFunction render`);
+
         setIsModalOpen(!isModalOpen);
     }
 
@@ -65,12 +65,20 @@ const Ingredient = (props:IngredientProps) => {
 
 const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedRef<HTMLLIElement>) => {
 
-    let children = props.ingredients.map(el=>{
-        if(el.type === props.value) {
-            return <Ingredient key={el._id} data={el}/>
-        }
-        return false;
-    })
+    // добавил useMemo из учебного интереса
+    // при клике по табам дети раздела кажды раз перересовываются
+    const children = useMemo(
+        ()=>{
+            const childrenCollect = props.ingredients.map(el=>{
+                if(el.type === props.value) {
+                    return <Ingredient key={el._id} data={el}/>
+                }
+                return false;
+            })
+
+            return childrenCollect;
+        }, []
+    )
 
     return (
         <ul  className={style.tabcontent}>
@@ -84,13 +92,13 @@ const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedR
 
 function BurgerIngredients(props:BurgerProps){
 
-    let [currentType, setCurrentType] = useState('bun');
+    const [currentType, setCurrentType] = useState('bun');
 
     const bunRef    = useRef<HTMLLIElement>(null);
     const sauceRef  = useRef<HTMLLIElement>(null);
     const mainRef   = useRef<HTMLLIElement>(null);
 
-    let tabHandle = (e:string) => {
+    const tabHandle = (e:string) => {
         setCurrentType(e);
         let scrollingRef: React.RefObject<HTMLLIElement> | undefined;
         switch(e){

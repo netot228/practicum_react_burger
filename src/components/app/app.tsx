@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './app.module.css'
 
 import AppHeader from '../app-header/app-header';
@@ -28,7 +28,6 @@ function App(){
             }
         })
         .then(json=>{
-            console.dir(json.data)
             setState({data: json.data, dataLoaded: true});
         })
         .catch(error=>{
