@@ -2,6 +2,8 @@ import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import Modal from '../modal/modal';
+import {useModal} from'../../hooks/useModal';
+
 import IngredientDetails from '../ingredient-details/ingredient-details';
 
 import style from './burger-ingredients.module.css';
@@ -25,15 +27,17 @@ interface IngredientProps {
 
 const Ingredient = (props:IngredientProps) => {
 
-    console.log(` Ingredient render`);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    console.log('ingredient rendering')
+    const {isModalOpen, closeModal, openModal } = useModal(false);
 
     const showIngredient = ()=>{
 
-        console.log(` showIngredientFunction render`);
-
-        setIsModalOpen(!isModalOpen);
+        if(isModalOpen){
+            closeModal();
+        } else {
+            openModal();
+        }
+        
     }
 
     return(
@@ -66,7 +70,11 @@ const Ingredient = (props:IngredientProps) => {
 const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedRef<HTMLLIElement>) => {
 
     // добавил useMemo из учебного интереса
-    // при клике по табам дети раздела кажды раз перересовываются
+    // при клике по табам родителя (чтобы доскролить до нужной позииц) 
+    // дети раздела каждый раз перересовываются
+    // целесообразно ли использовать при этом useMemo
+    // или я впринципе не в ту сторону повернул структурно?
+    
     const children = useMemo(
         ()=>{
             const childrenCollect = props.ingredients.map(el=>{
@@ -79,6 +87,13 @@ const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedR
             return childrenCollect;
         }, []
     )
+
+    // const children = props.ingredients.map(el=>{
+    //     if(el.type === props.value) {
+    //         return <Ingredient key={el._id} data={el}/>
+    //     }
+    //     return false;
+    // })
 
     return (
         <ul  className={style.tabcontent}>

@@ -2,6 +2,8 @@ import {useState} from 'react';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import Modal from '../modal/modal';
+import {useModal} from'../../hooks/useModal';
+
 import OrderDetails from '../order-details/order-details';
 
 import style from './burger-constructor.module.css';
@@ -33,9 +35,13 @@ function BurgerConstructor(props:BurgerConstructorProps){
 
     const total = props.ingredients.reduce((total, el)=>total+el.price, 0);
 
-    const [isOrdered, setIsOrdered] = useState(false);
+    const {isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = ()=>{
-        setIsOrdered(!isOrdered);
+        if(isModalOpen){
+            closeModal();
+        } else {
+            openModal();
+        }
     }
 
     return(
@@ -81,7 +87,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
                         </Button>
                     </div>
 
-                    {isOrdered &&
+                    {isModalOpen &&
 
                         <Modal onClose={confirmOrder} >
                             <OrderDetails />

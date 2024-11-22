@@ -33,7 +33,7 @@
     bottom: 0;
     margin: auto;
     background: url(../../images/wave1.svg) no-repeat 50% 50%;
-    animation: rotate_wave 10s infinite alternate-reverse linear;
+    animation: rotate_wave 10s infinite alternate-reverse ease;
 }
 .wave2 {
     position: absolute;
@@ -46,7 +46,7 @@
     bottom: 0;
     margin: auto;
     background: url(../../images/wave2.svg) no-repeat 50% 50%;
-    animation: rotate_wave 20s infinite alternate-reverse linear;
+    animation: rotate_wave 20s infinite alternate-reverse ease-in;
 }
 .wave3 {
     position: absolute;

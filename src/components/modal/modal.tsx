@@ -12,6 +12,8 @@ const modalsRoot = document.getElementById('modals') as HTMLElement;
 
 function Modal(props: ModalProps){
 
+    console.log('is modal rendering');
+
     const closeModal = props.onClose;
 
     const keyBoardHandler = (e:KeyboardEvent) => {
