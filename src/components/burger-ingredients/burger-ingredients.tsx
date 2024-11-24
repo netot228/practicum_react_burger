@@ -74,7 +74,7 @@ const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedR
     // дети раздела каждый раз перересовываются
     // целесообразно ли использовать при этом useMemo
     // или я впринципе не в ту сторону повернул структурно?
-    
+
     const children = useMemo(
         ()=>{
             const childrenCollect = props.ingredients.map(el=>{
@@ -85,7 +85,7 @@ const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedR
             })
 
             return childrenCollect;
-        }, []
+        }, [props.ingredients, props.value]
     )
 
     // const children = props.ingredients.map(el=>{
