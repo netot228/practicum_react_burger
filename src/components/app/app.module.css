@@ -1,0 +1,20 @@
+.app {
+    position: relative;
+    width: 100%;
+    min-width: var(--content-width);
+    height: 100vh;
+    background: var(--background-alt);
+    display: flex;
+    flex-flow: column;
+}
+.mainarea {
+    position: relative;
+    width: var(--content-width);
+    min-width: var(--content-width);
+    height: calc(100vh - 88px);
+    display: flex;
+    flex-flow: row;
+    align-items: stretch;
+    justify-content: space-between;
+    margin: 0 auto;
+}

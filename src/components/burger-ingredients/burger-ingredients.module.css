@@ -1,0 +1,128 @@
+.wrapper {
+    position: relative;
+    width: 600px;
+    height: 100%;
+}
+
+.title {
+    margin: 40px 0 20px;
+}
+
+.switcher {
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 200px);
+    padding: 0 0 40px;
+    overflow: auto;
+    scrollbar-width: unset !important;
+    scrollbar-color: unset !important;
+
+}
+
+.container::-webkit-scrollbar {
+    width: 8px;
+}
+.container::-webkit-scrollbar-track {
+    background: #2F2F37;
+}
+.container::-webkit-scrollbar-thumb {
+    display: inline-block;
+    border-radius: 0;
+    background: #8585AD;
+    width: 8px;
+}
+
+@-moz-document url-prefix() {
+    .container {
+        scrollbar-color: #8585AD #2F2F37 !important;
+        scrollbar-width: thin !important;
+    }
+}
+
+.tabcontent {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: start;
+    justify-content: start;
+    gap: 32px;
+    column-gap: 24px;
+
+    &:first-child .tabcontent_title {
+        margin-top: 0;
+    }
+}
+
+.tabcontent_title {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 40px 0 8px;
+}
+
+.ingredient {
+    position: relative;
+    display: inline-flex;
+    flex-flow: column;
+    align-items: center;
+    width: 272px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transform: scale(1);
+    transition: all 0.5s ease;
+
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    & img {
+        display: inline-block;
+        /* width: 240px;
+        height: 120px; */
+        width: auto;
+        max-height: 120px;
+        height: 140rem;
+        margin-bottom: 4px;
+    }
+}
+.ingredient_price {
+    display: inline-flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+.ingredient_icon {
+    display: inline-block;
+    margin-left: 12px;
+}
+.ingredient_name {
+    min-height: 48px;
+    text-align: center;
+}
+.ingredient_qnt {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+@media screen and (max-height: 800px) {
+    .title {
+        margin: 40rem 0 20rem;
+        font-size: 40rem;
+    }
+    .tabcontent_title {
+        margin: 40rem 0 8rem;
+        font-size: 30rem;
+    }
+
+    .tabcontent {
+        gap: 32rem;
+    }
+
+}

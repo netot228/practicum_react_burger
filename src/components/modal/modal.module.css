@@ -1,0 +1,57 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+.wrapper {
+    position: relative;
+    z-index: 10;
+    display: inline-flex;
+    border-radius: 40px;
+    background: var(--background);
+    padding: 60px 40px;
+    width: 720px;
+    height: auto;
+
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.close {
+    cursor: pointer;
+    transform: scale(1) rotate(0deg);
+    /* transition: var(--common-transition); */
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: scale(1.2) rotate(90deg);
+    }
+}
+
+.content {
+    width: 100%;
+}
