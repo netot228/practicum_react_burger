@@ -7,7 +7,7 @@ export const GET_INGREDIENTS_FAILED    = 'GET_INGREDIENTS_FAILED';
 export const DATA_END_POINT_URL = 'https://norma.nomoreparties.space/api/ingredients';
 
 export function getIngredients() {
-    return function(dispatch:any) {
+    return function(dispatch:AppDispatch) {
       dispatch({
         type: GET_INGREDIENTS_REQUEST
       });
@@ -24,10 +24,9 @@ export function getIngredients() {
 
             dispatch({
                 type: GET_INGREDIENTS_SUCCESS,
-                items: json.data
+                ingredients: json.data
             });
 
-            // setState({data: json.data, dataLoaded: true});
         })
         .catch(error=>{
             console.log('Что-то пошло не так')

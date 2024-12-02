@@ -7,17 +7,86 @@ import {useModal} from'../../hooks/useModal';
 import OrderDetails from '../order-details/order-details';
 
 import style from './burger-constructor.module.css';
+
 import {IngredientData} from '../../utils/types';
 
+import { useDrop } from "react-dnd";
+
+import {useAppDispatch, useAppSelector} from '../../hooks/useAppSelector';
+
+import { ADD_INGREDIENT } from '../../services/actions/burger-constructor'
+
 interface BurgerConstructorProps {
-    ingredients: IngredientData[]
+    ingredients: IngredientData[],
+    currentBun?: IngredientData,
+    dropHandler: (_id:string|number|undefined)=> void
+}
+
+interface BunProps {
+    type?: "bottom" | "top" | undefined,
+    bun?: IngredientData,
+    dropHandler: (_id:string|number|undefined)=> void
+}
+
+const Bun: React.FC<BunProps> = (props: BunProps) => {
+
+
+
+    const {
+        name,
+        price,
+        image
+    } = props.bun || {
+        name: 'Выберите булочку',
+        price: 0,
+        image: ''
+    };
+
+    const type = props.bun === undefined ? undefined : props.type;
+
+    const dropHandler = props.dropHandler;
+
+    const [{isHover}, dropTarget] = useDrop({
+        accept: "bun",
+        drop(_id:string|number|undefined) {
+            dropHandler(_id);
+        },
+        collect: monitor => ({
+            isHover: monitor.isOver(),
+        })
+    });
+
+    const extraClass = `${style.bun}
+                        ${props.type === 'top'
+                            ? style.topbun
+                            : style.btmbun
+                        }
+                        ${props.bun === undefined && style.undefinedBun}
+                        ${isHover && style.canAccepted}
+                        `;
+
+    return (
+        <div ref={dropTarget}>
+            <ConstructorElement
+                text={name}
+                price={price}
+                thumbnail={image}
+                type={type}
+                isLocked={true}
+                extraClass={extraClass}
+            />
+        </div>
+    )
 }
 
 function BurgerConstructor(props:BurgerConstructorProps){
 
-    const currentBun: IngredientData | undefined = props.ingredients.find(el=>el.type==='bun');
+    const ingredients = useAppSelector(state=>state.constructor.ingredients)
+    const dispatch = useAppDispatch();
 
-    const ingredientsList = props.ingredients.map(el=>{
+    const {currentBun, dropHandler} = props;
+
+    const ingredientsList = ingredients.map(el=>{
         if(el.type !== 'bun') {
             return  <li key={el._id} className={style.item}>
                         <DragIcon className={style.drug_btn} type="primary" />
@@ -33,7 +102,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
         return false;
     })
 
-    const total = props.ingredients.reduce((total, el)=>total+el.price, 0);
+    const total = ingredients.length> 0 ? ingredients.reduce((total:number, el:IngredientData)=>total+el.price, 0) : 0;
 
     const {isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = ()=>{
@@ -44,10 +113,80 @@ function BurgerConstructor(props:BurgerConstructorProps){
         }
     }
 
+    const bunProps:BunProps = {
+        bun: currentBun,
+        dropHandler: dropHandler
+    }
+    const [{isHover}, dropTarget] = useDrop({
+        accept: "ingredient",
+        drop(_id) {
+            // dropHandler(_id);
+            dispatch({
+                type: ADD_INGREDIENT,
+                _id
+            });
+        },
+        collect: monitor => ({
+            isHover: monitor.isOver(),
+        })
+    });
+
     return(
 
         <section className={style.wrapper}>
-            {props.ingredients.length>0 &&
+
+            <Bun {...bunProps} type="top" />
+
+            <ul className={`${style.container} ${props.ingredients.length<5 && style.hFree } `}>
+                {props.ingredients.length>0
+
+                    ?   ingredientsList
+
+                    :
+                        <li className={style.item}>
+                            <DragIcon className={`${style.drug_btn} ${style.undefinedBun}`} type="primary" />
+                            <ConstructorElement
+                                text='Выберите начинку'
+                                price={0}
+                                thumbnail=''
+                                type={undefined}
+                                extraClass={`${style.undefinedBun} ${style.bun}`}
+                            />
+                        </li>
+                    }
+                {}
+            </ul>
+
+            <Bun {...bunProps} type="bottom" />
+
+            {props.ingredients.length>0 && currentBun &&
+                <>
+                    <div className={style.confirm_order}>
+                        <span className={`${style.confirm_order_total} text_type_digits-medium`}>{total}</span>
+                        <CurrencyIcon className={style.confirm_order_icon} type="primary" />
+                        <Button extraClass={style.confirm_order_btn}
+                                htmlType="button"
+                                type="primary"
+                                size="large"
+                                onClick={confirmOrder}
+                                >
+                                Оформить заказ
+                        </Button>
+                    </div>
+
+                    {isModalOpen &&
+
+                        <Modal onClose={confirmOrder} >
+                            <OrderDetails />
+                        </Modal>
+
+                        }
+                </>
+            }
+
+
+            {}
+            {/* {props.ingredients.length>0 &&
                 <>
                     {currentBun !== undefined &&
                         <ConstructorElement
@@ -95,7 +234,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
 
                         }
                 </>
-            }
+            } */}
 
 
         </section>

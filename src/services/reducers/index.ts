@@ -4,7 +4,8 @@ import { combineReducers } from 'redux';
 // import { checkoutReducer } from './checkout';
 // import { NEXT_STEP, PREVIOUS_STEP } from '../actions';
 
-import { ingredientsReducer } from './burger-ingredients'
+import { ingredientsReducer } from './burger-ingredients';
+import { constructorReducer } from './burger-constructor';
 
 // const stepReducer = (state = 'cart', action) => {
 //   switch (action.type) {
@@ -35,7 +36,8 @@ import { ingredientsReducer } from './burger-ingredients'
 
 
 export const rootReducer = combineReducers({
-    
-    ingredients: ingredientsReducer
+
+    ingredients: ingredientsReducer,
+    constructor: constructorReducer
 
 });

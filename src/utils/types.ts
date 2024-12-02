@@ -24,7 +24,6 @@ export interface IngredientsState {
 export interface IngredientsAction {
     type: string,
     ingredients: IngredientData[]
-    
 }
 
 export interface ModalProps {
@@ -32,4 +31,12 @@ export interface ModalProps {
     children?: React.ReactNode
     onClose: () => void
     className?: string
+}
+
+export interface ConstructorState {
+    ingredients: IngredientData[] | []
+}
+export interface ConstructorAction {
+    type: string,
+    ingredient: IngredientData
 }

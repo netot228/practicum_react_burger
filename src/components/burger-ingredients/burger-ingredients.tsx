@@ -9,6 +9,8 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import style from './burger-ingredients.module.css';
 import {IngredientData} from '../../utils/types';
 
+import { useDrag } from "react-dnd";
+
 
 interface BurgerProps {
     ingredients: IngredientData[]
@@ -27,7 +29,6 @@ interface IngredientProps {
 
 const Ingredient = (props:IngredientProps) => {
 
-    console.log('ingredient rendering')
     const {isModalOpen, closeModal, openModal } = useModal(false);
 
     const showIngredient = ()=>{
@@ -37,12 +38,20 @@ const Ingredient = (props:IngredientProps) => {
         } else {
             openModal();
         }
-        
+
     }
 
+    const [{isDrag}, dragRef] = useDrag({
+        type: props.data.type === 'bun' ? 'bun' : 'ingredient',
+        item: props.data._id,
+        collect: monitor => ({
+            isDrag: monitor.isDragging()
+        })
+    });
+
     return(
-        <>
-            <figure className={style.ingredient} onClick={showIngredient}>
+        <li key={props.data._id} className={style.ingredient_list_item}>
+            <figure ref={dragRef} className={style.ingredient} onClick={showIngredient}>
                 <img src={props.data.image} alt={props.data.name} />
                 <p className={`${style.ingredient_price} text_type_digits-default`}>
                     {props.data.price}
@@ -62,7 +71,7 @@ const Ingredient = (props:IngredientProps) => {
                 </Modal>
 
             }
-        </>
+        </li>
 
     )
 }
@@ -70,7 +79,7 @@ const Ingredient = (props:IngredientProps) => {
 const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedRef<HTMLLIElement>) => {
 
     // добавил useMemo из учебного интереса
-    // при клике по табам родителя (чтобы доскролить до нужной позииц) 
+    // при клике по табам родителя (чтобы доскролить до нужной позииц)
     // дети раздела каждый раз перересовываются
     // целесообразно ли использовать при этом useMemo
     // или я впринципе не в ту сторону повернул структурно?
@@ -97,7 +106,7 @@ const TabContent = React.forwardRef((props:TabContentData, ref: React.ForwardedR
 
     return (
         <ul  className={style.tabcontent}>
-            <li ref={ref} className={`text_type_main-medium ${style.tabcontent_title}`}>
+            <li key={0} ref={ref} className={`text_type_main-medium ${style.tabcontent_title}`}>
                 {props.title}
             </li>
             {children}

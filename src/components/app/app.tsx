@@ -9,56 +9,42 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 // import {data} from '../../utils/data';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../utils/store';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { RootState } from '../../utils/store';
 
-import {getIngredients} from '../../services/actions/burger-ingredients'
+import {getIngredients} from '../../services/actions/burger-ingredients';
+import {useAppDispatch, useAppSelector} from '../../hooks/useAppSelector';
 
-
-// const DATA_END_POINT_URL = 'https://norma.nomoreparties.space/api/ingredients';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App(){
 
-    const dispatch = useDispatch();
-    const {ingredients} = useSelector( (state: RootState) => state.ingredients)
-      
-
-    // const [state, setState ] = useState({
-    //     dataLoaded: false,
-    //     data:[]
-    // });
+    const dispatch = useAppDispatch();
+    const {ingredients} = useAppSelector( (state) => state.ingredients)
 
     useEffect(()=>{
 
         if(!ingredients.length) {
-            // dispatch(getIngredients());
+            dispatch(getIngredients());
         }
 
-        // fetch(DATA_END_POINT_URL)
-        // .then(response=>{
-        //     if(response.ok){
-        //         return response.json();
-        //     } else {
-        //         throw new Error(`Error: ${response.status}`);
-        //     }
-        // })
-        // .then(json=>{
-        //     setState({data: json.data, dataLoaded: true});
-        // })
-        // .catch(error=>{
-        //     console.log('Что-то пошло не так')
-        //     console.error(error);
-        // })
+    }, [dispatch])
 
-
-    }, [])
+    const dropHandler = (_id:string|number|undefined)=>{
+        // логика обновления стора
+        console.dir('dropped');
+        console.dir(_id);
+    }
 
     return (
         <div className={style.app}>
             <AppHeader />
             <main className={style.mainarea}>
-                <BurgerIngredients ingredients={ingredients}/>
-                <BurgerConstructor ingredients={ingredients}/>
+                <DndProvider backend={HTML5Backend}>
+                    <BurgerIngredients ingredients={ingredients}/>
+                    <BurgerConstructor dropHandler={dropHandler} ingredients={[]}/>
+                </DndProvider>
             </main>
         </div>
     )
