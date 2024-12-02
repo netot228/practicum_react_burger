@@ -15,6 +15,18 @@ export interface IngredientData {
     __v?: number
 }
 
+export interface IngredientsState {
+    ingredients: IngredientData[],
+    ingredientsRequest: boolean,
+    ingredientsFailed: boolean
+}
+
+export interface IngredientsAction {
+    type: string,
+    ingredients: IngredientData[]
+    
+}
+
 export interface ModalProps {
     title?: string
     children?: React.ReactNode
