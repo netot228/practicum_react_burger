@@ -31,6 +31,7 @@ const Ingredient = (props:IngredientProps) => {
 
     const {isModalOpen, closeModal, openModal } = useModal(false);
 
+    const {type, _id} = props.data;
     const showIngredient = ()=>{
 
         if(isModalOpen){
@@ -41,16 +42,16 @@ const Ingredient = (props:IngredientProps) => {
 
     }
 
-    const [{isDrag}, dragRef] = useDrag({
-        type: props.data.type === 'bun' ? 'bun' : 'ingredient',
-        item: props.data._id,
-        collect: monitor => ({
-            isDrag: monitor.isDragging()
-        })
-    });
+    const [, dragRef] = useDrag({
+        type: type === 'bun' ? 'bun' : 'ingredient',
+        item: {_id},
+        // collect: monitor => ({
+        //     isDrag: monitor.isDragging()
+        // })
+    }, []);
 
     return(
-        <li key={props.data._id} className={style.ingredient_list_item}>
+        <li  key={props.data._id} className={style.ingredient_list_item}>
             <figure ref={dragRef} className={style.ingredient} onClick={showIngredient}>
                 <img src={props.data.image} alt={props.data.name} />
                 <p className={`${style.ingredient_price} text_type_digits-default`}>

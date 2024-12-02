@@ -17,8 +17,8 @@ export interface IngredientData {
 
 export interface IngredientsState {
     ingredients: IngredientData[],
-    ingredientsRequest: boolean,
-    ingredientsFailed: boolean
+    ingredientsRequest: true | false,
+    ingredientsFailed: true | false
 }
 
 export interface IngredientsAction {
@@ -34,7 +34,8 @@ export interface ModalProps {
 }
 
 export interface ConstructorState {
-    ingredients: IngredientData[] | []
+    topping: IngredientData[] | [],
+    bun: IngredientData | {}
 }
 export interface ConstructorAction {
     type: string,

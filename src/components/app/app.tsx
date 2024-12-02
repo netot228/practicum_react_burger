@@ -13,6 +13,9 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 // import { RootState } from '../../utils/store';
 
 import {getIngredients} from '../../services/actions/burger-ingredients';
+
+import { ADD_INGREDIENT } from '../../services/actions/burger-constructor'
+
 import {useAppDispatch, useAppSelector} from '../../hooks/useAppSelector';
 
 import { DndProvider } from "react-dnd";
@@ -21,8 +24,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 function App(){
 
     const dispatch = useAppDispatch();
-    const {ingredients} = useAppSelector( (state) => state.ingredients)
+    const {ingredients} = useAppSelector( (state) => state.ingredients);
+    const {topping} = useAppSelector( state=>state.burger)
 
+    // const constructorItems = useAppSelector(state=>state.burger.ingredients)
+
+    // console.dir(constructorItems);
     useEffect(()=>{
 
         if(!ingredients.length) {
@@ -31,10 +38,23 @@ function App(){
 
     }, [dispatch])
 
-    const dropHandler = (_id:string|number|undefined)=>{
+    interface DropObj {
+        _id?: string | number | undefined
+    }
+     
+
+    const dropHandler = (item:DropObj)=>{
         // логика обновления стора
-        console.dir('dropped');
-        console.dir(_id);
+        // console.dir('dropped');
+        // console.dir(item._id);
+        
+        // const {_id} = item;
+        const ingredient = ingredients.find(el=>el._id===item._id);
+        
+        dispatch({
+            type: ADD_INGREDIENT,
+            ingredient: ingredient
+        })
     }
 
     return (

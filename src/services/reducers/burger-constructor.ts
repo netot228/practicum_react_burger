@@ -11,22 +11,8 @@ import {ADD_INGREDIENT} from '../actions/burger-constructor';
 
 
 const constructorState: ConstructorState = {
-    ingredients: [
-        {
-            "_id":"60666c42cc7b410027a1a9b1",
-            "name":"Краторная булка N-200i",
-            "type":"bun",
-            "proteins":80,
-            "fat":24,
-            "carbohydrates":53,
-            "calories":420,
-            "price":1255,
-            "image":"https://code.s3.yandex.net/react/code/bun-02.png",
-            "image_large":"https://code.s3.yandex.net/react/code/bun-02-large.png",
-            "__v":0,
-            "qnt": 1
-         }
-    ]
+    topping: [],
+    bun: {}
 }
 
 
@@ -35,7 +21,8 @@ export const constructorReducer = (state: ConstructorState = constructorState, a
         case ADD_INGREDIENT: {
             return {
                 ...state,
-                ingredients: [...state.ingredients, action.ingredient]
+                // topping: [...state.topping, action.ingredient]
+                topping: [...state.topping, action.ingredient]
             }
         }
     //     case GET_INGREDIENTS_SUCCESS: {
