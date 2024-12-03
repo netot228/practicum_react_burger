@@ -1,22 +1,20 @@
-import {useState} from 'react';
+import {IngredientData, DropObj} from '../../utils/types';
+
+import {useMemo} from 'react';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useDrop } from "react-dnd";
 
 import Modal from '../modal/modal';
 import {useModal} from'../../hooks/useModal';
-
-import OrderDetails from '../order-details/order-details';
-
-import style from './burger-constructor.module.css';
-
-import {IngredientData, DropObj} from '../../utils/types';
-
-import { useDrop } from "react-dnd";
-
 import {useAppDispatch, useAppSelector} from '../../hooks/useAppSelector';
+
+import { sendOrder } from '../../services/actions/order-details';
+import OrderDetails from '../order-details/order-details';
 
 import {INCREASE_INGREDIENT_ITEM, DECREASE_INGREDIENT_ITEM} from '../../services/actions/burger-ingredients';
 import { ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT } from '../../services/actions/burger-constructor'
 
+import style from './burger-constructor.module.css';
 
 interface BurgerConstructorProps {
     ingredients?: IngredientData[],
@@ -106,7 +104,12 @@ function BurgerConstructor(props:BurgerConstructorProps){
 
     const {ingredients}     = useAppSelector(state=>state.ingredients);
     const {topping, bun}    = useAppSelector(state=>state.burger);
+    const {orderData}       = useAppSelector(state=>state.order);
 
+
+    console.log('render burger constructor')
+    console.dir(orderData);
+    
     const dispatch = useAppDispatch();
 
     const decreaseItem = (item:IngredientData|undefined)=>{
@@ -115,7 +118,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
             ingredient: item
         })
     }
-
     const removeTopping = (uid: string | number | undefined)=>{
         const removedItem = topping.find(el=>el.uid===uid)
         dispatch({
@@ -131,14 +133,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
         const uid = `${ingredient?._id}__${Math.floor(Math.random()*1000)}`;
 
         if(ingredient?.type === 'bun' && bun && bun!==ingredient){
-            // console.log('decrease bun');
-            console.dir(bun);
-            // debugger;
-
-            // dispatch({
-            //     type: DECREASE_INGREDIENT_ITEM,
-            //     ingredient: bun
-            // })
             decreaseItem(bun)
         }
 
@@ -155,35 +149,46 @@ function BurgerConstructor(props:BurgerConstructorProps){
 
     }
 
-    const ingredientsList = topping.length > 0
-                            ?
-                            topping.map((el, i)=>{
+    const ingredientsList = useMemo(
+        ()=> {
+            const toppingCollect = topping.length > 0
+                ?
+                topping.map((el, i)=>{
 
-                                if(el.type !== 'bun') {
-                                    console.dir(el);
-                                    return  <Topping key={`${el._id}_${i}`} removeTopping={removeTopping} topping={el}/>
-                                }
-                                return false;
+                    if(el.type !== 'bun') {
+                        return  <Topping key={`${el._id}_${i}`} removeTopping={removeTopping} topping={el}/>
+                    }
+                    return false;
 
-                            })
-                            : [];
+                })
+                : [];
+            return toppingCollect;
+        }, [topping]);
 
-    const total = topping.length > 0 && bun
-                                    ? (topping as IngredientData[]).reduce((total, el)=>total+el.price, 0)
-                                        + bun.price
-                                    : 0;
+    const total = useMemo(()=>{
+        return topping.length > 0 && bun
+        ? (topping as IngredientData[]).reduce((total, el)=>total+el.price, 0) + bun.price*2
+        : 0;
+    }, [topping, bun])
+    
 
     const {isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = ()=>{
+
         if(isModalOpen){
             closeModal();
         } else {
+            
+            let sendOrderData = topping.map(el=>el._id);
+        
+            if(bun){
+                sendOrderData.push(bun._id)
+            }
+            
+            dispatch(sendOrder(sendOrderData))
+
             openModal();
         }
-    }
-
-    const bunProps:BunProps = {
-        bun: bun
     }
 
     const [{isHover}, dropTarget] = useDrop({
@@ -202,30 +207,13 @@ function BurgerConstructor(props:BurgerConstructorProps){
 
         <section ref={dropTarget} className={`${style.wrapper}  ${isHover && style.canAccepted } `}>
 
-            <Bun {...bunProps} type="top" />
+            <Bun bun={bun} type="top" />
 
             <ul className={containerExtraClass}>
-                {topping.length>0
-
-                    ?   ingredientsList
-
-                    :
-                        <Topping topping={null}/>
-                        // <li className={style.item}>
-                        //     <DragIcon className={`${style.drug_btn} ${style.undefinedBun}`} type="primary" />
-                        //     <ConstructorElement
-                        //         text='Выберите начинку'
-                        //         price={0}
-                        //         thumbnail=''
-                        //         type={undefined}
-                        //         extraClass={`${style.undefinedBun} ${style.bun}`}
-                        //     />
-                        // </li>
-                }
-
+                {topping.length > 0 ? ingredientsList : <Topping topping={null}/>}
             </ul>
 
-            <Bun {...bunProps} type="bottom" />
+            <Bun bun={bun} type="bottom" />
 
             {topping.length>0 && bun &&
                 <>
@@ -245,7 +233,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
                     {isModalOpen &&
 
                         <Modal onClose={confirmOrder} >
-                            <OrderDetails />
+                            <OrderDetails orderData={orderData}/>
                         </Modal>
 
                         }

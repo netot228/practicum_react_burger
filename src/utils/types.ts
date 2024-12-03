@@ -48,3 +48,9 @@ export interface ConstructorAction {
 export interface DropObj {
     _id?: string | number | undefined
 }
+
+export interface OrderData {
+    name: string
+    order: {number:number}
+    success: boolean
+}

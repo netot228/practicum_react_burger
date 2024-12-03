@@ -1,14 +1,20 @@
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './order-details.module.css';
 
-function OrderDetails(){
+import { OrderData } from '../../utils/types';
+import { createDiffieHellman } from 'crypto';
+
+function OrderDetails(props:any){
+
+    
+
     return (
         <div className={style.order}>
             <h4 className={`text_type_digits-large ${style.order_id}`}>
-                {Math.floor(10000 + Math.random()*100000)}
+            {props.orderData.order.number}
             </h4>
             <span className={`text_type_main-medium ${style.title}`}>
-                идентификатор заказа
+                {props.orderData.name}
             </span>
 
             <div className={style.check}>

@@ -1,4 +1,5 @@
 import { AppDispatch } from '../../utils/store';
+import { INGREDIENT_DATA_ENDPOINT } from '../../utils/api-endpoints';
 
 export const GET_INGREDIENTS_REQUEST   = 'GET_INGREDIENTS_REQUEST';
 export const GET_INGREDIENTS_SUCCESS   = 'GET_INGREDIENTS_SUCCESS';
@@ -7,7 +8,6 @@ export const GET_INGREDIENTS_FAILED    = 'GET_INGREDIENTS_FAILED';
 export const INCREASE_INGREDIENT_ITEM  = 'INCREASE_INGREDIENT_ITEM';
 export const DECREASE_INGREDIENT_ITEM  = 'DECREASE_INGREDIENT_ITEM';
 
-export const DATA_END_POINT_URL = 'https://norma.nomoreparties.space/api/ingredients';
 
 export function getIngredients() {
     return function(dispatch:AppDispatch) {
@@ -15,7 +15,7 @@ export function getIngredients() {
         type: GET_INGREDIENTS_REQUEST
       });
 
-      fetch(DATA_END_POINT_URL)
+      fetch(INGREDIENT_DATA_ENDPOINT)
         .then(response=>{
             if(response.ok){
                 return response.json();
