@@ -12,7 +12,8 @@ export interface IngredientData {
     carbohydrates?: number
     calories?: number
     image_large?: string
-    __v?: number
+    __v?: number,
+    uid?: string|number
 }
 
 export interface IngredientsState {
@@ -40,5 +41,10 @@ export interface ConstructorState {
 }
 export interface ConstructorAction {
     type: string,
-    ingredient: IngredientData
+    ingredient: IngredientData,
+    uid?: string | number | undefined
+}
+
+export interface DropObj {
+    _id?: string | number | undefined
 }

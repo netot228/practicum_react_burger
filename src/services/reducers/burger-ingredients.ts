@@ -4,7 +4,8 @@ import {
     GET_INGREDIENTS_REQUEST,
     GET_INGREDIENTS_SUCCESS,
     GET_INGREDIENTS_FAILED,
-    INCREASE_INGREDIENT_ITEM
+    INCREASE_INGREDIENT_ITEM,
+    DECREASE_INGREDIENT_ITEM
 } from '../actions/burger-ingredients';
 
 
@@ -39,6 +40,23 @@ export const ingredientsReducer = (state: IngredientsState = ingredientsState, a
                 ...state,
                 ingredientsRequest: false,
                 ingredientsFailed: true
+            }
+        }
+        case DECREASE_INGREDIENT_ITEM: {
+            return {
+                ...state,
+                ingredients: [...state.ingredients].map(ingredient =>
+                    ingredient._id === action.ingredient._id
+                        ? { ...ingredient,
+                            qnt: ingredient.qnt && action.ingredient.type !== 'bun'
+                                    ?
+                                    ingredient.qnt-1 >= 0 ?
+                                    ingredient.qnt-1
+                                    : 0
+                                    : 0
+                            }
+                        : ingredient
+                )
             }
         }
         case INCREASE_INGREDIENT_ITEM: {

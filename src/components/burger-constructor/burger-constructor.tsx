@@ -8,26 +8,30 @@ import OrderDetails from '../order-details/order-details';
 
 import style from './burger-constructor.module.css';
 
-import {IngredientData} from '../../utils/types';
+import {IngredientData, DropObj} from '../../utils/types';
 
 import { useDrop } from "react-dnd";
 
 import {useAppDispatch, useAppSelector} from '../../hooks/useAppSelector';
 
-interface DropObj {
-    _id?: string | number | undefined
-}
+import {INCREASE_INGREDIENT_ITEM, DECREASE_INGREDIENT_ITEM} from '../../services/actions/burger-ingredients';
+import { ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT } from '../../services/actions/burger-constructor'
+
 
 interface BurgerConstructorProps {
-    ingredients: IngredientData[],
+    ingredients?: IngredientData[],
     currentBun?: IngredientData,
-    dropHandler: (item:DropObj)=> void
+    dropHandler?: (item:DropObj)=> void
 }
 
 interface BunProps {
     type?: "bottom" | "top" | undefined,
-    bun?: IngredientData | null,
-    dropHandler: (item:DropObj)=> void
+    bun?: IngredientData | null
+}
+
+interface ToppingProps {
+    topping: IngredientData | null,
+    removeTopping?: (uid:string | number | undefined)=>void
 }
 
 const Bun: React.FC<BunProps> = (props: BunProps) => {
@@ -42,36 +46,16 @@ const Bun: React.FC<BunProps> = (props: BunProps) => {
         image: ''
     };
 
-    // const { name = 'Выберите булочку',
-    //         price = 0,
-    //         image = ''
-    //         } = props.bun;
-
-
-
     const type = props.bun === undefined ? undefined : props.type;
-    const dropHandler = props.dropHandler;
-    const [{isHover}, dropTarget] = useDrop({
-        accept: "bun",
-        drop(item:DropObj) {
-            dropHandler(item);
-        },
-        collect: monitor => ({
-            isHover: monitor.isOver(),
-        })
-    });
-
     const extraClass = `${style.bun}
                         ${props.type === 'top'
                             ? style.topbun
                             : style.btmbun
                         }
                         ${props.bun === null && style.undefinedBun}
-                        ${isHover && style.canAccepted}
                         `;
-
     return (
-        <div ref={dropTarget}>
+        <div>
             <ConstructorElement
                 text={name}
                 price={price}
@@ -84,35 +68,103 @@ const Bun: React.FC<BunProps> = (props: BunProps) => {
     )
 }
 
+const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
+
+    const {
+        name,
+        price,
+        image,
+        uid
+    } = props.topping ? props.topping : {
+        name: 'Выберите начинку',
+        price: 0,
+        image: '',
+        uid: ''
+    };
+
+    const removeTopping = props.removeTopping || null;
+
+    const deleteTopping = ()=>{
+        removeTopping && removeTopping(uid)
+    }
+
+    return (
+        <li className={`${style.item} ${!props.topping && style.undefinedBun}`}>
+            <DragIcon className={style.drug_btn} type="primary" />
+            <ConstructorElement
+                text={name}
+                price={price}
+                thumbnail={image}
+                extraClass={style.bun}
+                handleClose={deleteTopping}
+            />
+        </li>
+    )
+}
+
 function BurgerConstructor(props:BurgerConstructorProps){
 
-    const {topping, bun} = useAppSelector(state=>state.burger);
-
-    console.log('ingredients')
-    console.dir(topping);
+    const {ingredients}     = useAppSelector(state=>state.ingredients);
+    const {topping, bun}    = useAppSelector(state=>state.burger);
 
     const dispatch = useAppDispatch();
 
-    const {dropHandler} = props;
+    const decreaseItem = (item:IngredientData|undefined)=>{
+        dispatch({
+            type: DECREASE_INGREDIENT_ITEM,
+            ingredient: item
+        })
+    }
+
+    const removeTopping = (uid: string | number | undefined)=>{
+        const removedItem = topping.find(el=>el.uid===uid)
+        dispatch({
+            type: REMOVE_INGREDIENT,
+            uid
+        })
+        decreaseItem(removedItem)
+    }
+
+    const dropHandler = (item:DropObj)=>{
+
+        const ingredient = ingredients.find(el=>el._id===item._id);
+        const uid = `${ingredient?._id}__${Math.floor(Math.random()*1000)}`;
+
+        if(ingredient?.type === 'bun' && bun && bun!==ingredient){
+            // console.log('decrease bun');
+            console.dir(bun);
+            // debugger;
+
+            // dispatch({
+            //     type: DECREASE_INGREDIENT_ITEM,
+            //     ingredient: bun
+            // })
+            decreaseItem(bun)
+        }
+
+        dispatch({
+            type: ingredient?.type === 'bun' ? ADD_BUN : ADD_INGREDIENT,
+            ingredient: ingredient,
+            uid: uid
+
+        })
+        dispatch({
+            type: INCREASE_INGREDIENT_ITEM,
+            ingredient: ingredient
+        })
+
+    }
 
     const ingredientsList = topping.length > 0
                             ?
-                            topping.map((el)=>{
-
+                            topping.map((el, i)=>{
 
                                 if(el.type !== 'bun') {
-                                    return  <li key={el._id} className={style.item}>
-                                                <DragIcon className={style.drug_btn} type="primary" />
-                                                <ConstructorElement
-                                                    text={el.name}
-                                                    price={el.price}
-                                                    thumbnail={el.image}
-                                                    extraClass={style.bun}
-                                                />
-                                            </li>
-
+                                    console.dir(el);
+                                    return  <Topping key={`${el._id}_${i}`} removeTopping={removeTopping} topping={el}/>
                                 }
                                 return false;
+
                             })
                             : [];
 
@@ -131,10 +183,8 @@ function BurgerConstructor(props:BurgerConstructorProps){
     }
 
     const bunProps:BunProps = {
-        bun: bun,
-        dropHandler: dropHandler
+        bun: bun
     }
-
 
     const [{isHover}, dropTarget] = useDrop({
         accept: "ingredient",
@@ -146,7 +196,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
         })
     });
 
-    const containerExtraClass = `${style.container} ${topping.length<5 && style.hFree }`;
+    const containerExtraClass = `${style.container} ${topping.length<=5 && style.hFree }`;
 
     return(
 
@@ -160,18 +210,19 @@ function BurgerConstructor(props:BurgerConstructorProps){
                     ?   ingredientsList
 
                     :
-                        <li className={style.item}>
-                            <DragIcon className={`${style.drug_btn} ${style.undefinedBun}`} type="primary" />
-                            <ConstructorElement
-                                text='Выберите начинку'
-                                price={0}
-                                thumbnail=''
-                                type={undefined}
-                                extraClass={`${style.undefinedBun} ${style.bun}`}
-                            />
-                        </li>
-                    }
-                {}
+                        <Topping topping={null}/>
+                        // <li className={style.item}>
+                        //     <DragIcon className={`${style.drug_btn} ${style.undefinedBun}`} type="primary" />
+                        //     <ConstructorElement
+                        //         text='Выберите начинку'
+                        //         price={0}
+                        //         thumbnail=''
+                        //         type={undefined}
+                        //         extraClass={`${style.undefinedBun} ${style.bun}`}
+                        //     />
+                        // </li>
+                }
+
             </ul>
 
             <Bun {...bunProps} type="bottom" />
@@ -200,59 +251,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
                         }
                 </>
             }
-
-
-            {}
-            {/* {props.ingredients.length>0 &&
-                <>
-                    {currentBun !== undefined &&
-                        <ConstructorElement
-                            text={currentBun.name}
-                            price={currentBun.price}
-                            thumbnail={currentBun.image}
-                            type="top"
-                            isLocked={true}
-                            extraClass={`${style.bun} ${style.topbun}`}
-                        />
-                    }
-                    <ul className={style.container}>
-                        {ingredientsList}
-                    </ul>
-                    {currentBun !== undefined &&
-                        <ConstructorElement
-                            key={2}
-                            text={currentBun.name}
-                            price={currentBun.price}
-                            thumbnail={currentBun.image}
-                            type="bottom"
-                            isLocked={true}
-                            extraClass={`${style.bun} ${style.btmbun}`}
-                        />
-                    }
-
-                    <div className={style.confirm_order}>
-                        <span className={`${style.confirm_order_total} text_type_digits-medium`}>{total}</span>
-                        <CurrencyIcon className={style.confirm_order_icon} type="primary" />
-                        <Button extraClass={style.confirm_order_btn}
-                                htmlType="button"
-                                type="primary"
-                                size="large"
-                                onClick={confirmOrder}
-                                >
-                                Оформить заказ
-                        </Button>
-                    </div>
-
-                    {isModalOpen &&
-
-                        <Modal onClose={confirmOrder} >
-                            <OrderDetails />
-                        </Modal>
-
-                        }
-                </>
-            } */}
-
 
         </section>
     )

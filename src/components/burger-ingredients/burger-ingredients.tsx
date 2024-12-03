@@ -43,16 +43,12 @@ const Ingredient = (props:IngredientProps) => {
     }
 
     const [, dragRef] = useDrag({
-        // type: type === 'bun' ? 'bun' : 'ingredient',
         type: 'ingredient',
-        item: {_id},
-        // collect: monitor => ({
-        //     isDrag: monitor.isDragging()
-        // })
+        item: {_id}
     }, []);
 
     return(
-        <li  key={props.data._id} className={style.ingredient_list_item}>
+        <li className={style.ingredient_list_item}>
             <figure ref={dragRef} className={style.ingredient} onClick={showIngredient}>
                 <img src={props.data.image} alt={props.data.name} />
                 <p className={`${style.ingredient_price} text_type_digits-default`}>

@@ -5,6 +5,7 @@ export const GET_INGREDIENTS_SUCCESS   = 'GET_INGREDIENTS_SUCCESS';
 export const GET_INGREDIENTS_FAILED    = 'GET_INGREDIENTS_FAILED';
 
 export const INCREASE_INGREDIENT_ITEM  = 'INCREASE_INGREDIENT_ITEM';
+export const DECREASE_INGREDIENT_ITEM  = 'DECREASE_INGREDIENT_ITEM';
 
 export const DATA_END_POINT_URL = 'https://norma.nomoreparties.space/api/ingredients';
 
