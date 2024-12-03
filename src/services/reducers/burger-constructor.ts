@@ -6,13 +6,13 @@ import {ConstructorState, ConstructorAction} from '../../utils/types';
 //     GET_INGREDIENTS_FAILED
 // } from '../actions/burger-ingredients';
 
-import {ADD_INGREDIENT} from '../actions/burger-constructor';
+import {ADD_INGREDIENT, ADD_BUN} from '../actions/burger-constructor';
 
 
 
 const constructorState: ConstructorState = {
     topping: [],
-    bun: {}
+    bun: null
 }
 
 
@@ -21,8 +21,13 @@ export const constructorReducer = (state: ConstructorState = constructorState, a
         case ADD_INGREDIENT: {
             return {
                 ...state,
-                // topping: [...state.topping, action.ingredient]
                 topping: [...state.topping, action.ingredient]
+            }
+        }
+        case ADD_BUN: {
+            return {
+                ...state,
+                bun: action.ingredient
             }
         }
     //     case GET_INGREDIENTS_SUCCESS: {

@@ -23,7 +23,8 @@ export interface IngredientsState {
 
 export interface IngredientsAction {
     type: string,
-    ingredients: IngredientData[]
+    ingredients: IngredientData[],
+    ingredient: IngredientData
 }
 
 export interface ModalProps {
@@ -35,7 +36,7 @@ export interface ModalProps {
 
 export interface ConstructorState {
     topping: IngredientData[] | [],
-    bun: IngredientData | {}
+    bun: IngredientData | null
 }
 export interface ConstructorAction {
     type: string,

@@ -26,7 +26,7 @@ interface BurgerConstructorProps {
 
 interface BunProps {
     type?: "bottom" | "top" | undefined,
-    bun?: IngredientData,
+    bun?: IngredientData | null,
     dropHandler: (item:DropObj)=> void
 }
 
@@ -36,11 +36,18 @@ const Bun: React.FC<BunProps> = (props: BunProps) => {
         name,
         price,
         image
-    } = props.bun || {
+    } = props.bun ? props.bun : {
         name: 'Выберите булочку',
         price: 0,
         image: ''
     };
+
+    // const { name = 'Выберите булочку',
+    //         price = 0,
+    //         image = ''
+    //         } = props.bun;
+
+
 
     const type = props.bun === undefined ? undefined : props.type;
     const dropHandler = props.dropHandler;
@@ -59,7 +66,7 @@ const Bun: React.FC<BunProps> = (props: BunProps) => {
                             ? style.topbun
                             : style.btmbun
                         }
-                        ${props.bun === undefined && style.undefinedBun}
+                        ${props.bun === null && style.undefinedBun}
                         ${isHover && style.canAccepted}
                         `;
 
@@ -79,21 +86,21 @@ const Bun: React.FC<BunProps> = (props: BunProps) => {
 
 function BurgerConstructor(props:BurgerConstructorProps){
 
-    const {topping} = useAppSelector(state=>state.burger);
+    const {topping, bun} = useAppSelector(state=>state.burger);
 
     console.log('ingredients')
     console.dir(topping);
 
     const dispatch = useAppDispatch();
 
-    const {currentBun, dropHandler} = props;
+    const {dropHandler} = props;
 
-    const ingredientsList = topping.length > 0 
-                            ? 
+    const ingredientsList = topping.length > 0
+                            ?
                             topping.map((el)=>{
-                                
-                                
-                                // if(el.type !== 'bun') {
+
+
+                                if(el.type !== 'bun') {
                                     return  <li key={el._id} className={style.item}>
                                                 <DragIcon className={style.drug_btn} type="primary" />
                                                 <ConstructorElement
@@ -104,13 +111,15 @@ function BurgerConstructor(props:BurgerConstructorProps){
                                                 />
                                             </li>
 
-                                // }
-                                // return false;
+                                }
+                                return false;
                             })
                             : [];
 
-    // const total = props.ingredients.length> 0 ? props.ingredients.reduce((total, el)=>total+el.price, 0) : 0;
-    // const total = ingredients.length> 0 ? ingredients.reduce((total, el)=>total+el.price, 0) : 0;
+    const total = topping.length > 0 && bun
+                                    ? (topping as IngredientData[]).reduce((total, el)=>total+el.price, 0)
+                                        + bun.price
+                                    : 0;
 
     const {isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = ()=>{
@@ -122,31 +131,30 @@ function BurgerConstructor(props:BurgerConstructorProps){
     }
 
     const bunProps:BunProps = {
-        bun: currentBun,
+        bun: bun,
         dropHandler: dropHandler
     }
 
-    
-    
+
     const [{isHover}, dropTarget] = useDrop({
         accept: "ingredient",
         drop(item:DropObj) {
-            
             dropHandler(item);
-            
         },
         collect: monitor => ({
             isHover: monitor.isOver(),
         })
     });
 
+    const containerExtraClass = `${style.container} ${topping.length<5 && style.hFree }`;
+
     return(
 
-        <section className={style.wrapper}>
+        <section ref={dropTarget} className={`${style.wrapper}  ${isHover && style.canAccepted } `}>
 
             <Bun {...bunProps} type="top" />
 
-            <ul ref={dropTarget} className={`${style.container} ${props.ingredients.length<5 && style.hFree } `}>
+            <ul className={containerExtraClass}>
                 {topping.length>0
 
                     ?   ingredientsList
@@ -168,10 +176,10 @@ function BurgerConstructor(props:BurgerConstructorProps){
 
             <Bun {...bunProps} type="bottom" />
 
-            {topping.length>0 && currentBun &&
+            {topping.length>0 && bun &&
                 <>
                     <div className={style.confirm_order}>
-                        <span className={`${style.confirm_order_total} text_type_digits-medium`}>{/*total*/}</span>
+                        <span className={`${style.confirm_order_total} text_type_digits-medium`}>{total}</span>
                         <CurrencyIcon className={style.confirm_order_icon} type="primary" />
                         <Button extraClass={style.confirm_order_btn}
                                 htmlType="button"

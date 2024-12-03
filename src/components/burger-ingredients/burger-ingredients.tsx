@@ -43,7 +43,8 @@ const Ingredient = (props:IngredientProps) => {
     }
 
     const [, dragRef] = useDrag({
-        type: type === 'bun' ? 'bun' : 'ingredient',
+        // type: type === 'bun' ? 'bun' : 'ingredient',
+        type: 'ingredient',
         item: {_id},
         // collect: monitor => ({
         //     isDrag: monitor.isDragging()

@@ -12,9 +12,9 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RootState } from '../../utils/store';
 
-import {getIngredients} from '../../services/actions/burger-ingredients';
+import {getIngredients, INCREASE_INGREDIENT_ITEM} from '../../services/actions/burger-ingredients';
 
-import { ADD_INGREDIENT } from '../../services/actions/burger-constructor'
+import { ADD_INGREDIENT, ADD_BUN } from '../../services/actions/burger-constructor'
 
 import {useAppDispatch, useAppSelector} from '../../hooks/useAppSelector';
 
@@ -41,20 +41,26 @@ function App(){
     interface DropObj {
         _id?: string | number | undefined
     }
-     
+
 
     const dropHandler = (item:DropObj)=>{
         // логика обновления стора
         // console.dir('dropped');
         // console.dir(item._id);
-        
+
         // const {_id} = item;
         const ingredient = ingredients.find(el=>el._id===item._id);
-        
+
         dispatch({
-            type: ADD_INGREDIENT,
+            type: ingredient?.type === 'bun' ? ADD_BUN : ADD_INGREDIENT,
             ingredient: ingredient
         })
+        dispatch({
+            type: INCREASE_INGREDIENT_ITEM,
+            ingredient: ingredient
+        })
+
+
     }
 
     return (
