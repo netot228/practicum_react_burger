@@ -1,5 +1,5 @@
 import {ConstructorState, ConstructorAction} from '../../utils/types';
-import {ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT} from '../actions/burger-constructor';
+import {ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT, SORT_TOPPING} from '../actions/burger-constructor';
 
 const constructorState: ConstructorState = {
     topping: [],
@@ -24,6 +24,14 @@ export const constructorReducer = (state: ConstructorState = constructorState, a
             return {
                 ...state,
                 topping: [...state.topping].filter(el=>el.uid!==action.uid)
+            }
+        }
+        case SORT_TOPPING: {
+            // const zlo = state.topping[action.index];
+            // const
+            return {
+                ...state,
+                // topping: zlo
             }
         }
         default: {

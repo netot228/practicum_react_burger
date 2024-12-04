@@ -1,5 +1,3 @@
-import {DropObj} from '../../utils/types';
-
 import { useEffect } from 'react';
 import style from './app.module.css'
 
@@ -17,7 +15,7 @@ function App(){
 
     const dispatch = useAppDispatch();
     const {ingredients} = useAppSelector( (state) => state.ingredients);
-    
+
     useEffect(()=>{
 
         if(!ingredients.length) {

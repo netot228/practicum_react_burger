@@ -45,6 +45,7 @@
 }
 
 .item {
+    position: relative;
     scroll-snap-align: start;
     display: inline-flex;
     flex-flow: row;
@@ -80,7 +81,7 @@
 
 .undefinedBun {
 
-    opacity: 0.5;
+    opacity: 0.5 !important;
 
     & img {
         opacity: 0;

@@ -5,6 +5,8 @@ export const SEND_ORDER_REQUEST = 'SEND_ORDER_REQUEST';
 export const SEND_ORDER_SUCCESS = 'SEND_ORDER_SUCCESS';
 export const SEND_ORDER_FAILED  = 'SEND_ORDER_FAILED';
 
+export const CLEAR_ORDER_DETAILS  = 'CLEAR_ORDER_DETAILS';
+
 export function sendOrder(order:(string | number)[]){
     return function(dispatch:AppDispatch){
         dispatch({
@@ -25,6 +27,7 @@ export function sendOrder(order:(string | number)[]){
             }
         })
         .then(json=>{
+            console.dir('SEND_ORDER_SUCCESS');
             console.dir(json);
             dispatch({
                 type: SEND_ORDER_SUCCESS,

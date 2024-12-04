@@ -42,11 +42,15 @@ export interface ConstructorState {
 export interface ConstructorAction {
     type: string,
     ingredient: IngredientData,
-    uid?: string | number | undefined
+    uid?: string | number | undefined,
+    // index: number,
+    // endPos: number
 }
 
-export interface DropObj {
-    _id?: string | number | undefined
+export interface DrugItem {
+    _id?: string | number | undefined,
+    uid?: string,
+    index?: number
 }
 
 export interface OrderData {

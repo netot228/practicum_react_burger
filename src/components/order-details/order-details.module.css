@@ -3,6 +3,7 @@
     flex-flow: column;
     width: 100%;
     align-items: center;
+    text-align: center;
 }
 .order_id {
     width: 100%;

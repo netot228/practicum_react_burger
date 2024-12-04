@@ -1,7 +1,8 @@
 import {
     // SEND_ORDER_REQUEST,
     SEND_ORDER_SUCCESS,
-    // SEND_ORDER_FAILED
+    // SEND_ORDER_FAILED,
+    CLEAR_ORDER_DETAILS
 } from '../actions/order-details';
 
 
@@ -18,9 +19,14 @@ export const orderReducer = (state:any = orderState, action:any) => {
                 orderData: action.json
             }
         }
+        case CLEAR_ORDER_DETAILS: {
+            return {
+                ingredients: [],
+                orderData: {}
+            }
+        }
         default: {
             return state;
         }
     }
 }
-

@@ -30,7 +30,7 @@ const Ingredient = (props:IngredientProps) => {
 
     const {isModalOpen, closeModal, openModal } = useModal(false);
 
-    const {_id} = props.data;
+    const {_id, image, name, price, qnt} = props.data;
     const showIngredient = ()=>{
 
         if(isModalOpen){
@@ -48,15 +48,15 @@ const Ingredient = (props:IngredientProps) => {
     return(
         <li className={style.ingredient_list_item}>
             <figure ref={dragRef} className={style.ingredient} onClick={showIngredient}>
-                <img src={props.data.image} alt={props.data.name} />
+                <img src={image} alt={name} />
                 <p className={`${style.ingredient_price} text_type_digits-default`}>
-                    {props.data.price}
+                    {price}
                     <CurrencyIcon className={style.ingredient_icon} type="primary" />
                 </p>
                 <figcaption className={`${style.ingredient_name} text_type_main-default`}>
-                    {props.data.name}
+                    {name}
                 </figcaption>
-                {props.data.qnt &&  <Counter count={props.data.qnt} size="default" extraClass="m-1" />}
+                {qnt &&  <Counter count={qnt} size="default" extraClass="m-1" />}
 
             </figure>
 
