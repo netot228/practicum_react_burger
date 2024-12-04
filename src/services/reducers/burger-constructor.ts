@@ -27,11 +27,14 @@ export const constructorReducer = (state: ConstructorState = constructorState, a
             }
         }
         case SORT_TOPPING: {
-            // const zlo = state.topping[action.index];
-            // const
+            console.log('SORT_TOPPING');
+            
+            const newToppingOrder = state.topping.slice();
+            newToppingOrder.splice(action.moveItemToPos, 0, newToppingOrder.splice(action.moveItemFromPos, 1)[0]);
+            
             return {
                 ...state,
-                // topping: zlo
+                topping: newToppingOrder
             }
         }
         default: {

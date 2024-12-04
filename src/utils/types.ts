@@ -43,7 +43,8 @@ export interface ConstructorAction {
     type: string,
     ingredient: IngredientData,
     uid?: string | number | undefined,
-    // index: number,
+    moveItemFromPos: number,
+    moveItemToPos: number
     // endPos: number
 }
 

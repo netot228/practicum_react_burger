@@ -13,7 +13,7 @@ import { sendOrder, CLEAR_ORDER_DETAILS } from '../../services/actions/order-det
 import OrderDetails from '../order-details/order-details';
 
 import {INCREASE_INGREDIENT_ITEM, DECREASE_INGREDIENT_ITEM} from '../../services/actions/burger-ingredients';
-import { ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT } from '../../services/actions/burger-constructor'
+import { ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT, SORT_TOPPING } from '../../services/actions/burger-constructor'
 
 import style from './burger-constructor.module.css';
 
@@ -98,6 +98,8 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
     const removeTopping = props.removeTopping || null;
     const index = props.index || 0;
 
+    const dispatch = useAppDispatch();
+
     const deleteTopping = ()=>{
         removeTopping && removeTopping(uid)
     }
@@ -122,8 +124,6 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
         })
 
     }, []);
-
-
 
         const [/*{handlerId}*/, drop] = useDrop/*<DrugItem, void,{ handlerId: Identifier | null }>*/(
 
@@ -170,13 +170,15 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
                             return
                         }
 
-                        console.log('ref')
-                        console.dir(ref)
+                        выполнить сортировку по дропу
 
-                        ref.current.style.right = '200px';
+                        // dispatch({
+                        //     type: SORT_TOPPING,
+                        //     moveItemToPos: hoverIndex,
+                        //     moveItemFromPos: dragIndex
+                        // })
 
-
-                        // console.dir(monitor.getClientOffset())
+                        
                     }
                 }
             )
@@ -236,19 +238,6 @@ const ToppingBlock:  React.FC<ToppingBlockProps> = (props: ToppingBlockProps) =>
 
     const containerExtraClass = `${style.container} ${topping.length<=5 && style.hFree }`;
 
-    // const [{isHover}, drop] = useDrop({
-    //     accept: 'topping',
-    //     drop(item:DrugItem) {
-    //         debugger;
-    //     },
-    //     collect: monitor => ({
-    //         isHover: monitor.isOver(),
-    //     }),
-    //     hover(item: DrugItem, monitor) {
-    //         // console.dir(ref.current)
-    //     }
-    // });
-
     return(
         <ul className={containerExtraClass}>
             {topping.length > 0 ? ingredientsList : <Topping topping={null}/>}
@@ -270,14 +259,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
             ingredient: item
         })
     }
-    // const removeTopping = (uid: string | number | undefined)=>{
-    //     const removedItem = topping.find(el=>el.uid===uid)
-    //     dispatch({
-    //         type: REMOVE_INGREDIENT,
-    //         uid
-    //     })
-    //     decreaseItem(removedItem)
-    // }
 
     const dropHandler = (item:DrugItem)=>{
 
@@ -300,24 +281,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
         })
 
     }
-
-    // const ingredientsList = useMemo(
-    //     ()=> {
-    //         const toppingCollect = topping.length > 0
-    //             ?
-    //             topping.map((el, i)=>{
-
-    //                 if(el.type !== 'bun') {
-
-    //                     return  <Topping key={`${el._id}_${i}`} removeTopping={removeTopping} topping={el}/>
-    //                 }
-    //                 return false;
-
-    //             })
-    //             : [];
-    //         return toppingCollect;
-    //     }, [topping]
-    // );
 
     const total = useMemo(()=>{
         return topping.length > 0 && bun
@@ -356,18 +319,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
         })
     });
 
-    // const [, drop] = useDrop({
-    //     accept: 'ingredient',
-    //     drop(item:DrugItem) {
-    //         dropHandler(item);
-    //     },
-    //     collect: monitor => ({
-    //         isHover: monitor.isOver(),
-    //     })
-    // });
-
-
-
     return(
 
         <section ref={dropTarget} className={`${style.wrapper}  ${isHover && style.canAccepted } `}>
@@ -375,10 +326,6 @@ function BurgerConstructor(props:BurgerConstructorProps){
             <Bun bun={bun} type="top" />
 
             <ToppingBlock decreaseItem={decreaseItem} topping={topping}/>
-
-            {/* <ul className={containerExtraClass}>
-                {topping.length > 0 ? ingredientsList : <Topping topping={null}/>}
-            </ul> */}
 
             <Bun bun={bun} type="bottom" />
 
