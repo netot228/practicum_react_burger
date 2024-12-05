@@ -1,5 +1,5 @@
 import {IngredientData, DrugItem} from '../../utils/types';
-import update from 'immutability-helper'
+
 
 import {useMemo, useRef, useState, useCallback} from 'react';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -98,9 +98,7 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
     };
 
     const removeTopping = props.removeTopping || null;
-    // const moveTopping = props.moveTopping;
     const index = props.index || 0;
-
     const dispatch = useAppDispatch();
 
     const deleteTopping = ()=>{
@@ -234,17 +232,6 @@ const ToppingBlock:  React.FC<ToppingBlockProps> = (props: ToppingBlockProps) =>
         }, [topping]
     );
 
-    // const [toppingList, setToppingList] = useState(ingredientsList);
-
-    // const moveTopping = useCallback((dragIndex: number, hoverIndex: number) => {
-    //     setToppingList(()=>{
-    //         const newToppingOrder = toppingList.slice();
-    //         newToppingOrder.splice(hoverIndex, 0, newToppingOrder.splice(dragIndex, 1)[0]);
-    //         return newToppingOrder;
-    //     })
-    // }, [])
-
-
     const containerExtraClass = `${style.container} ${topping.length<=5 && style.hFree }`;
 
     return(
@@ -254,11 +241,11 @@ const ToppingBlock:  React.FC<ToppingBlockProps> = (props: ToppingBlockProps) =>
     )
 }
 
-function BurgerConstructor(props:BurgerConstructorProps){
+function BurgerConstructor(){
 
     const {ingredients}     = useAppSelector(state=>state.ingredients);
     const {topping, bun}    = useAppSelector(state=>state.burger);
-
+    const {success: orderCreated, notice: orderNotice} = useAppSelector(state=>state.order);
 
     const dispatch = useAppDispatch();
 
@@ -353,7 +340,7 @@ function BurgerConstructor(props:BurgerConstructorProps){
                         </Button>
                     </div>
 
-                    {isModalOpen &&
+                    {isModalOpen && (orderCreated || orderNotice) && 
 
                         <Modal onClose={confirmOrder} >
                             <OrderDetails />

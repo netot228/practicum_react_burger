@@ -63,8 +63,9 @@ export interface OrderData {
 
 export interface OrderState {
     ingredients: string[],
-    orderData: OrderData | null | {},
-    notice: string | null
+    orderData: OrderData | null,
+    notice: string | null,
+    success: boolean
 }
 export interface OrderAction {
     type: string,

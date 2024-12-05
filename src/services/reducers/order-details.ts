@@ -10,8 +10,9 @@ import {
 
 const orderState:OrderState  = {
     ingredients: [],
-    orderData: null,
-    notice: ''
+    orderData: {name:'', order:{number:0},success:false},
+    notice: '',
+    success: false
 }
 
 export const orderReducer = (state:OrderState = orderState, action:OrderAction) => {
@@ -25,22 +26,25 @@ export const orderReducer = (state:OrderState = orderState, action:OrderAction) 
         case SEND_ORDER_SUCCESS: {
             return {
                 ...state,
-                orderData: action.json
+                orderData: action.json,
+                success: true
             }
         }
         case SEND_ORDER_FAILED: {
             return {
                 ingredients: [],
-                orderData: {},
-                notice: action.notice
+                orderData:  {name:'', order:{number:0},success:false},
+                notice: action.notice,
+                success: false
             }
         }
         case CLEAR_ORDER_DETAILS: {
             return {
                 ingredients: [],
-                orderData: {},
+                orderData: {name:'', order:{number:0},success:false},
                 notice: '',
-                error: ''
+                error: '',
+                success: false
             }
         }
         default: {
