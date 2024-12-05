@@ -1,10 +1,8 @@
 import {IngredientData, DrugItem} from '../../utils/types';
 
-
-import {useMemo, useRef, useState, useCallback} from 'react';
-import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import {useMemo, useRef} from 'react';
 import { useDrop, useDrag } from "react-dnd";
-import type { Identifier } from 'dnd-core'
+import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import Modal from '../modal/modal';
 import {useModal} from'../../hooks/useModal';
@@ -18,36 +16,19 @@ import { ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT, SORT_TOPPING } from '../../
 
 import style from './burger-constructor.module.css';
 
-interface BurgerConstructorProps {
-    ingredients?: IngredientData[],
-    currentBun?: IngredientData,
-    dropHandler?: (item:DrugItem)=> void
-}
-
 interface BunProps {
     type?: "bottom" | "top" | undefined,
     bun?: IngredientData | null
 }
-
 interface ToppingProps {
     topping: IngredientData | null,
     index?: number,
     removeTopping?: (uid:string | number | undefined)=>void
-    // moveTopping: (dragIndex: number, hoverIndex: number)=>void
 }
-
 interface ToppingBlockProps {
     topping: IngredientData[] | [],
     decreaseItem: (item:IngredientData|undefined)=>void
 }
-
-interface DragTopping {
-    index: number
-    uid: string
-    // type: string
-}
-
-
 
 const Bun: React.FC<BunProps> = (props: BunProps) => {
 
@@ -105,40 +86,28 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
         removeTopping && removeTopping(uid)
     }
 
-    /*
-        // логика сортировки:
-        создаем реф, который присваиваем элементам списка
-        данный реф выступает в качестве таскаемого элемента и элемента принимающего таскаемый
-    */
     const ref = useRef<HTMLLIElement>(null);
 
     const [{ isDragging }, drag] = useDrag({
         type: 'topping',
-
-        // в информацию об объекте положим кроме uid еще его индекс в массиве
-        // это необходимо для перестройки набора топингов и отслеживания его позиции
-
         item: { uid, index },
         collect: (monitor: any) => ({
-            // нужно для отслеживания события, чтобы "подсветить" перетаскиваемый элемент
             isDragging: monitor.isDragging(),
         })
 
     }, []);
 
-    const [, drop] = useDrop<DrugItem, void, { handlerId: Identifier | null }>(
+    const [, drop] = useDrop(
         {
             accept: 'topping',
-            // в useDrop в качестве Item - хранится таскаемый объект
             hover(item:DrugItem, monitor) {
 
-                // ref - место назначения, то есть текущий, принимающий объект
                 if (!ref.current) {
                     return
                 }
 
                 const dragIndex = item.index;
-                const hoverIndex = index; // индекс текущего, принимающего объекта
+                const hoverIndex = index;
 
                 if (dragIndex === hoverIndex) {
                     return
@@ -147,20 +116,14 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
                 const hoverItemBox = ref.current?.getBoundingClientRect();
                 const hoverMiddleY = (hoverItemBox.bottom - hoverItemBox.top)/2;
 
-                // получить координаты мыши
-                // в обычном режиме это данные приходят от события
-                // move (e)=>MouseEvent.clientX/MouseEvent.clientY
-
                 const clientOffset = monitor.getClientOffset(); //{x:number,y:number}
                 const hoverY = (clientOffset as any).y - hoverItemBox.top
 
                 if (dragIndex && dragIndex < hoverIndex && hoverY < hoverMiddleY) {
-                    // если таскаемый объект выше и мышка выше середины таргета
                     return
                 }
 
                 if (dragIndex && dragIndex > hoverIndex && hoverY > hoverMiddleY) {
-                    // если таскаемый объект ниже и мышка ниже середины таргета
                     return
                 }
 
@@ -175,7 +138,6 @@ const Topping: React.FC<ToppingProps> = (props: ToppingProps) => {
             }
         }, []
     )
-
 
     drag(drop(ref))
 

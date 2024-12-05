@@ -1,5 +1,3 @@
-import {IngredientData} from '../../utils/types';
-
 import {useAppSelector} from '../../hooks/useAppSelector';
 
 import style from './ingredient-details.module.css';
@@ -23,7 +21,7 @@ const ContentItem = (props:conentItemPops) => {
 
 function IngredientDetails(){
 
-    const {ingredient}     = useAppSelector(state=>state.detail);
+    const {ingredient} = useAppSelector(state=>state.detail);
 
     return (
         <figure className={style.ingredient} >

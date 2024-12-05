@@ -16,7 +16,7 @@ export function sendOrder(order:(string | number)[]){
         fetch(SEND_ORDER_ENDPOINT, {
             method: 'POST',
             headers: {
-                'Content-Type': 'a1pplication/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({ingredients:order})
         })

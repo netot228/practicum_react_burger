@@ -1,4 +1,3 @@
-// import {OrderData} from '../../utils/types';
 import style from './order-details.module.css';
 import {useAppSelector} from '../../hooks/useAppSelector';
 
@@ -6,7 +5,6 @@ import {CheckMarkIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 
 function OrderDetails(){
 
-    // const orderData = useAppSelector(state=>state.order);
     const {notice, orderData, success} = useAppSelector(state=>state.order);
 
     return (
@@ -45,8 +43,6 @@ function OrderDetails(){
                 </>
                     
             }
-
-
 
         </div>
     )

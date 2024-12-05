@@ -126,6 +126,10 @@
     }
     .container {
         height: calc(60px*3 + 2*16px);
+        &.hFree {
+            height: calc(60px*3 + 2*16px);
+            padding-right: 24px;
+        }
     }
     .bun {
         min-height: auto;
