@@ -1,5 +1,7 @@
 import {IngredientData} from '../../utils/types';
 
+import {useAppSelector} from '../../hooks/useAppSelector';
+
 import style from './ingredient-details.module.css';
 
 interface conentItemPops {
@@ -19,21 +21,23 @@ const ContentItem = (props:conentItemPops) => {
     )
 }
 
-function IngredientDetails(props:IngredientData){
+function IngredientDetails(){
+
+    const {ingredient}     = useAppSelector(state=>state.detail);
 
     return (
         <figure className={style.ingredient} >
-            <img src={props.image_large ? props.image_large : props.image } alt={props.name}  className={style.image}/>
+            <img src={ingredient?.image_large ? ingredient?.image_large : ingredient?.image } alt={ingredient?.name}  className={style.image}/>
 
             <figcaption className={`${style.caption} text_type_main-medium`}>
-                {props.name}
+                {ingredient?.name}
             </figcaption>
 
             <div className={style.content}>
-                <ContentItem title={`Калории,ккал`} value={props.calories || 0} />
-                <ContentItem title={`Белки,г`} value={props.proteins || 0} />
-                <ContentItem title={`Жиры,г`} value={props.fat || 0} />
-                <ContentItem title={`Углеводы,г`} value={props.carbohydrates || 0} />
+                <ContentItem title={`Калории,ккал`} value={ingredient?.calories || 0} />
+                <ContentItem title={`Белки,г`} value={ingredient?.proteins || 0} />
+                <ContentItem title={`Жиры,г`} value={ingredient?.fat || 0} />
+                <ContentItem title={`Углеводы,г`} value={ingredient?.carbohydrates || 0} />
             </div>
 
         </figure>

@@ -14,7 +14,8 @@ const ingredientsState: IngredientsState = {
 
     ingredients: [],
     ingredientsRequest: false,
-    ingredientsFailed: false
+    ingredientsFailed: false,
+    selectedIngredient: null
 
 }
 

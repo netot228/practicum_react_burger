@@ -19,7 +19,8 @@ export interface IngredientData {
 export interface IngredientsState {
     ingredients: IngredientData[],
     ingredientsRequest: true | false,
-    ingredientsFailed: true | false
+    ingredientsFailed: true | false,
+    selectedIngredient: IngredientData | null
 }
 
 export interface IngredientsAction {
@@ -58,4 +59,24 @@ export interface OrderData {
     name: string
     order: {number:number}
     success: boolean
+}
+
+export interface OrderState {
+    ingredients: string[],
+    orderData: OrderData | null | {},
+    notice: string | null
+}
+export interface OrderAction {
+    type: string,
+    notice?: string,
+    json?: OrderData,
+    order?: string[]
+}
+
+export interface SelectedIngredientState {
+    ingredient: IngredientData | null
+}
+export interface SelectedIngredientAction {
+    type: string
+    ingredient?: IngredientData
 }

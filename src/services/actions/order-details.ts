@@ -10,12 +10,13 @@ export const CLEAR_ORDER_DETAILS  = 'CLEAR_ORDER_DETAILS';
 export function sendOrder(order:(string | number)[]){
     return function(dispatch:AppDispatch){
         dispatch({
-            type: SEND_ORDER_REQUEST
+            type: SEND_ORDER_REQUEST,
+            order
         })
         fetch(SEND_ORDER_ENDPOINT, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'a1pplication/json;charset=utf-8'
             },
             body: JSON.stringify({ingredients:order})
         })
@@ -27,8 +28,6 @@ export function sendOrder(order:(string | number)[]){
             }
         })
         .then(json=>{
-            console.dir('SEND_ORDER_SUCCESS');
-            console.dir(json);
             dispatch({
                 type: SEND_ORDER_SUCCESS,
                 json
@@ -39,7 +38,9 @@ export function sendOrder(order:(string | number)[]){
             console.log('Что-то пошло не так')
             console.error(error);
             dispatch({
-                type: SEND_ORDER_FAILED
+                type: SEND_ORDER_FAILED,
+                notice: 'Что-то пошло не так, ваш заказ не был создан',
+                error
             });
         })
     }
