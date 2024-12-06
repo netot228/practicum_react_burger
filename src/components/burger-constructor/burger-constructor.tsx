@@ -1,105 +1,159 @@
-import {useState} from 'react';
-import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { IngredientData, DragItem } from "../../utils/types";
 
-import Modal from '../modal/modal';
-import {useModal} from'../../hooks/useModal';
+import { useMemo } from "react";
+import { useDrop } from "react-dnd";
+import {
+    Button,
+    CurrencyIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 
-import OrderDetails from '../order-details/order-details';
+import Modal from "../modal/modal";
+import { useModal } from "../../hooks/useModal";
+import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
-import style from './burger-constructor.module.css';
-import {IngredientData} from '../../utils/types';
+import {
+    sendOrder,
+    CLEAR_ORDER_DETAILS,
+} from "../../services/actions/order-details";
+import OrderDetails from "../order-details/order-details";
 
-interface BurgerConstructorProps {
-    ingredients: IngredientData[]
-}
+import {
+    INCREASE_INGREDIENT_ITEM,
+    DECREASE_INGREDIENT_ITEM,
+} from "../../services/actions/burger-ingredients";
+import {
+    ADD_INGREDIENT,
+    ADD_BUN,
+} from "../../services/actions/burger-constructor";
 
-function BurgerConstructor(props:BurgerConstructorProps){
+import style from "./burger-constructor.module.css";
 
-    const currentBun: IngredientData | undefined = props.ingredients.find(el=>el.type==='bun');
+import { v4 as uuid } from "uuid";
+import Bun from "./bun/bun";
 
-    const ingredientsList = props.ingredients.map(el=>{
-        if(el.type !== 'bun') {
-            return  <li key={el._id} className={style.item}>
-                        <DragIcon className={style.drug_btn} type="primary" />
-                        <ConstructorElement
-                            text={el.name}
-                            price={el.price}
-                            thumbnail={el.image}
-                            extraClass={style.bun}
-                        />
-                    </li>
+import ToppingBlock from "./topping-block/topping-block";
 
+function BurgerConstructor() {
+    const ingredients = useAppSelector(
+        (state) => state.ingredients.ingredients
+    );
+    const topping = useAppSelector((state) => state.burger.topping);
+    const bun = useAppSelector((state) => state.burger.bun);
+
+    const { success: orderCreated, notice: orderNotice } = useAppSelector(
+        (state) => state.order
+    );
+
+    const dispatch = useAppDispatch();
+
+    const decreaseItem = (item: IngredientData | undefined) => {
+        dispatch({
+            type: DECREASE_INGREDIENT_ITEM,
+            ingredient: item,
+        });
+    };
+
+    const dropHandler = (item: DragItem) => {
+        const ingredient = ingredients.find((el) => el._id === item._id);
+        // const uid = `${ingredient?._id}__${Math.floor(Math.random()*10000)}`;
+        const uid = uuid();
+
+        if (ingredient?.type === "bun" && bun && bun !== ingredient) {
+            decreaseItem(bun);
         }
-        return false;
-    })
 
-    const total = props.ingredients.reduce((total, el)=>total+el.price, 0);
+        dispatch({
+            type: ingredient?.type === "bun" ? ADD_BUN : ADD_INGREDIENT,
+            ingredient: ingredient,
+            uid,
+        });
 
-    const {isModalOpen, closeModal, openModal } = useModal(false);
-    const confirmOrder = ()=>{
-        if(isModalOpen){
+        dispatch({
+            type: INCREASE_INGREDIENT_ITEM,
+            ingredient: ingredient,
+        });
+    };
+
+    const total = useMemo(() => {
+        return topping.length > 0 && bun
+            ? (topping as IngredientData[]).reduce(
+                  (total, el) => total + el.price,
+                  0
+              ) +
+                  bun.price * 2
+            : 0;
+    }, [topping, bun]);
+
+    const { isModalOpen, closeModal, openModal } = useModal(false);
+    const confirmOrder = () => {
+        if (isModalOpen) {
             closeModal();
+            dispatch({ type: CLEAR_ORDER_DETAILS });
         } else {
+            let sendOrderData = topping.map((el) => el._id);
+
+            if (bun) {
+                sendOrderData.push(bun._id);
+            }
+
+            dispatch(sendOrder(sendOrderData));
             openModal();
         }
-    }
+    };
 
-    return(
+    const [{ isHover }, dropTarget] = useDrop({
+        accept: "ingredient",
+        drop(item: DragItem) {
+            dropHandler(item);
+        },
+        collect: (monitor) => ({
+            isHover: monitor.isOver(),
+        }),
+    });
 
-        <section className={style.wrapper}>
-            {props.ingredients.length>0 &&
+    return (
+        <section
+            ref={dropTarget}
+            className={`${style.wrapper}  ${isHover && style.canAccepted} `}
+        >
+            <Bun bun={bun} type="top" />
+
+            <ToppingBlock decreaseItem={decreaseItem} topping={topping} />
+
+            <Bun bun={bun} type="bottom" />
+
+            {topping.length > 0 && bun && (
                 <>
-                    {currentBun !== undefined &&
-                        <ConstructorElement
-                            text={currentBun.name}
-                            price={currentBun.price}
-                            thumbnail={currentBun.image}
-                            type="top"
-                            isLocked={true}
-                            extraClass={`${style.bun} ${style.topbun}`}
-                        />
-                    }
-                    <ul className={style.container}>
-                        {ingredientsList}
-                    </ul>
-                    {currentBun !== undefined &&
-                        <ConstructorElement
-                            key={2}
-                            text={currentBun.name}
-                            price={currentBun.price}
-                            thumbnail={currentBun.image}
-                            type="bottom"
-                            isLocked={true}
-                            extraClass={`${style.bun} ${style.btmbun}`}
-                        />
-                    }
-
                     <div className={style.confirm_order}>
-                        <span className={`${style.confirm_order_total} text_type_digits-medium`}>{total}</span>
-                        <CurrencyIcon className={style.confirm_order_icon} type="primary" />
-                        <Button extraClass={style.confirm_order_btn}
-                                htmlType="button"
-                                type="primary"
-                                size="large"
-                                onClick={confirmOrder}
-                                >
-                                Оформить заказ
+                        <span
+                            className={`${style.confirm_order_total} text_type_digits-medium`}
+                        >
+                            {total}
+                        </span>
+                        <CurrencyIcon
+                            className={style.confirm_order_icon}
+                            type="primary"
+                        />
+                        <Button
+                            extraClass={style.confirm_order_btn}
+                            htmlType="button"
+                            type="primary"
+                            size="large"
+                            onClick={confirmOrder}
+                        >
+                            Оформить заказ
                         </Button>
                     </div>
 
-                    {isModalOpen &&
-
-                        <Modal onClose={confirmOrder} >
+                    {isModalOpen && (orderCreated || orderNotice) && (
+                        <Modal onClose={confirmOrder}>
                             <OrderDetails />
                         </Modal>
-
-                        }
+                    )}
                 </>
-            }
-
-
+            )}
         </section>
-    )
+    );
 }
 
 export default BurgerConstructor;

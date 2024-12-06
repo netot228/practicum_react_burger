@@ -111,6 +111,10 @@
     right: 0;
 }
 
+.ingredient_list_item {
+    list-style-type: none;
+}
+
 @media screen and (max-height: 800px) {
     .title {
         margin: 40rem 0 20rem;
