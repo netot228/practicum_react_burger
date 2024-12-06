@@ -27,15 +27,15 @@ export const constructorReducer = (state: ConstructorState = constructorState, a
             }
         }
         case SORT_TOPPING: {
-            console.log('SORT_TOPPING');
-            
-            const newToppingOrder = state.topping.slice();
-            newToppingOrder.splice(action.moveItemToPos, 0, newToppingOrder.splice(action.moveItemFromPos, 1)[0]);
-            
+
+            const newToppingOrder = [...state.topping];
+            newToppingOrder[action.moveItemToPos] = newToppingOrder.splice(action.moveItemFromPos,1, newToppingOrder[action.moveItemToPos])[0]
+
             return {
                 ...state,
                 topping: newToppingOrder
             }
+
         }
         default: {
             return state;

@@ -49,7 +49,7 @@ export interface ConstructorAction {
     // endPos: number
 }
 
-export interface DrugItem {
+export interface DragItem {
     _id?: string | number | undefined,
     uid?: string,
     index?: number
