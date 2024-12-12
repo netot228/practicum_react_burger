@@ -11,6 +11,10 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import SignIn from "../../pages/sign-in";
+
 function App() {
     const dispatch = useAppDispatch();
     const ingredients = useAppSelector(
@@ -24,15 +28,27 @@ function App() {
     }, [dispatch, ingredients]);
 
     return (
-        <div className={style.app}>
-            <AppHeader />
-            <main className={style.mainarea}>
-                <DndProvider backend={HTML5Backend}>
-                    <BurgerIngredients ingredients={ingredients} />
-                    <BurgerConstructor />
-                </DndProvider>
-            </main>
-        </div>
+        <BrowserRouter>
+            <div className={style.app}>
+                <AppHeader />
+                <main className={style.mainarea}>
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <DndProvider backend={HTML5Backend}>
+                                    <BurgerIngredients
+                                        ingredients={ingredients}
+                                    />
+                                    <BurgerConstructor />
+                                </DndProvider>
+                            }
+                        />
+                        <Route path="/login" element={<SignIn />} />
+                    </Routes>
+                </main>
+            </div>
+        </BrowserRouter>
     );
 }
 
