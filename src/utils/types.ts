@@ -1,4 +1,3 @@
-
 export interface IngredientData {
     _id: string|number
     type: string
@@ -40,6 +39,7 @@ export interface ConstructorState {
     topping: IngredientData[] | [],
     bun: IngredientData | null
 }
+
 export interface ConstructorAction {
     type: string,
     ingredient: IngredientData,
@@ -77,7 +77,27 @@ export interface OrderAction {
 export interface SelectedIngredientState {
     ingredient: IngredientData | null
 }
+
 export interface SelectedIngredientAction {
     type: string
     ingredient?: IngredientData
+}
+
+
+// auth types
+
+export interface UserData {
+    email: string,
+    password?: string,
+    name?: string
+}
+export interface UserState {
+    success?: boolean,
+    accessToken?: string | undefined,
+    refreshToken?: string | undefined,
+    user?: UserData
+}
+export interface UserAction {
+    type: string,
+    payload: UserState
 }

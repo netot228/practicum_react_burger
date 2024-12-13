@@ -11,11 +11,18 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
-import SignIn from "../../pages/sign-in";
+import {
+    SignIn,
+    RegistrationForm,
+    ForgotPass,
+    ResetPassword,
+} from "../../pages";
 
 function App() {
+    const isUserDetected = useAppSelector((state) => state.auth.success);
+
     const dispatch = useAppDispatch();
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
@@ -33,6 +40,19 @@ function App() {
                 <AppHeader />
                 <main className={style.mainarea}>
                     <Routes>
+                        <Route path="/login" element={<SignIn />} />
+                        <Route
+                            path="/register"
+                            element={<RegistrationForm />}
+                        />
+                        <Route
+                            path="/forgot-password"
+                            element={<ForgotPass />}
+                        />
+                        <Route
+                            path="/reset-password"
+                            element={<ResetPassword />}
+                        />
                         <Route
                             path="/"
                             element={
@@ -44,7 +64,6 @@ function App() {
                                 </DndProvider>
                             }
                         />
-                        <Route path="/login" element={<SignIn />} />
                     </Routes>
                 </main>
             </div>
