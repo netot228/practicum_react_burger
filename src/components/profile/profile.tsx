@@ -1,36 +1,54 @@
+import s from "../../pages/pages.module.css";
+
 import {
     PasswordInput,
     EmailInput,
+    Input,
     Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import s from "./pages.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { getUserData } from "../services/actions/auth";
+import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
-function SignIn() {
-    const dispatch = useAppDispatch();
+function Profile() {
+    const z = useAppSelector((state) => state.auth.user);
 
-    const [form, setValue] = useState({ email: "", password: "" });
+    console.dir(z);
+
+    const [userData, setUserData] = useState({
+        email: "",
+        password: "",
+        name: "",
+    });
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...form, [e.target.name]: e.target.value });
+        setUserData({ ...userData, [e.target.name]: e.target.value });
     };
 
-    const signInHolder = () => {
-        dispatch(getUserData(form));
+    // fix UI bug for pointEvents
+    const pointEventHandler = (e: React.PointerEvent<HTMLInputElement>) => {
+        console.dir(e);
     };
 
     return (
         <div className={s.wrapper}>
-            <form className={s.form}>
+            <section className={s.form}>
                 <h1 className={`text_type_main-medium ${s.title}`}>Вход</h1>
+                <Input
+                    type={"text"}
+                    placeholder={"Имя"}
+                    onChange={onChangeHolder}
+                    value={userData.name}
+                    name={"name"}
+                    extraClass={s.input}
+                    onPointerEnterCapture={pointEventHandler}
+                    onPointerLeaveCapture={pointEventHandler}
+                />
                 <EmailInput
                     onChange={onChangeHolder}
-                    value={form.email}
+                    value={userData.email}
                     name={"email"}
                     placeholder="Логин"
                     isIcon={false}
@@ -38,13 +56,12 @@ function SignIn() {
                 />
                 <PasswordInput
                     onChange={onChangeHolder}
-                    value={form.password}
+                    value={userData.password}
                     name={"password"}
                     extraClass={s.input}
-                    autoComplete={"true"}
                 />
 
-                <Button
+                {/* <Button
                     extraClass={s.btn}
                     htmlType="button"
                     type="primary"
@@ -52,9 +69,9 @@ function SignIn() {
                     onClick={signInHolder}
                 >
                     Войти
-                </Button>
+                </Button> */}
 
-                <div className={s.option}>
+                {/* <div className={s.option}>
                     <span>Вы — новый пользователь?</span>
                     <Link to="/register" className={s.link}>
                         Зарегистрироваться
@@ -66,10 +83,10 @@ function SignIn() {
                     <Link to="/forgot-password" className={s.link}>
                         Восстановить пароль
                     </Link>
-                </div>
-            </form>
+                </div> */}
+            </section>
         </div>
     );
 }
 
-export default SignIn;
+export default Profile;

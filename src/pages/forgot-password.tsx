@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { resetPasswordRequest } from "..//services/actions/auth";
+import { sendMailToResetPassword } from "../services/actions/auth";
 
 function ForgotPass() {
     const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ function ForgotPass() {
     };
 
     const ForgotPassHolder = () => {
-        dispatch(resetPasswordRequest(email));
+        dispatch(sendMailToResetPassword(email));
     };
 
     return (

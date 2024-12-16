@@ -32,7 +32,7 @@ export function getIngredients() {
 
         })
         .catch(error=>{
-            console.log('Что-то пошло не так')
+            console.log('Данные с ингредиентами не поступили')
             console.error(error);
             dispatch({
                 type: GET_INGREDIENTS_FAILED

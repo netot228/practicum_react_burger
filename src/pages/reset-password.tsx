@@ -8,14 +8,21 @@ import s from "./pages.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAppDispatch } from "../hooks/useAppSelector";
+import { resetPassword } from "../services/actions/auth";
+
 function ResetPassword() {
-    const [form, setValue] = useState({ code: "", password: "" });
+    const dispatch = useAppDispatch();
+
+    const [form, setValue] = useState({ token: "", password: "" });
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
-    const ResetPasswordHolder = () => {};
+    const ResetPasswordHolder = () => {
+        dispatch(resetPassword(form));
+    };
 
     // fix UI bug for pointEvents
     const pointEventHandler = (e: React.PointerEvent<HTMLInputElement>) => {
@@ -35,10 +42,10 @@ function ResetPassword() {
                 />
                 <Input
                     type={"text"}
-                    placeholder={""}
+                    placeholder={"Код для восстановления пароля"}
                     onChange={onChangeHolder}
-                    value={form.code}
-                    name={"name"}
+                    value={form.token}
+                    name={"token"}
                     extraClass={s.input}
                     onPointerEnterCapture={pointEventHandler}
                     onPointerLeaveCapture={pointEventHandler}

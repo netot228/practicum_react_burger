@@ -18,7 +18,7 @@ function RegistrationForm() {
     const dispatch = useAppDispatch();
 
     const [form, setValue] = useState({ name: "", email: "", password: "" });
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue({ ...form, [e.target.name]: e.target.value });

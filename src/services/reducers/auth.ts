@@ -3,7 +3,8 @@ import {
     REGISTER_USER_REQUEST,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAILED,
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    RESET_PASSWORD_SUCCESS
 } from '../actions/auth';
 
 import { UserData, UserState, UserAction } from '../../utils/types';

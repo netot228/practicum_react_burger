@@ -87,17 +87,23 @@ export interface SelectedIngredientAction {
 // auth types
 
 export interface UserData {
-    email: string,
-    password?: string,
-    name?: string
+    email: string | undefined,
+    password?: string | undefined,
+    name?: string | undefined
 }
 export interface UserState {
     success?: boolean,
     accessToken?: string | undefined,
     refreshToken?: string | undefined,
-    user?: UserData
+    user?: UserData,
+    resetPassword?: boolean
 }
 export interface UserAction {
     type: string,
     payload: UserState
+}
+
+export interface ResetPassData {
+    token: string
+    password: string
 }

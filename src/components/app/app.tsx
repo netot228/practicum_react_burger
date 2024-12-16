@@ -20,6 +20,8 @@ import {
     ResetPassword,
 } from "../../pages";
 
+import Profile from "../profile/profile";
+
 function App() {
     const isUserDetected = useAppSelector((state) => state.auth.success);
 
@@ -53,6 +55,7 @@ function App() {
                             path="/reset-password"
                             element={<ResetPassword />}
                         />
+                        <Route path="/profile" element={<Profile />} />
                         <Route
                             path="/"
                             element={

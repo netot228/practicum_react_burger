@@ -1,0 +1,9 @@
+@import url(../../pages/pages.module.css);
+
+.wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
