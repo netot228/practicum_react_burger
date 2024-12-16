@@ -21,9 +21,10 @@ import {
 } from "../../pages";
 
 import Profile from "../profile/profile";
+import ProtectedRouteElement from '../protected-route-element/protected-route-element'
 
 function App() {
-    const isUserDetected = useAppSelector((state) => state.auth.success);
+    // const isUserDetected = useAppSelector((state) => state.auth.success);
 
     const dispatch = useAppDispatch();
     const ingredients = useAppSelector(
@@ -55,7 +56,10 @@ function App() {
                             path="/reset-password"
                             element={<ResetPassword />}
                         />
-                        <Route path="/profile" element={<Profile />} />
+                        
+                        <Route path="/profile" element={<ProtectedRouteElement element={<Profile />}/>} />
+                        {/* <Route path="/profile" element={<Profile />} /> */}
+                        {/* <Route path="/profile" element={<ProtectedRouteElement element={<Profile />}/>} */}
                         <Route
                             path="/"
                             element={
