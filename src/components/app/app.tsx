@@ -41,10 +41,16 @@ function App() {
 
     useEffect(() => {
         if (!isUserDetected && localStorage.accessToken) {
-            dispatch(getAuthUser(localStorage.accessToken)).then((response) => {
-                console.dir(response);
-                console.error(response);
+            // dispatch(getAuthUser(localStorage.accessToken)).then((response) => {
+            //     console.dir(response);
+            //     console.error(response);
+            // });
+
+            dispatch(getAuthUser(localStorage.accessToken)).then((res) => {
+                console.log("dispatch then");
+                console.dir(res);
             });
+
             // data.then(res=>{
 
             // })
