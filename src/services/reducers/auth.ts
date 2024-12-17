@@ -4,7 +4,8 @@ import {
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAILED,
     RESET_PASSWORD,
-    RESET_PASSWORD_SUCCESS
+    RESET_PASSWORD_SUCCESS,
+    LOGIN_USER
 } from '../actions/auth';
 
 import { UserData, UserState, UserAction } from '../../utils/types';
@@ -23,11 +24,11 @@ const initState = {
 
 export const authReducer = (state:UserState = initState, action:UserAction) => {
     switch (action.type){
-        case REGISTER_USER_REQUEST: {
-            return {
-                ...state
-            }
-        }
+        // case REGISTER_USER_REQUEST: {
+        //     return {
+        //         ...state
+        //     }
+        // }
         case REGISTER_USER_SUCCESS: {
             return {
                 ...state,
@@ -40,6 +41,13 @@ export const authReducer = (state:UserState = initState, action:UserAction) => {
                 resetPassword: true
             }
         }
+        case LOGIN_USER: {
+            return {
+                ...state,
+                ...action.payload
+            }
+        }
+
         default: {
             return state;
         }

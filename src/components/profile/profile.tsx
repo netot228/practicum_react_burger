@@ -17,14 +17,10 @@ function Profile() {
 
     console.dir(z);
 
-    const [userData, setUserData] = useState({
-        email: "",
-        password: "",
-        name: "",
-    });
+    const userData = useAppSelector((state) => state.auth.user);
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserData({ ...userData, [e.target.name]: e.target.value });
+        // setUserData({ ...userData, [e.target.name]: e.target.value });
     };
 
     // fix UI bug for pointEvents
@@ -34,31 +30,33 @@ function Profile() {
 
     return (
         <div className={s.wrapper}>
+            <nav className={s.navigation}></nav>
             <section className={s.form}>
-                <h1 className={`text_type_main-medium ${s.title}`}>Вход</h1>
                 <Input
                     type={"text"}
                     placeholder={"Имя"}
                     onChange={onChangeHolder}
-                    value={userData.name}
+                    value={userData?.name ? userData.name : ""}
                     name={"name"}
                     extraClass={s.input}
                     onPointerEnterCapture={pointEventHandler}
                     onPointerLeaveCapture={pointEventHandler}
+                    icon={"EditIcon"}
                 />
                 <EmailInput
                     onChange={onChangeHolder}
-                    value={userData.email}
+                    value={userData?.email ? userData.email : ""}
                     name={"email"}
                     placeholder="Логин"
-                    isIcon={false}
+                    isIcon={true}
                     extraClass={s.input}
                 />
                 <PasswordInput
                     onChange={onChangeHolder}
-                    value={userData.password}
+                    value={""}
                     name={"password"}
                     extraClass={s.input}
+                    icon={"EditIcon"}
                 />
 
                 {/* <Button

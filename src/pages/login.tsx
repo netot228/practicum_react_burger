@@ -5,14 +5,18 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import s from "./pages.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { getUserData } from "../services/actions/auth";
+import { authUser } from "../services/actions/auth";
+import { useNavigate } from "react-router-dom";
 
-function SignIn() {
+function Login() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const successAuth = useAppSelector((state) => state.auth.success);
 
     const [form, setValue] = useState({ email: "", password: "" });
 
@@ -20,9 +24,15 @@ function SignIn() {
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
-    const signInHolder = () => {
-        dispatch(getUserData(form));
+    const signInForm = () => {
+        dispatch(authUser(form));
     };
+
+    useEffect(() => {
+        if (successAuth) {
+            navigate("/");
+        }
+    });
 
     return (
         <div className={s.wrapper}>
@@ -49,7 +59,7 @@ function SignIn() {
                     htmlType="button"
                     type="primary"
                     size="large"
-                    onClick={signInHolder}
+                    onClick={signInForm}
                 >
                     Войти
                 </Button>
@@ -72,4 +82,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default Login;

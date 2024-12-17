@@ -6,8 +6,7 @@ import HeaderButton from "./app-header-button/app-header-button";
 import { useAppSelector } from "../../hooks/useAppSelector";
 
 function AppHeader() {
-
-    const user = useAppSelector(state=>state.auth.user);
+    const name = useAppSelector((state) => state.auth.user?.name);
 
     return (
         <header className={style.header}>
@@ -29,7 +28,7 @@ function AppHeader() {
 
                 <div>
                     <HeaderButton
-                        text="Личный кабинет"
+                        text={name ? name : `Личный кабинет`}
                         icon="profile"
                         type="secondary"
                         path="/profile"

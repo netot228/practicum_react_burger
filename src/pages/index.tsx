@@ -1,6 +1,6 @@
-import SignIn from "./sign-in";
+import Login from "./login";
 import RegistrationForm from "./register";
 import ForgotPass from "./forgot-password";
 import ResetPassword from "./reset-password";
 
-export { SignIn, RegistrationForm, ForgotPass, ResetPassword };
+export { Login, RegistrationForm, ForgotPass, ResetPassword };

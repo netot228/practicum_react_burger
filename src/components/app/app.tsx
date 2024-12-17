@@ -14,19 +14,21 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 import {
-    SignIn,
+    Login,
     RegistrationForm,
     ForgotPass,
     ResetPassword,
 } from "../../pages";
 
 import Profile from "../profile/profile";
-import ProtectedRouteElement from '../protected-route-element/protected-route-element'
+import ProtectedRouteElement from "../protected-route-element/protected-route-element";
+
+import { getAuthUser } from "../../services/actions/auth";
 
 function App() {
-    // const isUserDetected = useAppSelector((state) => state.auth.success);
-
     const dispatch = useAppDispatch();
+
+    const isUserDetected = useAppSelector((state) => state.auth.success);
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
     );
@@ -37,13 +39,25 @@ function App() {
         }
     }, [dispatch, ingredients]);
 
+    useEffect(() => {
+        if (!isUserDetected && localStorage.accessToken) {
+            dispatch(getAuthUser(localStorage.accessToken)).then((response) => {
+                console.dir(response);
+                console.error(response);
+            });
+            // data.then(res=>{
+
+            // })
+        }
+    }, [dispatch, isUserDetected]);
+
     return (
         <BrowserRouter>
             <div className={style.app}>
                 <AppHeader />
                 <main className={style.mainarea}>
                     <Routes>
-                        <Route path="/login" element={<SignIn />} />
+                        <Route path="/login" element={<Login />} />
                         <Route
                             path="/register"
                             element={<RegistrationForm />}
@@ -56,8 +70,13 @@ function App() {
                             path="/reset-password"
                             element={<ResetPassword />}
                         />
-                        
-                        <Route path="/profile" element={<ProtectedRouteElement element={<Profile />}/>} />
+
+                        <Route
+                            path="/profile"
+                            element={
+                                <ProtectedRouteElement element={<Profile />} />
+                            }
+                        />
                         {/* <Route path="/profile" element={<Profile />} /> */}
                         {/* <Route path="/profile" element={<ProtectedRouteElement element={<Profile />}/>} */}
                         <Route
