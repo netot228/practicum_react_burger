@@ -31,7 +31,7 @@ function Profile() {
     return (
         <div className={s.wrapper}>
             <nav className={s.navigation}>
-                <Link></Link>
+                {/* <Link></Link> */}
             </nav>
             <section className={s.form}>
                 <Input

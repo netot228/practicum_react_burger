@@ -9,7 +9,6 @@ import {
     AUTH_RESET_PASSWORD_ENDPOINT,
     GET_AUTH_USER
 } from '../../utils/api-endpoints';
-import { error } from 'console';
 
 export const REGISTER_USER              = 'REGISTER_USER';
 export const REGISTER_USER_REQUEST      = 'REGISTER_USER_REQUEST';
@@ -18,7 +17,6 @@ export const REGISTER_USER_FAILED       = 'REGISTER_USER_FAILED';
 
 export const LOGIN_USER     = 'LOGIN_USER';
 export const LOGOUT_USER    = 'LOGOUT_USER';
-
 
 export const RESET_PASSWORD = 'RESET_PASSWORD'
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
@@ -125,8 +123,13 @@ export const resetPassword = (data:ResetPassData) => (dispatch:AppDispatch) => {
 
 }
 
-export const authUser = (data:UserData) => (dispatch: AppDispatch) => {
-    fetch(AUTH_LOGIN_ENDPOINT,{
+export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
+    
+    dispatch({
+        type: REGISTER_USER_REQUEST
+    });
+    
+    return await fetch(AUTH_LOGIN_ENDPOINT,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -138,12 +141,13 @@ export const authUser = (data:UserData) => (dispatch: AppDispatch) => {
             return response.json();
         } else {
             throw new Error(`Error: ${response.status}`);
+            // throw new Error(`${response.status}`);
         }
     })
     .then(json=>{
         console.dir(json);
         if(!json.success){
-            throw new Error(`Error: ${json.message}`);
+            throw new Error(json.message);
         } else {
 
             localStorage.setItem('refreshToken', json.refreshToken);
@@ -164,6 +168,8 @@ export const authUser = (data:UserData) => (dispatch: AppDispatch) => {
         dispatch({
             type: REGISTER_USER_FAILED
         });
+        
+        return error
     })
 }
 

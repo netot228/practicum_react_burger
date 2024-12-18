@@ -20,19 +20,32 @@ const initState = {
     },
 
     resetPassword: false,
+
+    registerFailed: false,
+    requestRegister: false
 }
 
 export const authReducer = (state:UserState = initState, action:UserAction) => {
     switch (action.type){
-        // case REGISTER_USER_REQUEST: {
-        //     return {
-        //         ...state
-        //     }
-        // }
+        case REGISTER_USER_REQUEST: {
+            return {
+                ...state,
+                requestRegister: true
+            }
+        }
+        case REGISTER_USER_FAILED: {
+            return {
+                ...state,
+                registerFailed: true,
+                requestRegister: false
+
+            }
+        }
         case REGISTER_USER_SUCCESS: {
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
+                requestRegister: false
             }
         }
         case RESET_PASSWORD: {
@@ -44,7 +57,8 @@ export const authReducer = (state:UserState = initState, action:UserAction) => {
         case LOGIN_USER: {
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
+                requestRegister: false
             }
         }
 

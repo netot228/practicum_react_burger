@@ -26,7 +26,12 @@ import ProtectedRouteElement from "../protected-route-element/protected-route-el
 import { getAuthUser } from "../../services/actions/auth";
 
 function App() {
+    
+    console.log('reload App');
+    
+    
     const dispatch = useAppDispatch();
+
 
     const isUserDetected = useAppSelector((state) => state.auth.success);
     const ingredients = useAppSelector(
@@ -46,10 +51,10 @@ function App() {
             //     console.error(response);
             // });
 
-            dispatch(getAuthUser(localStorage.accessToken)).then((res) => {
-                console.log("dispatch then");
-                console.dir(res);
-            });
+            // dispatch(getAuthUser(localStorage.accessToken)).then((res) => {
+            //     console.log("dispatch then");
+            //     console.dir(res);
+            // });
 
             // data.then(res=>{
 

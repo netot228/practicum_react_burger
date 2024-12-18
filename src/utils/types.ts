@@ -96,7 +96,11 @@ export interface UserState {
     accessToken?: string | undefined,
     refreshToken?: string | undefined,
     user?: UserData,
-    resetPassword?: boolean
+    resetPassword?: boolean,
+
+    registerFailed?: boolean,
+    requestRegister?: boolean,
+    accessTokenDie?: number
 }
 export interface UserAction {
     type: string,

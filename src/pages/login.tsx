@@ -5,27 +5,39 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import s from "./pages.module.css";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
 import { authUser } from "../services/actions/auth";
 import { useNavigate } from "react-router-dom";
 
+import Loader from "../ui/loader";
+
 function Login() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const successAuth = useAppSelector((state) => state.auth.success);
+    const requestRegister = useAppSelector(state=> state.auth.requestRegister)
 
+    console.log('reload Login');
+    
     const [form, setValue] = useState({ email: "", password: "" });
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
-    const signInForm = () => {
-        dispatch(authUser(form));
+    const [errorAuth, setErrorAuth] = useState('');
+
+    const signInForm = (e: SyntheticEvent) => {
+        e.preventDefault();
+        dispatch(authUser(form))
+        .then(response=>{response?.message && 
+            setErrorAuth(response.message)
+        })
+        
     };
 
     useEffect(() => {
@@ -54,14 +66,22 @@ function Login() {
                     autoComplete={"true"}
                 />
 
+                {errorAuth && (
+                    <p className={s.notice}>
+                        {errorAuth}
+                    </p>
+                )}
+
                 <Button
                     extraClass={s.btn}
-                    htmlType="button"
+                    htmlType="submit"
                     type="primary"
                     size="large"
                     onClick={signInForm}
                 >
-                    Войти
+                    {
+                        requestRegister ? <Loader /> : `Войти`
+                    }
                 </Button>
 
                 <div className={s.option}>
