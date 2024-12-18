@@ -48,3 +48,31 @@
 	font-weight: normal;
     color: var(--colors-interface-error);
 }
+
+.profile {
+    position: relative;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    padding-top: 120px;
+    width: 100%;
+}
+.navigation {
+    display: inline-flex;
+    flex-flow: column;
+    align-items: start;
+    width: 320px;
+    margin-right: 60px;
+}
+.link {
+    display: inline-flex;
+    font: 700 24px/30px 'Jet Brains Mono', sans-serif;
+    color: var(--text-inactive-color);
+    margin-bottom: 20px;
+}
+.activelink {
+    display: inline-flex;
+    font: 700 24px/30px 'Jet Brains Mono', sans-serif;
+    color: var(--text-primary-color);
+    margin-bottom: 20px;
+}

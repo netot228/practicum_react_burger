@@ -9,6 +9,7 @@ import {
     AUTH_RESET_PASSWORD_ENDPOINT,
     GET_AUTH_USER
 } from '../../utils/api-endpoints';
+import { stringify } from 'querystring';
 
 export const REGISTER_USER              = 'REGISTER_USER';
 export const REGISTER_USER_REQUEST      = 'REGISTER_USER_REQUEST';
@@ -17,6 +18,8 @@ export const REGISTER_USER_FAILED       = 'REGISTER_USER_FAILED';
 
 export const LOGIN_USER     = 'LOGIN_USER';
 export const LOGOUT_USER    = 'LOGOUT_USER';
+
+export const RESET_TOKEN = 'RESET_TOKEN';
 
 export const RESET_PASSWORD = 'RESET_PASSWORD'
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
@@ -124,11 +127,11 @@ export const resetPassword = (data:ResetPassData) => (dispatch:AppDispatch) => {
 }
 
 export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
-    
+
     dispatch({
         type: REGISTER_USER_REQUEST
     });
-    
+
     return await fetch(AUTH_LOGIN_ENDPOINT,{
         method: 'POST',
         headers: {
@@ -151,7 +154,7 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
         } else {
 
             localStorage.setItem('refreshToken', json.refreshToken);
-            localStorage.setItem('accessToken', json.accessToken);
+            localStorage.setItem('accessToken', json.accessToken.replace(/^Bearer\s+/, ''));
 
             localStorage.userData = JSON.stringify(json);
 
@@ -168,7 +171,7 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
         dispatch({
             type: REGISTER_USER_FAILED
         });
-        
+
         return error
     })
 }
@@ -182,16 +185,53 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
 //     })
 // }
 
-export const getAuthUser = (token: string) => async (dispatch: AppDispatch) => {
-    return await fetch(GET_AUTH_USER, {
+// export const getAuthUser = (token: string) => async (dispatch: AppDispatch) => {
+//     return await fetch(GET_AUTH_USER, {
+//         headers: {
+//             'Authorization': `${token}`
+//         }
+//     })
+//     .then(response=>{
+//         console.log('response');
+//         console.dir(response)
+
+//         if(response.ok || response.status===401){
+//             return response.json();
+//         } else {
+//             throw new Error(`Error: ${response.status}`);
+//         }
+//     })
+//     .then(json=>{
+//         console.dir(json);
+//         dispatch({
+//             type: REGISTER_USER_SUCCESS,
+//             payload: json
+//         });
+//     })
+//     .catch(error=>{
+//         console.log('Авторизация не пройдена')
+//         console.error(error);
+//         return error
+//         // dispatch({
+//         //     type: REGISTER_USER_FAILED
+//         // });
+//     })
+// }
+
+export const resetToken = (token: string) => async (dispatch:AppDispatch) => {
+
+    console.log('reset token');
+    console.dir(token);
+
+
+    return await fetch(AUTH_TOKEN_ENDPOINT,{
+        method: 'POST',
         headers: {
-            'Authorization': `${token}`
-        }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"token": token})
     })
     .then(response=>{
-        console.log('response');
-        console.dir(response)
-
         if(response.ok || response.status===401){
             return response.json();
         } else {
@@ -199,18 +239,31 @@ export const getAuthUser = (token: string) => async (dispatch: AppDispatch) => {
         }
     })
     .then(json=>{
+        console.log('resetTokenThen');
+
         console.dir(json);
-        dispatch({
-            type: REGISTER_USER_SUCCESS,
-            payload: json
-        });
+        if(!json.success){
+            throw new Error(json.message);
+        } else {
+
+            localStorage.setItem('refreshToken', json.refreshToken);
+            localStorage.setItem('accessToken', json.accessToken.replace(/^Bearer\s+/, ''));
+            localStorage.setItem('tokenTimeout', (new Date().getTime()).toString())
+
+            dispatch({
+                type: RESET_TOKEN,
+                payload: json
+            });
+        }
+
     })
     .catch(error=>{
         console.log('Авторизация не пройдена')
         console.error(error);
+        dispatch({
+            type: REGISTER_USER_FAILED
+        });
+
         return error
-        // dispatch({
-        //     type: REGISTER_USER_FAILED
-        // });
     })
 }

@@ -5,20 +5,17 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "../app-header.module.css";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 type BtnPops = {
     type: "secondary" | "primary" | "error" | "success" | "disabled";
     icon?: string;
     text?: string;
     className?: string;
-    path: string
+    path: string;
 };
 
 function HeaderButton(props: BtnPops) {
-
-    const navigate = useNavigate();
-
     let Icon;
     switch (props.icon) {
         case "burger":
@@ -34,19 +31,20 @@ function HeaderButton(props: BtnPops) {
             Icon = null;
     }
 
-    const goTo = (e: React.MouseEvent<HTMLElement>)=>{
-        navigate(props.path)
-    }
-
     return (
-        <button className={style.button} onClick={goTo}>
+        <NavLink
+            className={({ isActive }) =>
+                isActive ? style.activebtn : style.button
+            }
+            to={props.path}
+        >
             {props.icon && Icon}
             <span
                 className={`text text_type_main-default ${style[props.type]}`}
             >
                 {props.text}
             </span>
-        </button>
+        </NavLink>
     );
 }
 

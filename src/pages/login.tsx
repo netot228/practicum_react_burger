@@ -19,25 +19,26 @@ function Login() {
     const navigate = useNavigate();
 
     const successAuth = useAppSelector((state) => state.auth.success);
-    const requestRegister = useAppSelector(state=> state.auth.requestRegister)
+    const requestRegister = useAppSelector(
+        (state) => state.auth.requestRegister
+    );
 
-    console.log('reload Login');
-    
+    console.log("reload Login");
+
     const [form, setValue] = useState({ email: "", password: "" });
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
-    const [errorAuth, setErrorAuth] = useState('');
+    const [errorAuth, setErrorAuth] = useState("");
 
     const signInForm = (e: SyntheticEvent) => {
         e.preventDefault();
-        dispatch(authUser(form))
-        .then(response=>{response?.message && 
-            setErrorAuth(response.message)
-        })
-        
+
+        dispatch(authUser(form)).then((response) => {
+            response?.message && setErrorAuth(response.message);
+        });
     };
 
     useEffect(() => {
@@ -66,11 +67,7 @@ function Login() {
                     autoComplete={"true"}
                 />
 
-                {errorAuth && (
-                    <p className={s.notice}>
-                        {errorAuth}
-                    </p>
-                )}
+                {errorAuth && <p className={s.notice}>{errorAuth}</p>}
 
                 <Button
                     extraClass={s.btn}
@@ -79,9 +76,7 @@ function Login() {
                     size="large"
                     onClick={signInForm}
                 >
-                    {
-                        requestRegister ? <Loader /> : `Войти`
-                    }
+                    {requestRegister ? <Loader /> : `Войти`}
                 </Button>
 
                 <div className={s.option}>

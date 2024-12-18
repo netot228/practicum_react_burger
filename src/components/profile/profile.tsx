@@ -1,4 +1,4 @@
-import s from "../../pages/pages.module.css";
+import s from "./profile.module.css";
 
 import {
     PasswordInput,
@@ -7,15 +7,15 @@ import {
     Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
-function Profile() {
-    const z = useAppSelector((state) => state.auth.user);
+import { resetToken } from "../../services/actions/auth";
 
-    console.dir(z);
+function Profile() {
+    const dispatch = useAppDispatch();
 
     const userData = useAppSelector((state) => state.auth.user);
 
@@ -28,10 +28,50 @@ function Profile() {
         console.dir(e);
     };
 
+    useEffect(() => {
+        const dateTime = new Date().getTime();
+        console.dir(dateTime);
+
+        if (
+            localStorage.refreshToken &&
+            (!localStorage.tokenTimeout ||
+                localStorage.tokenTimeout < dateTime - 60 * 60 * 15)
+        ) {
+            dispatch(resetToken(localStorage.refreshToken));
+            // dispatch(resetToken(localStorage.accessToken));
+        }
+    });
+
+    const logOut = () => {};
+
     return (
-        <div className={s.wrapper}>
+        <div className={s.profile}>
             <nav className={s.navigation}>
-                {/* <Link></Link> */}
+                <NavLink
+                    to="/profile"
+                    className={({ isActive }) =>
+                        isActive ? s.activelink : s.link
+                    }
+                >
+                    Профиль
+                </NavLink>
+                <NavLink
+                    to="/profile/orders"
+                    className={({ isActive }) =>
+                        isActive ? s.activelink : s.link
+                    }
+                >
+                    История заказов
+                </NavLink>
+                <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                        isActive ? s.activelink : s.link
+                    }
+                    onClick={logOut}
+                >
+                    Выход
+                </NavLink>
             </nav>
             <section className={s.form}>
                 <Input

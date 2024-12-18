@@ -15,7 +15,7 @@ function AppHeader() {
                     <HeaderButton
                         text="Конструктор"
                         icon="burger"
-                        type="primary"
+                        type="secondary"
                         path="/"
                     />
                     <HeaderButton

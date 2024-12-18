@@ -23,15 +23,12 @@ import {
 import Profile from "../profile/profile";
 import ProtectedRouteElement from "../protected-route-element/protected-route-element";
 
-import { getAuthUser } from "../../services/actions/auth";
+import { LOGIN_USER } from "../../services/actions/auth";
 
 function App() {
-    
-    console.log('reload App');
-    
-    
-    const dispatch = useAppDispatch();
+    console.log("reload App");
 
+    const dispatch = useAppDispatch();
 
     const isUserDetected = useAppSelector((state) => state.auth.success);
     const ingredients = useAppSelector(
@@ -45,20 +42,12 @@ function App() {
     }, [dispatch, ingredients]);
 
     useEffect(() => {
-        if (!isUserDetected && localStorage.accessToken) {
-            // dispatch(getAuthUser(localStorage.accessToken)).then((response) => {
-            //     console.dir(response);
-            //     console.error(response);
-            // });
-
-            // dispatch(getAuthUser(localStorage.accessToken)).then((res) => {
-            //     console.log("dispatch then");
-            //     console.dir(res);
-            // });
-
-            // data.then(res=>{
-
-            // })
+        if (!isUserDetected && localStorage.userData) {
+            const userData = JSON.parse(localStorage.userData);
+            dispatch({
+                type: LOGIN_USER,
+                payload: userData,
+            });
         }
     }, [dispatch, isUserDetected]);
 
@@ -88,8 +77,6 @@ function App() {
                                 <ProtectedRouteElement element={<Profile />} />
                             }
                         />
-                        {/* <Route path="/profile" element={<Profile />} /> */}
-                        {/* <Route path="/profile" element={<ProtectedRouteElement element={<Profile />}/>} */}
                         <Route
                             path="/"
                             element={
