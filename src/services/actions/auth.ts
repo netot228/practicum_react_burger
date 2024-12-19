@@ -9,7 +9,6 @@ import {
     AUTH_RESET_PASSWORD_ENDPOINT,
     GET_AUTH_USER
 } from '../../utils/api-endpoints';
-import { stringify } from 'querystring';
 
 export const REGISTER_USER              = 'REGISTER_USER';
 export const REGISTER_USER_REQUEST      = 'REGISTER_USER_REQUEST';
@@ -25,37 +24,56 @@ export const RESET_PASSWORD = 'RESET_PASSWORD'
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
 
 
-export const registerRequest = (data:UserData) => (dispatch:AppDispatch) => {
+export const registerRequest = (data:UserData) => async (dispatch:AppDispatch) => {
 
-    fetch(AUTH_REGISTER_ENDPOINT, {
+    dispatch({
+        type: REGISTER_USER_REQUEST
+    })
+
+    const response = await fetch(AUTH_REGISTER_ENDPOINT, {
         method: 'POST',
+        body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
-    })
-    .then(response=>{
-        if(response.ok){
-            return response.json();
-        } else {
-            throw new Error(`Error: ${response.status}`);
-        }
-    })
-    .then(json=>{
+    });
 
-        console.dir(json);
-        dispatch({
-            type: REGISTER_USER_SUCCESS,
-            payload: json
-        });
-    })
-    .catch(error=>{
-        console.log('При отправке данных на регистрацию произошла ошибка')
-        console.error(error);
-        dispatch({
-            type: REGISTER_USER_FAILED
-        });
-    })
+    return await response.json();
+
+    // return await fetch(AUTH_REGISTER_ENDPOINT, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json;charset=utf-8'
+    //     },
+    //     body: JSON.stringify(data)
+    // })
+    // .then(response=>{
+    //     // if(response.ok){
+    //         return response.json();
+    //     // } else {
+    //     //     throw new Error(`Error: ${response.status}`);
+    //     // }
+    // })
+    // .then(json=>{
+
+    //     console.dir(json);
+    //     if(!json.success){
+    //         throw new Error(json.message);
+    //     } else {
+    //         dispatch({
+    //             type: REGISTER_USER_SUCCESS,
+    //             payload: json
+    //         });
+    //     }
+        
+    // })
+    // .catch(error=>{
+    //     console.log('При отправке данных на регистрацию произошла ошибка')
+    //     console.error(error);
+    //     dispatch({
+    //         type: REGISTER_USER_FAILED
+    //     });
+    // })
 
 }
 
@@ -155,6 +173,7 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
 
             localStorage.setItem('refreshToken', json.refreshToken);
             localStorage.setItem('accessToken', json.accessToken.replace(/^Bearer\s+/, ''));
+            localStorage.setItem('tokenTimeout', (new Date().getTime()).toString())
 
             localStorage.userData = JSON.stringify(json);
 
@@ -176,60 +195,18 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
     })
 }
 
-
-// export const getAuthUser = async (token:string) => {
-//     return await fetch(AUTH_LOGIN_ENDPOINT, {
-//         headers: {
-//             'Authorization': `${token}`
-//         }
-//     })
-// }
-
-// export const getAuthUser = (token: string) => async (dispatch: AppDispatch) => {
-//     return await fetch(GET_AUTH_USER, {
-//         headers: {
-//             'Authorization': `${token}`
-//         }
-//     })
-//     .then(response=>{
-//         console.log('response');
-//         console.dir(response)
-
-//         if(response.ok || response.status===401){
-//             return response.json();
-//         } else {
-//             throw new Error(`Error: ${response.status}`);
-//         }
-//     })
-//     .then(json=>{
-//         console.dir(json);
-//         dispatch({
-//             type: REGISTER_USER_SUCCESS,
-//             payload: json
-//         });
-//     })
-//     .catch(error=>{
-//         console.log('Авторизация не пройдена')
-//         console.error(error);
-//         return error
-//         // dispatch({
-//         //     type: REGISTER_USER_FAILED
-//         // });
-//     })
-// }
-
 export const resetToken = (token: string) => async (dispatch:AppDispatch) => {
 
     console.log('reset token');
     console.dir(token);
-
 
     return await fetch(AUTH_TOKEN_ENDPOINT,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({"token": token})
+        body: JSON.stringify({"token": `${token}`})
+        // body: JSON.stringify({"token": "b76489e479655b5c72a72c2467415165399eec52401924b1403dc7214e49a6d3ea9d104be4b12f4b"})
     })
     .then(response=>{
         if(response.ok || response.status===401){
@@ -265,5 +242,11 @@ export const resetToken = (token: string) => async (dispatch:AppDispatch) => {
         });
 
         return error
+    })
+}
+
+export const logOut = () => async (dispatch:AppDispatch) => {
+    return await fetch(AUTH_LOGOUT_ENDPOINT, {
+
     })
 }

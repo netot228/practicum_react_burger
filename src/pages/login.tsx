@@ -26,12 +26,14 @@ function Login() {
     console.log("reload Login");
 
     const [form, setValue] = useState({ email: "", password: "" });
+    const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(errorAuth){
+            setErrorAuth("")
+        }
         setValue({ ...form, [e.target.name]: e.target.value });
     };
-
-    const [errorAuth, setErrorAuth] = useState("");
 
     const signInForm = (e: SyntheticEvent) => {
         e.preventDefault();

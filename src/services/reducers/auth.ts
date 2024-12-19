@@ -45,7 +45,9 @@ export const authReducer = (state:UserState = initState, action:UserAction) => {
             return {
                 ...state,
                 ...action.payload,
+                registerFailed: false,
                 requestRegister: false
+                
             }
         }
         case RESET_PASSWORD: {

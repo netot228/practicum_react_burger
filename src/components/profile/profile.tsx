@@ -12,7 +12,7 @@ import { NavLink } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
-import { resetToken } from "../../services/actions/auth";
+import { resetToken, logOut } from "../../services/actions/auth";
 
 function Profile() {
     const dispatch = useAppDispatch();
@@ -42,7 +42,9 @@ function Profile() {
         }
     });
 
-    const logOut = () => {};
+    const logOut = () => {
+        dispatch(logOut);
+    };
 
     return (
         <div className={s.profile}>
