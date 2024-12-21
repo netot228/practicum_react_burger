@@ -1,51 +1,103 @@
 import s from "./profile.module.css";
-
+import { UserData as userType } from "../../utils/types";
 import {
     PasswordInput,
     EmailInput,
     Input,
     Button,
+    CloseIcon,
+    CheckMarkIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
-import { resetToken, logOut } from "../../services/actions/auth";
+import {
+    refreshToken,
+    logOut,
+    getUserData,
+    updateUserData,
+    LOGIN_USER,
+} from "../../services/actions/auth";
 
 function Profile() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const userData = useAppSelector((state) => state.auth.user);
+    const accessToken = useAppSelector((state) => state.auth.accessToken);
+
+    useEffect(() => {
+        const timeOut = new Date().getTime() - 5 * 60 * 1000;
+
+        if (
+            localStorage.tokenTimeout &&
+            Number(localStorage.tokenTimeout) > timeOut
+        ) {
+            console.log("token действителен get userData");
+
+            dispatch(getUserData(localStorage.accessToken)).then((res) => {
+                if (res.success) {
+                    console.log("getUserData DONE");
+                } else {
+                    console.log("getUserData ERROR");
+                }
+                console.dir(res);
+            });
+        }
+    }, [accessToken]);
+
+    const newUserDataInitState = {
+        name: userData?.name,
+        email: userData?.email,
+        password: localStorage.cosmicSecret
+            ? atob(localStorage.cosmicSecret)
+            : "",
+    };
+    const [newUserData, setNewUserData] = useState(newUserDataInitState);
+
+    const [isEditData, setIsEditData] = useState(false);
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // setUserData({ ...userData, [e.target.name]: e.target.value });
+        if (!isEditData) {
+            setIsEditData(true);
+        }
+        setNewUserData({ ...newUserData, [e.target.name]: e.target.value });
+    };
+
+    const resetNewData = () => {
+        setNewUserData(newUserDataInitState);
+        setIsEditData(false);
+    };
+
+    const updateNewUserData = () => {
+        dispatch(updateUserData(localStorage.accessToken, newUserData)).then(
+            (res) => {
+                if (res.success) {
+                    console.log("updateUserData DONE");
+                    setIsEditData(false);
+                    setNewUserData(newUserDataInitState);
+                } else {
+                    console.log("updateUserData ERROR");
+                }
+                console.dir(res);
+            }
+        );
+    };
+
+    const logOutHandler = () => {
+        dispatch(logOut(localStorage.refreshToken)).then((res) => {
+            console.log("logOut dispatch then");
+            console.dir(res);
+        });
     };
 
     // fix UI bug for pointEvents
     const pointEventHandler = (e: React.PointerEvent<HTMLInputElement>) => {
         console.dir(e);
     };
-
-    useEffect(() => {
-        const dateTime = new Date().getTime();
-        console.dir(dateTime);
-
-        if (
-            localStorage.refreshToken &&
-            (!localStorage.tokenTimeout ||
-                localStorage.tokenTimeout < dateTime - 60 * 60 * 15)
-        ) {
-            dispatch(resetToken(localStorage.refreshToken));
-            // dispatch(resetToken(localStorage.accessToken));
-        }
-    });
-
-    const logOut = () => {
-        dispatch(logOut);
-    };
-
     return (
         <div className={s.profile}>
             <nav className={s.navigation}>
@@ -70,17 +122,23 @@ function Profile() {
                     className={({ isActive }) =>
                         isActive ? s.activelink : s.link
                     }
-                    onClick={logOut}
+                    onClick={logOutHandler}
                 >
                     Выход
                 </NavLink>
+
+                <div
+                    className={`${s.notice} text_type_main-default text_color_inactive`}
+                >
+                    В этом разделе вы можете изменить свои персональные данные
+                </div>
             </nav>
-            <section className={s.form}>
+            <form className={s.form}>
                 <Input
                     type={"text"}
                     placeholder={"Имя"}
                     onChange={onChangeHolder}
-                    value={userData?.name ? userData.name : ""}
+                    value={newUserData?.name ? newUserData.name : ""}
                     name={"name"}
                     extraClass={s.input}
                     onPointerEnterCapture={pointEventHandler}
@@ -89,7 +147,7 @@ function Profile() {
                 />
                 <EmailInput
                     onChange={onChangeHolder}
-                    value={userData?.email ? userData.email : ""}
+                    value={newUserData?.email ? newUserData.email : ""}
                     name={"email"}
                     placeholder="Логин"
                     isIcon={true}
@@ -97,12 +155,35 @@ function Profile() {
                 />
                 <PasswordInput
                     onChange={onChangeHolder}
-                    value={""}
+                    value={newUserData?.password ? newUserData.password : ""}
                     name={"password"}
                     extraClass={s.input}
                     icon={"EditIcon"}
+                    autoComplete={"true"}
                 />
 
+                {isEditData && (
+                    <div className={s.row}>
+                        <Button
+                            extraClass={s.btn}
+                            htmlType="reset"
+                            type="primary"
+                            size="large"
+                            onClick={resetNewData}
+                        >
+                            Отмена <CloseIcon type="primary" />
+                        </Button>
+                        <Button
+                            extraClass={s.btn}
+                            htmlType="button"
+                            type="primary"
+                            size="large"
+                            onClick={updateNewUserData}
+                        >
+                            Сохранить <CheckMarkIcon type="primary" />
+                        </Button>
+                    </div>
+                )}
                 {/* <Button
                     extraClass={s.btn}
                     htmlType="button"
@@ -126,7 +207,7 @@ function Profile() {
                         Восстановить пароль
                     </Link>
                 </div> */}
-            </section>
+            </form>
         </div>
     );
 }

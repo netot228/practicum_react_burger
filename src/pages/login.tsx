@@ -9,7 +9,7 @@ import { SyntheticEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { authUser } from "../services/actions/auth";
+import { authUser, REGISTER_USER_FAILED } from "../services/actions/auth";
 import { useNavigate } from "react-router-dom";
 
 import Loader from "../ui/loader";
@@ -29,8 +29,8 @@ function Login() {
     const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(errorAuth){
-            setErrorAuth("")
+        if (errorAuth) {
+            setErrorAuth("");
         }
         setValue({ ...form, [e.target.name]: e.target.value });
     };
@@ -38,14 +38,33 @@ function Login() {
     const signInForm = (e: SyntheticEvent) => {
         e.preventDefault();
 
-        dispatch(authUser(form)).then((response) => {
-            response?.message && setErrorAuth(response.message);
+        if (!form.email) {
+            setErrorAuth("email required");
+            return;
+        }
+
+        if (!form.password) {
+            setErrorAuth("password required");
+            return;
+        }
+
+        dispatch(authUser(form)).then((res) => {
+            if (!res.success) {
+                setErrorAuth(res.message);
+                dispatch({
+                    type: REGISTER_USER_FAILED,
+                });
+            }
         });
     };
 
     useEffect(() => {
         if (successAuth) {
-            navigate("/");
+            if (localStorage.destination) {
+                navigate(localStorage.destination);
+            } else {
+                navigate("/");
+            }
         }
     });
 
@@ -66,7 +85,7 @@ function Login() {
                     value={form.password}
                     name={"password"}
                     extraClass={s.input}
-                    autoComplete={"true"}
+                    autoComplete={"on"}
                 />
 
                 {errorAuth && <p className={s.notice}>{errorAuth}</p>}

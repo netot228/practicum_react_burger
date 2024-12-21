@@ -1,11 +1,16 @@
 import {
-    REGISTER_USER,
     REGISTER_USER_REQUEST,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAILED,
+
     RESET_PASSWORD,
     RESET_PASSWORD_SUCCESS,
-    LOGIN_USER
+
+    GET_USER_DATA,
+    SET_TOKEN,
+
+    LOGIN_USER,
+    LOGOUT_USER
 } from '../actions/auth';
 
 import { UserData, UserState, UserAction } from '../../utils/types';
@@ -20,13 +25,13 @@ const initState = {
     },
 
     resetPassword: false,
-
     registerFailed: false,
     requestRegister: false
 }
 
 export const authReducer = (state:UserState = initState, action:UserAction) => {
     switch (action.type){
+
         case REGISTER_USER_REQUEST: {
             return {
                 ...state,
@@ -37,7 +42,8 @@ export const authReducer = (state:UserState = initState, action:UserAction) => {
             return {
                 ...state,
                 registerFailed: true,
-                requestRegister: false
+                requestRegister: false,
+                resetPassword: false
 
             }
         }
@@ -47,20 +53,40 @@ export const authReducer = (state:UserState = initState, action:UserAction) => {
                 ...action.payload,
                 registerFailed: false,
                 requestRegister: false
-                
+
             }
         }
+
         case RESET_PASSWORD: {
             return {
                 ...state,
                 resetPassword: true
             }
         }
+
+        case SET_TOKEN: {
+            return {
+                ...state,
+                ...action.payload,
+            }
+        }
+
         case LOGIN_USER: {
             return {
                 ...state,
                 ...action.payload,
                 requestRegister: false
+            }
+        }
+        case LOGOUT_USER: {
+            return {
+                ...initState
+            }
+        }
+        case GET_USER_DATA: {
+            return {
+                ...state,
+                ...action.payload
             }
         }
 

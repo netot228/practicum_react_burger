@@ -18,10 +18,12 @@ export const REGISTER_USER_FAILED       = 'REGISTER_USER_FAILED';
 export const LOGIN_USER     = 'LOGIN_USER';
 export const LOGOUT_USER    = 'LOGOUT_USER';
 
-export const RESET_TOKEN = 'RESET_TOKEN';
+export const SET_TOKEN = 'SET_TOKEN';
 
 export const RESET_PASSWORD = 'RESET_PASSWORD'
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
+
+export const GET_USER_DATA = 'GET_USER_DATA';
 
 
 export const registerRequest = (data:UserData) => async (dispatch:AppDispatch) => {
@@ -30,55 +32,40 @@ export const registerRequest = (data:UserData) => async (dispatch:AppDispatch) =
         type: REGISTER_USER_REQUEST
     })
 
-    const response = await fetch(AUTH_REGISTER_ENDPOINT, {
+    return await fetch(AUTH_REGISTER_ENDPOINT, {
         method: 'POST',
-        body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json;charset=utf-8'
         },
-    });
+        body: JSON.stringify(data)
+    })
+    .then(response=>{
+        return response.json();
+    })
+    .then(json=>{
 
-    return await response.json();
+        if(json.success){
+            dispatch({
+                type: REGISTER_USER_SUCCESS,
+                payload: json
+            });
+        }
+        return json;
 
-    // return await fetch(AUTH_REGISTER_ENDPOINT, {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json;charset=utf-8'
-    //     },
-    //     body: JSON.stringify(data)
-    // })
-    // .then(response=>{
-    //     // if(response.ok){
-    //         return response.json();
-    //     // } else {
-    //     //     throw new Error(`Error: ${response.status}`);
-    //     // }
-    // })
-    // .then(json=>{
-
-    //     console.dir(json);
-    //     if(!json.success){
-    //         throw new Error(json.message);
-    //     } else {
-    //         dispatch({
-    //             type: REGISTER_USER_SUCCESS,
-    //             payload: json
-    //         });
-    //     }
-        
-    // })
-    // .catch(error=>{
-    //     console.log('При отправке данных на регистрацию произошла ошибка')
-    //     console.error(error);
-    //     dispatch({
-    //         type: REGISTER_USER_FAILED
-    //     });
-    // })
+    })
+    .catch(error=>{
+        console.log('При отправке данных на регистрацию произошла ошибка')
+        console.error(error);
+        dispatch({
+            type: REGISTER_USER_FAILED
+        });
+        return error;
+    })
 
 }
 
-export const sendMailToResetPassword = (email:string) => (dispatch:AppDispatch) => {
-    fetch(AUTH_FORGOT_PASSWORD_ENDPOINT, {
+export const sendMailToResetPassword = (email:string) => async (dispatch:AppDispatch) => {
+    return await fetch(AUTH_FORGOT_PASSWORD_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -97,6 +84,7 @@ export const sendMailToResetPassword = (email:string) => (dispatch:AppDispatch) 
         dispatch({
             type: RESET_PASSWORD
         });
+        return json;
     })
     .catch(error=>{
         console.log('При запросе на сброс пароля произошла ошибка')
@@ -104,14 +92,14 @@ export const sendMailToResetPassword = (email:string) => (dispatch:AppDispatch) 
         dispatch({
             type: REGISTER_USER_FAILED
         });
+        return error;
     })
 }
 
-export const resetPassword = (data:ResetPassData) => (dispatch:AppDispatch) => {
-
+export const resetPassword = (data:ResetPassData) => async (dispatch:AppDispatch) => {
 
     // fetch('https://norma.nomoreparties.space/api/password-reset/reset', { //404
-    fetch(AUTH_RESET_PASSWORD_ENDPOINT, {
+    return await fetch(AUTH_RESET_PASSWORD_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -133,6 +121,7 @@ export const resetPassword = (data:ResetPassData) => (dispatch:AppDispatch) => {
         dispatch({
             type: RESET_PASSWORD_SUCCESS
         });
+        return json;
     })
     .catch(error=>{
         console.log('При сбросе пароля произошла ошибка')
@@ -140,9 +129,12 @@ export const resetPassword = (data:ResetPassData) => (dispatch:AppDispatch) => {
         dispatch({
             type: REGISTER_USER_FAILED
         });
+        return error;
     })
 
 }
+
+
 
 export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
 
@@ -158,30 +150,26 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
         body: JSON.stringify(data)
     })
     .then(response=>{
-        if(response.ok || response.status===401){
-            return response.json();
-        } else {
-            throw new Error(`Error: ${response.status}`);
-            // throw new Error(`${response.status}`);
-        }
+        return response.json();
     })
     .then(json=>{
-        console.dir(json);
-        if(!json.success){
-            throw new Error(json.message);
-        } else {
 
-            localStorage.setItem('refreshToken', json.refreshToken);
-            localStorage.setItem('accessToken', json.accessToken.replace(/^Bearer\s+/, ''));
-            localStorage.setItem('tokenTimeout', (new Date().getTime()).toString())
+        if(json.success){
 
-            localStorage.userData = JSON.stringify(json);
+            localStorage.userData       = JSON.stringify(json.user);
+            localStorage.refreshToken   = json.refreshToken;
+            localStorage.accessToken    = json.accessToken;
+            localStorage.tokenTimeout   = (new Date().getTime()).toString();
+            localStorage.cosmicSecret   = typeof data.password === 'string' && btoa(data.password);
 
             dispatch({
                 type: LOGIN_USER,
                 payload: json
             });
+
         }
+
+        return json
 
     })
     .catch(error=>{
@@ -195,43 +183,66 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
     })
 }
 
-export const resetToken = (token: string) => async (dispatch:AppDispatch) => {
+export const logOut = (token: string) => async (dispatch:AppDispatch) => {
 
-    console.log('reset token');
-    console.dir(token);
+    console.log('requestLogout');
+    localStorage.clear();
+
+    dispatch({
+        type: LOGOUT_USER
+    });
+
+    return await fetch(AUTH_LOGOUT_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"token": token})
+    })
+    .then(response=>{
+        return response.json();
+    })
+    .then(json=>{
+        console.log('logout');
+        console.dir(json);
+
+        return json
+
+    })
+    .catch(error=>{
+        console.log('Что пошло не так')
+        console.error(error);
+        return error
+    })
+}
+
+export const refreshToken = (token: string) => async (dispatch:AppDispatch) => {
 
     return await fetch(AUTH_TOKEN_ENDPOINT,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({"token": `${token}`})
-        // body: JSON.stringify({"token": "b76489e479655b5c72a72c2467415165399eec52401924b1403dc7214e49a6d3ea9d104be4b12f4b"})
+        body: JSON.stringify({"token": token})
     })
     .then(response=>{
-        if(response.ok || response.status===401){
-            return response.json();
-        } else {
-            throw new Error(`Error: ${response.status}`);
-        }
+        return response.json();
     })
     .then(json=>{
-        console.log('resetTokenThen');
 
-        console.dir(json);
-        if(!json.success){
-            throw new Error(json.message);
-        } else {
+        if(json.success){
 
-            localStorage.setItem('refreshToken', json.refreshToken);
-            localStorage.setItem('accessToken', json.accessToken.replace(/^Bearer\s+/, ''));
-            localStorage.setItem('tokenTimeout', (new Date().getTime()).toString())
+            localStorage.refreshToken   = json.refreshToken;
+            localStorage.tokenTimeout   = (new Date().getTime()).toString();
+            localStorage.accessToken    = json.accessToken;
 
             dispatch({
-                type: RESET_TOKEN,
+                type: SET_TOKEN,
                 payload: json
             });
         }
+
+        return json;
 
     })
     .catch(error=>{
@@ -245,8 +256,71 @@ export const resetToken = (token: string) => async (dispatch:AppDispatch) => {
     })
 }
 
-export const logOut = () => async (dispatch:AppDispatch) => {
-    return await fetch(AUTH_LOGOUT_ENDPOINT, {
+export const getUserData = (token: string) => async (dispatch:AppDispatch) => {
 
+    return await fetch(GET_AUTH_USER, {
+        headers: {
+            Authorization: token
+        }
     })
+    .then(response=>{
+        return response.json();
+    })
+    .then(json=>{
+
+        console.log('getUserData')
+        console.dir(json);
+        if(json.success){
+
+            localStorage.userData       = JSON.stringify(json.user);
+
+            dispatch({
+                type: GET_USER_DATA,
+                payload: json
+            });
+        }
+        return json
+    })
+    .catch(error=>{
+        console.log('Что пошло не так')
+        console.error(error);
+        return error
+    })
+}
+
+export const updateUserData = (token: string,  data:UserData) => async (dispatch: AppDispatch) => {
+    return await fetch(GET_AUTH_USER, {
+        method: 'PATCH',
+        headers: {
+            Authorization: token
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response=>{
+        return response.json();
+    })
+    .then(json=>{
+
+        console.log('updateUserData')
+        console.dir(json);
+
+        // не возвращает обновленные данные, переданные в data:UserData
+
+        if(json.success){
+
+            localStorage.userData       = JSON.stringify(json.user);
+
+            dispatch({
+                type: GET_USER_DATA,
+                payload: json
+            });
+        }
+        return json
+    })
+    .catch(error=>{
+        console.log('Что пошло не так')
+        console.error(error);
+        return error
+    })
+
 }

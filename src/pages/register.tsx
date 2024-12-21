@@ -14,7 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
 import { registerRequest } from "..//services/actions/auth";
 
-import { REGISTER_USER_SUCCESS } from '../services/actions/auth'
+import { REGISTER_USER_SUCCESS } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
@@ -24,38 +24,32 @@ function RegistrationForm() {
     const [form, setValue] = useState({ name: "", email: "", password: "" });
     const navigate = useNavigate();
     const [errorAuth, setErrorAuth] = useState("");
-    
+
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(errorAuth){
-            setErrorAuth("")
+        if (errorAuth) {
+            setErrorAuth("");
         }
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
     const RegistrationFormHolder = () => {
         dispatch(registerRequest(form))
-        .then(json=>{
-            console.log('dispatch(registerRequest');
-
-            console.dir(json);
-
-            if(!json.success){
-                setErrorAuth(json.message)
-            } else {
-                localStorage.userData = JSON.stringify(json);
-                dispatch({
-                    type: REGISTER_USER_SUCCESS,
-                    payload: json
-                });
-                navigate("/profile");
-            }
-            
-        })
-        .catch(err=>{
-            console.log('dispatchERROR');
-            console.dir(err);
-        })
-        // navigate("/login");
+            .then((json) => {
+                if (!json.success) {
+                    setErrorAuth(json.message);
+                } else {
+                    localStorage.userData = JSON.stringify(json);
+                    dispatch({
+                        type: REGISTER_USER_SUCCESS,
+                        payload: json,
+                    });
+                    navigate("/profile");
+                }
+            })
+            .catch((err) => {
+                console.log("dispatchERROR");
+                console.dir(err);
+            });
     };
 
     // fix UI bug for pointEvents

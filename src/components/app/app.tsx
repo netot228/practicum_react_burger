@@ -23,7 +23,13 @@ import {
 import Profile from "../profile/profile";
 import ProtectedRouteElement from "../protected-route-element/protected-route-element";
 
-import { LOGIN_USER } from "../../services/actions/auth";
+import {
+    LOGIN_USER,
+    SET_TOKEN,
+    refreshToken,
+    getUserData,
+} from "../../services/actions/auth";
+import { access } from "fs";
 
 function App() {
     console.log("reload App");
@@ -43,11 +49,41 @@ function App() {
 
     useEffect(() => {
         if (!isUserDetected && localStorage.userData) {
-            const userData = JSON.parse(localStorage.userData);
+            const userData = { ...JSON.parse(localStorage.userData) };
+
             dispatch({
                 type: LOGIN_USER,
-                payload: userData,
+                payload: { user: userData, success: true },
             });
+
+            const timeOut = new Date().getTime() - 5 * 60 * 1000;
+
+            if (
+                localStorage.tokenTimeout &&
+                Number(localStorage.tokenTimeout) < timeOut
+            ) {
+                console.log("token просрочен рефреш");
+
+                dispatch(refreshToken(localStorage.refreshToken)).then(
+                    (res) => {
+                        if (res.success) {
+                            console.log("refreshToken DONE");
+                        } else {
+                            console.log("refreshToken ERROR");
+                        }
+                        console.dir(res);
+                    }
+                );
+            } else {
+                console.log("установка токена");
+                dispatch({
+                    type: SET_TOKEN,
+                    payload: {
+                        accessToken: localStorage.accessToken,
+                        refreshToken: localStorage.refreshToken,
+                    },
+                });
+            }
         }
     }, [dispatch, isUserDetected]);
 

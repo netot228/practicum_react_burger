@@ -3,6 +3,7 @@ export const SEND_ORDER_ENDPOINT        = 'https://norma.nomoreparties.space/api
 
 export const AUTH_LOGIN_ENDPOINT        = 'https://norma.nomoreparties.space/api/auth/login';
 export const AUTH_REGISTER_ENDPOINT     = 'https://norma.nomoreparties.space/api/auth/register';
+
 export const AUTH_LOGOUT_ENDPOINT       = 'https://norma.nomoreparties.space/api/auth/logout';
 export const AUTH_TOKEN_ENDPOINT        = 'https://norma.nomoreparties.space/api/auth/token';
 
