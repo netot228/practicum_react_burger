@@ -10,20 +10,16 @@ import {
     GET_AUTH_USER
 } from '../../utils/api-endpoints';
 
-export const SEND_REQUEST              = 'SEND_REQUEST';
+export const SEND_REQUEST               = 'SEND_REQUEST';
 export const REGISTER_USER_REQUEST      = 'REGISTER_USER_REQUEST';
 export const REGISTER_USER_SUCCESS      = 'REGISTER_USER_SUCCESS';
 export const REGISTER_USER_FAILED       = 'REGISTER_USER_FAILED';
-
-export const LOGIN_USER     = 'LOGIN_USER';
-export const LOGOUT_USER    = 'LOGOUT_USER';
-
-export const SET_TOKEN = 'SET_TOKEN';
-
-export const RESET_PASSWORD = 'RESET_PASSWORD'
-export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
-
-export const GET_USER_DATA = 'GET_USER_DATA';
+export const LOGIN_USER                 = 'LOGIN_USER';
+export const LOGOUT_USER                = 'LOGOUT_USER';
+export const SET_TOKEN                  = 'SET_TOKEN';
+export const RESET_PASSWORD             = 'RESET_PASSWORD'
+export const RESET_PASSWORD_SUCCESS     = 'RESET_PASSWORD_SUCCESS';
+export const GET_USER_DATA              = 'GET_USER_DATA';
 
 
 export const regNewUser = (data:UserData) => async (dispatch:AppDispatch) => {
@@ -136,16 +132,16 @@ export const logOut = (token: string) => async (dispatch:AppDispatch) => {
     .then(response=>{
         return response.json();
     })
-    // .then(json=>{
-        
-    //     return json
+    .then(json=>{
 
-    // })
-    // .catch(error=>{
-    //     console.log('Что пошло не так')
-    //     console.error(error);
-    //     return error
-    // })
+        return json
+
+    })
+    .catch(error=>{
+        console.log('Что пошло не так')
+        console.error(error);
+        return error
+    })
 }
 
 export const refreshToken = (token: string) => async (dispatch:AppDispatch) => {
@@ -221,10 +217,14 @@ export const getUserData = (token: string) => async (dispatch:AppDispatch) => {
 }
 
 export const updateUserData = (token: string,  data:UserData) => async (dispatch: AppDispatch) => {
+
+    localStorage.cosmicSecret   = typeof data.password === 'string' && btoa(data.password);
+
     return await fetch(GET_AUTH_USER, {
         method: 'PATCH',
         headers: {
-            Authorization: token
+            Authorization: token,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })
@@ -236,8 +236,6 @@ export const updateUserData = (token: string,  data:UserData) => async (dispatch
         console.log('updateUserData')
         console.dir(json);
 
-        // не возвращает обновленные данные, переданные в data:UserData
-
         if(json.success){
 
             localStorage.userData       = JSON.stringify(json.user);
@@ -247,6 +245,7 @@ export const updateUserData = (token: string,  data:UserData) => async (dispatch
                 payload: json
             });
         }
+
         return json
     })
     .catch(error=>{
@@ -256,9 +255,6 @@ export const updateUserData = (token: string,  data:UserData) => async (dispatch
     })
 
 }
-
-
-
 
 export const sendMailToResetPassword = (email:string) => async (dispatch:AppDispatch) => {
     return await fetch(AUTH_FORGOT_PASSWORD_ENDPOINT, {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../hooks/useAppSelector";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { LOGIN_USER } from "../../services/actions/auth";
 
@@ -15,15 +15,13 @@ function ProtectedRouteElement(props: ProtectedElementProp) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        // if (!isUserDetected && localStorage.userData) {
-        //     const userData = { ...JSON.parse(localStorage.userData) };
-        //     dispatch({
-        //         type: LOGIN_USER,
-        //         payload: { user: userData, success: true },
-        //     });
-        // } else
-
-        if (!isUserDetected) {
+        if (!isUserDetected && localStorage.userData) {
+            const userData = { ...JSON.parse(localStorage.userData) };
+            dispatch({
+                type: LOGIN_USER,
+                payload: { user: userData, success: true },
+            });
+        } else if (!isUserDetected) {
             navigate("/login");
         }
     });

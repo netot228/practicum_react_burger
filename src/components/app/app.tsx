@@ -10,8 +10,13 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import Modal from "../modal/modal";
+import { useModal } from "../../hooks/useModal";
 
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import IngredientDetails from "../ingredient-details/ingredient-details";
+import Page404 from "../../pages/page-404";
+
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import {
     Login,
@@ -27,19 +32,43 @@ import {
     LOGIN_USER,
     SET_TOKEN,
     refreshToken,
-    getUserData,
 } from "../../services/actions/auth";
-import { access } from "fs";
+
+import {
+    CLEAR_SELECTED_INGREDIENT,
+    SET_SELECTED_INGREDIENT,
+} from "../../services/actions/ingredient-details";
 
 function App() {
-    console.log("reload App");
+    const { closeModal } = useModal(false);
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const isUserDetected = useAppSelector((state) => state.auth.success);
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
     );
+
+    const location = useLocation();
+    const background = location.state && location.state.background;
+
+    let ingredientID = location.state?.id ? location.state.id : "";
+    if (ingredientID === "" && location.pathname.match("/ingredients/:")) {
+        ingredientID = location.pathname.replace(/^\/ingredients\/:/, "");
+    }
+
+    if (ingredients.length > 0 && ingredientID) {
+        const ingredient = ingredients.find((el) => el._id === ingredientID);
+        if (ingredient) {
+            dispatch({
+                type: SET_SELECTED_INGREDIENT,
+                ingredient: ingredient,
+            });
+        } else {
+            navigate("/");
+        }
+    }
 
     useEffect(() => {
         if (!ingredients.length) {
@@ -87,47 +116,77 @@ function App() {
         }
     }, [dispatch, isUserDetected]);
 
-    return (
-        <BrowserRouter>
-            <div className={style.app}>
-                <AppHeader />
-                <main className={style.mainarea}>
-                    <Routes>
-                        <Route path="/login" element={<Login />} />
-                        <Route
-                            path="/register"
-                            element={<RegistrationForm />}
-                        />
-                        <Route
-                            path="/forgot-password"
-                            element={<ForgotPass />}
-                        />
-                        <Route
-                            path="/reset-password"
-                            element={<ResetPassword />}
-                        />
+    const closeModalHandler = () => {
+        console.dir("modalHandler");
+        dispatch({
+            type: CLEAR_SELECTED_INGREDIENT,
+        });
+        navigate("/");
+        closeModal();
+    };
 
+    return (
+        <div className={style.app}>
+            <AppHeader />
+            <main className={style.mainarea}>
+                <Routes location={background || location}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<RegistrationForm />} />
+                    <Route path="/forgot-password" element={<ForgotPass />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRouteElement element={<Profile />} />
+                        }
+                    />
+
+                    <Route
+                        path="ingredients/:id"
+                        element={
+                            <Modal
+                                onClose={closeModalHandler}
+                                title="Детали ингредиента"
+                                data-test="ss"
+                            >
+                                <IngredientDetails />
+                            </Modal>
+                        }
+                    />
+
+                    <Route
+                        path="/"
+                        element={
+                            <DndProvider backend={HTML5Backend}>
+                                <BurgerIngredients ingredients={ingredients} />
+                                <BurgerConstructor />
+                            </DndProvider>
+                        }
+                    ></Route>
+
+                    <Route path="*" element={<Page404 />} />
+                </Routes>
+
+                {background && (
+                    <Routes>
                         <Route
-                            path="/profile"
+                            path="/ingredients/:id"
                             element={
-                                <ProtectedRouteElement element={<Profile />} />
-                            }
-                        />
-                        <Route
-                            path="/"
-                            element={
-                                <DndProvider backend={HTML5Backend}>
-                                    <BurgerIngredients
-                                        ingredients={ingredients}
-                                    />
-                                    <BurgerConstructor />
-                                </DndProvider>
+                                <Modal
+                                    onClose={closeModalHandler}
+                                    title="Детали ингредиента"
+                                    data-test="ss"
+                                >
+                                    <IngredientDetails />
+                                </Modal>
                             }
                         />
                     </Routes>
-                </main>
-            </div>
-        </BrowserRouter>
+                )}
+            </main>
+        </div>
+        // </BrowserRouter>
     );
 }
 

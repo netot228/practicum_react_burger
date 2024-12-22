@@ -24,6 +24,7 @@ import {
 import {
     ADD_INGREDIENT,
     ADD_BUN,
+    CLEAR_BURGER,
 } from "../../services/actions/burger-constructor";
 
 import style from "./burger-constructor.module.css";
@@ -33,7 +34,14 @@ import Bun from "./bun/bun";
 
 import ToppingBlock from "./topping-block/topping-block";
 
+import { useNavigate } from "react-router-dom";
+
 function BurgerConstructor() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const isUserDetected = useAppSelector((state) => state.auth.success);
+
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
     );
@@ -43,8 +51,6 @@ function BurgerConstructor() {
     const { success: orderCreated, notice: orderNotice } = useAppSelector(
         (state) => state.order
     );
-
-    const dispatch = useAppDispatch();
 
     const decreaseItem = (item: IngredientData | undefined) => {
         dispatch({
@@ -86,9 +92,14 @@ function BurgerConstructor() {
 
     const { isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = () => {
+        if (!isUserDetected) {
+            return navigate("/login");
+        }
         if (isModalOpen) {
+            console.log("confirmOrder - CLEAR_ORDER_DETAILS");
             closeModal();
             dispatch({ type: CLEAR_ORDER_DETAILS });
+            // dispatch({ type: CLEAR_BURGER });
         } else {
             let sendOrderData = topping.map((el) => el._id);
 

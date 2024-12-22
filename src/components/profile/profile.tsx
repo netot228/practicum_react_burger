@@ -20,6 +20,7 @@ import {
     getUserData,
     updateUserData,
     LOGIN_USER,
+    LOGOUT_USER,
 } from "../../services/actions/auth";
 
 function Profile() {
@@ -28,6 +29,8 @@ function Profile() {
 
     const userData = useAppSelector((state) => state.auth.user);
     const accessToken = useAppSelector((state) => state.auth.accessToken);
+
+    const [errorDispatch, setErrorDispatch] = useState("");
 
     useEffect(() => {
         const timeOut = new Date().getTime() - 5 * 60 * 1000;
@@ -78,7 +81,17 @@ function Profile() {
                 if (res.success) {
                     console.log("updateUserData DONE");
                     setIsEditData(false);
-                    setNewUserData(newUserDataInitState);
+
+                    let a = atob(localStorage.cosmicSecret);
+                    console.dir(a);
+
+                    setNewUserData({
+                        name: res.user?.name,
+                        email: res.user?.email,
+                        password: localStorage.cosmicSecret
+                            ? atob(localStorage.cosmicSecret)
+                            : "",
+                    });
                 } else {
                     console.log("updateUserData ERROR");
                 }
@@ -88,7 +101,11 @@ function Profile() {
     };
 
     const logOutHandler = () => {
-        dispatch(logOut(localStorage.refreshToken))
+        dispatch(logOut(localStorage.refreshToken)).then((res) => {
+            if (!res.success) {
+                setErrorDispatch(res.message);
+            }
+        });
     };
 
     // fix UI bug for pointEvents
@@ -130,6 +147,7 @@ function Profile() {
                     В этом разделе вы можете изменить свои персональные данные
                 </div>
             </nav>
+
             <form className={s.form}>
                 <Input
                     type={"text"}
@@ -159,6 +177,8 @@ function Profile() {
                     autoComplete={"true"}
                 />
 
+                {errorDispatch && <p className={s.notice}>{errorDispatch}</p>}
+
                 {isEditData && (
                     <div className={s.row}>
                         <Button
@@ -181,29 +201,6 @@ function Profile() {
                         </Button>
                     </div>
                 )}
-                {/* <Button
-                    extraClass={s.btn}
-                    htmlType="button"
-                    type="primary"
-                    size="large"
-                    onClick={signInHolder}
-                >
-                    Войти
-                </Button> */}
-
-                {/* <div className={s.option}>
-                    <span>Вы — новый пользователь?</span>
-                    <Link to="/register" className={s.link}>
-                        Зарегистрироваться
-                    </Link>
-                </div>
-
-                <div className={s.option}>
-                    <span>Забыли пароль?</span>
-                    <Link to="/forgot-password" className={s.link}>
-                        Восстановить пароль
-                    </Link>
-                </div> */}
             </form>
         </div>
     );
