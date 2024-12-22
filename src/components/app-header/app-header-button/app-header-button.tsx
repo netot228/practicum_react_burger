@@ -5,7 +5,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "../app-header.module.css";
 
-import { useNavigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 type BtnPops = {
     type: "secondary" | "primary" | "error" | "success" | "disabled";

@@ -61,7 +61,6 @@ function BurgerConstructor() {
 
     const dropHandler = (item: DragItem) => {
         const ingredient = ingredients.find((el) => el._id === item._id);
-        // const uid = `${ingredient?._id}__${Math.floor(Math.random()*10000)}`;
         const uid = uuid();
 
         if (ingredient?.type === "bun" && bun && bun !== ingredient) {

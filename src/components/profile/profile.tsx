@@ -1,5 +1,4 @@
 import s from "./profile.module.css";
-import { UserData as userType } from "../../utils/types";
 import {
     PasswordInput,
     EmailInput,
@@ -18,9 +17,7 @@ import {
     refreshToken,
     logOut,
     getUserData,
-    updateUserData,
-    LOGIN_USER,
-    LOGOUT_USER,
+    updateUserData
 } from "../../services/actions/auth";
 
 function Profile() {
@@ -49,8 +46,21 @@ function Profile() {
                 }
                 console.dir(res);
             });
+        } else {
+            console.log("token просрочен рефреш");
+
+            dispatch(refreshToken(localStorage.refreshToken)).then(
+                (res) => {
+                    if (res.success) {
+                        console.log("refreshToken DONE");
+                    } else {
+                        console.log("refreshToken ERROR");
+                    }
+                    console.dir(res);
+                }
+            );
         }
-    }, [accessToken]);
+    }, [accessToken,dispatch]);
 
     const newUserDataInitState = {
         name: userData?.name,

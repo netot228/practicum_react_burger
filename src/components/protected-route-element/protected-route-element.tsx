@@ -16,7 +16,7 @@ function ProtectedRouteElement(props: ProtectedElementProp) {
 
     useEffect(() => {
         if (!isUserDetected && localStorage.userData) {
-            const userData = { ...JSON.parse(localStorage.userData) };
+            const userData = JSON.parse(localStorage.userData);
             dispatch({
                 type: LOGIN_USER,
                 payload: { user: userData, success: true },

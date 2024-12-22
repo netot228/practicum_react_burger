@@ -14,7 +14,6 @@ import Modal from "../modal/modal";
 import { useModal } from "../../hooks/useModal";
 
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import Page404 from "../../pages/page-404";
 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
@@ -23,6 +22,7 @@ import {
     RegistrationForm,
     ForgotPass,
     ResetPassword,
+    Page404
 } from "../../pages";
 
 import Profile from "../profile/profile";
@@ -78,7 +78,7 @@ function App() {
 
     useEffect(() => {
         if (!isUserDetected && localStorage.userData) {
-            const userData = { ...JSON.parse(localStorage.userData) };
+            const userData = JSON.parse(localStorage.userData);
 
             dispatch({
                 type: LOGIN_USER,
@@ -117,7 +117,6 @@ function App() {
     }, [dispatch, isUserDetected]);
 
     const closeModalHandler = () => {
-        console.dir("modalHandler");
         dispatch({
             type: CLEAR_SELECTED_INGREDIENT,
         });
@@ -186,7 +185,6 @@ function App() {
                 )}
             </main>
         </div>
-        // </BrowserRouter>
     );
 }
 

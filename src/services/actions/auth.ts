@@ -196,8 +196,6 @@ export const getUserData = (token: string) => async (dispatch:AppDispatch) => {
     })
     .then(json=>{
 
-        console.log('getUserData')
-        console.dir(json);
         if(json.success){
 
             localStorage.userData       = JSON.stringify(json.user);
@@ -232,9 +230,6 @@ export const updateUserData = (token: string,  data:UserData) => async (dispatch
         return response.json();
     })
     .then(json=>{
-
-        console.log('updateUserData')
-        console.dir(json);
 
         if(json.success){
 
@@ -272,7 +267,7 @@ export const sendMailToResetPassword = (email:string) => async (dispatch:AppDisp
         }
     })
     .then(json=>{
-        console.dir(json)
+        
         dispatch({
             type: RESET_PASSWORD
         });
@@ -290,7 +285,6 @@ export const sendMailToResetPassword = (email:string) => async (dispatch:AppDisp
 
 export const resetPassword = (data:ResetPassData) => async (dispatch:AppDispatch) => {
 
-    // fetch('https://norma.nomoreparties.space/api/password-reset/reset', { //404
     return await fetch(AUTH_RESET_PASSWORD_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -309,7 +303,7 @@ export const resetPassword = (data:ResetPassData) => async (dispatch:AppDispatch
         }
     })
     .then(json=>{
-        console.dir(json)
+        
         dispatch({
             type: RESET_PASSWORD_SUCCESS
         });
