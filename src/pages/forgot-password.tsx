@@ -32,6 +32,7 @@ function ForgotPass() {
         setIsRequest(true);
         dispatch(sendMailToResetPassword(email)).then((res) => {
             if (res.success) {
+                sessionStorage.sendedRestoreMessage = 'done';
                 navigate("/reset-password");
             } else {
                 setErrorAuth("При запросе на сброс пароля произошла ошибка");

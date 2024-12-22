@@ -10,7 +10,7 @@ import {
     GET_AUTH_USER
 } from '../../utils/api-endpoints';
 
-export const REGISTER_USER              = 'REGISTER_USER';
+export const SEND_REQUEST              = 'SEND_REQUEST';
 export const REGISTER_USER_REQUEST      = 'REGISTER_USER_REQUEST';
 export const REGISTER_USER_SUCCESS      = 'REGISTER_USER_SUCCESS';
 export const REGISTER_USER_FAILED       = 'REGISTER_USER_FAILED';
@@ -26,10 +26,10 @@ export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
 export const GET_USER_DATA = 'GET_USER_DATA';
 
 
-export const registerRequest = (data:UserData) => async (dispatch:AppDispatch) => {
+export const regNewUser = (data:UserData) => async (dispatch:AppDispatch) => {
 
     dispatch({
-        type: REGISTER_USER_REQUEST
+        type: SEND_REQUEST
     })
 
     return await fetch(AUTH_REGISTER_ENDPOINT, {
@@ -45,8 +45,15 @@ export const registerRequest = (data:UserData) => async (dispatch:AppDispatch) =
     .then(json=>{
 
         if(json.success){
+
+            localStorage.userData       = JSON.stringify(json.user);
+            localStorage.refreshToken   = json.refreshToken;
+            localStorage.accessToken    = json.accessToken;
+            localStorage.tokenTimeout   = (new Date().getTime()).toString();
+            localStorage.cosmicSecret   = typeof data.password === 'string' && btoa(data.password);
+
             dispatch({
-                type: REGISTER_USER_SUCCESS,
+                type: LOGIN_USER,
                 payload: json
             });
         }
@@ -64,82 +71,10 @@ export const registerRequest = (data:UserData) => async (dispatch:AppDispatch) =
 
 }
 
-export const sendMailToResetPassword = (email:string) => async (dispatch:AppDispatch) => {
-    return await fetch(AUTH_FORGOT_PASSWORD_ENDPOINT, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify({"email": email})
-    })
-    .then(response=>{
-        if(response.ok){
-            return response.json();
-        } else {
-            throw new Error(`Error: ${response.status}`);
-        }
-    })
-    .then(json=>{
-        console.dir(json)
-        dispatch({
-            type: RESET_PASSWORD
-        });
-        return json;
-    })
-    .catch(error=>{
-        console.log('При запросе на сброс пароля произошла ошибка')
-        console.error(error);
-        dispatch({
-            type: REGISTER_USER_FAILED
-        });
-        return error;
-    })
-}
-
-export const resetPassword = (data:ResetPassData) => async (dispatch:AppDispatch) => {
-
-    // fetch('https://norma.nomoreparties.space/api/password-reset/reset', { //404
-    return await fetch(AUTH_RESET_PASSWORD_ENDPOINT, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify({
-            "password": data.password,
-            "token": data.token
-        })
-    })
-    .then(response=>{
-        if(response.ok){
-            return response.json();
-        } else {
-            throw new Error(`Error: ${response.status}`);
-        }
-    })
-    .then(json=>{
-        console.dir(json)
-        dispatch({
-            type: RESET_PASSWORD_SUCCESS
-        });
-        return json;
-    })
-    .catch(error=>{
-        console.log('При сбросе пароля произошла ошибка')
-        console.error(error);
-        dispatch({
-            type: REGISTER_USER_FAILED
-        });
-        return error;
-    })
-
-}
-
-
-
 export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
 
     dispatch({
-        type: REGISTER_USER_REQUEST
+        type: SEND_REQUEST
     });
 
     return await fetch(AUTH_LOGIN_ENDPOINT,{
@@ -185,7 +120,6 @@ export const authUser = (data:UserData) => async (dispatch: AppDispatch) => {
 
 export const logOut = (token: string) => async (dispatch:AppDispatch) => {
 
-    console.log('requestLogout');
     localStorage.clear();
 
     dispatch({
@@ -202,18 +136,16 @@ export const logOut = (token: string) => async (dispatch:AppDispatch) => {
     .then(response=>{
         return response.json();
     })
-    .then(json=>{
-        console.log('logout');
-        console.dir(json);
+    // .then(json=>{
+        
+    //     return json
 
-        return json
-
-    })
-    .catch(error=>{
-        console.log('Что пошло не так')
-        console.error(error);
-        return error
-    })
+    // })
+    // .catch(error=>{
+    //     console.log('Что пошло не так')
+    //     console.error(error);
+    //     return error
+    // })
 }
 
 export const refreshToken = (token: string) => async (dispatch:AppDispatch) => {
@@ -321,6 +253,79 @@ export const updateUserData = (token: string,  data:UserData) => async (dispatch
         console.log('Что пошло не так')
         console.error(error);
         return error
+    })
+
+}
+
+
+
+
+export const sendMailToResetPassword = (email:string) => async (dispatch:AppDispatch) => {
+    return await fetch(AUTH_FORGOT_PASSWORD_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({"email": email})
+    })
+    .then(response=>{
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error(`Error: ${response.status}`);
+        }
+    })
+    .then(json=>{
+        console.dir(json)
+        dispatch({
+            type: RESET_PASSWORD
+        });
+        return json;
+    })
+    .catch(error=>{
+        console.log('При запросе на сброс пароля произошла ошибка')
+        console.error(error);
+        dispatch({
+            type: REGISTER_USER_FAILED
+        });
+        return error;
+    })
+}
+
+export const resetPassword = (data:ResetPassData) => async (dispatch:AppDispatch) => {
+
+    // fetch('https://norma.nomoreparties.space/api/password-reset/reset', { //404
+    return await fetch(AUTH_RESET_PASSWORD_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({
+            "password": data.password,
+            "token": data.token
+        })
+    })
+    .then(response=>{
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error(`Error: ${response.status}`);
+        }
+    })
+    .then(json=>{
+        console.dir(json)
+        dispatch({
+            type: RESET_PASSWORD_SUCCESS
+        });
+        return json;
+    })
+    .catch(error=>{
+        console.log('При сбросе пароля произошла ошибка')
+        console.error(error);
+        dispatch({
+            type: REGISTER_USER_FAILED
+        });
+        return error;
     })
 
 }

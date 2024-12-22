@@ -88,10 +88,7 @@ function Profile() {
     };
 
     const logOutHandler = () => {
-        dispatch(logOut(localStorage.refreshToken)).then((res) => {
-            console.log("logOut dispatch then");
-            console.dir(res);
-        });
+        dispatch(logOut(localStorage.refreshToken))
     };
 
     // fix UI bug for pointEvents

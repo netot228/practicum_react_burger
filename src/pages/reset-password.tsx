@@ -49,7 +49,10 @@ function ResetPassword() {
     const successAuth = useAppSelector((state) => state.auth.success);
 
     useEffect(() => {
-        if (successAuth) {
+        if(!sessionStorage.sendedRestoreMessage){
+            navigate("/forgot-password");
+        } 
+        else if (successAuth) {
             navigate("/");
         }
     });

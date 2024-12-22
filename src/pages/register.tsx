@@ -8,11 +8,11 @@ import {
 import { UserData } from "../utils/types";
 
 import s from "./pages.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { registerRequest } from "..//services/actions/auth";
+import { regNewUser } from "..//services/actions/auth";
 
 import { REGISTER_USER_SUCCESS } from "../services/actions/auth";
 
@@ -20,9 +20,14 @@ import Loader from "../ui/loader";
 
 function RegistrationForm() {
     const dispatch = useAppDispatch();
-
-    const [form, setValue] = useState({ name: "", email: "", password: "" });
     const navigate = useNavigate();
+
+    const successAuth = useAppSelector((state) => state.auth.success);
+    const requestRegister = useAppSelector(
+        (state) => state.auth.requestRegister
+    );
+    
+    const [form, setValue] = useState({ name: "", email: "", password: "" });
     const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,29 +38,26 @@ function RegistrationForm() {
     };
 
     const RegistrationFormHolder = () => {
-        dispatch(registerRequest(form))
-            .then((json) => {
-                if (!json.success) {
-                    setErrorAuth(json.message);
-                } else {
-                    localStorage.userData = JSON.stringify(json);
-                    dispatch({
-                        type: REGISTER_USER_SUCCESS,
-                        payload: json,
-                    });
-                    navigate("/profile");
-                }
-            })
-            .catch((err) => {
-                console.log("dispatchERROR");
-                console.dir(err);
-            });
+        dispatch(regNewUser(form))
+        .then(res=>{
+            if(res.success){
+                navigate("/profile");
+            } else {
+                setErrorAuth(res.message);
+            }
+        })
     };
 
     // fix UI bug for pointEvents
     const pointEventHandler = (e: React.PointerEvent<HTMLInputElement>) => {
         console.dir(e);
     };
+
+    useEffect(() => {
+        if (successAuth) {
+            navigate("/");
+        }
+    });
 
     return (
         <div className={s.wrapper}>
@@ -73,19 +75,6 @@ function RegistrationForm() {
                     onPointerEnterCapture={pointEventHandler}
                     onPointerLeaveCapture={pointEventHandler}
                 />
-
-                {/* <Input
-                    type={"text"}
-                    placeholder={"Имя"}
-                    onChange={onChangeHolder}
-                    value={form.name}
-                    name={"name"}
-                    error={false}
-                    errorText={""}
-                    size={"default"}
-                    icon={"EditIcon"}
-                /> */}
-
                 <EmailInput
                     onChange={onChangeHolder}
                     value={form.email}
@@ -111,8 +100,7 @@ function RegistrationForm() {
                     size="large"
                     onClick={RegistrationFormHolder}
                 >
-                    Зарегистрироваться
-                    {/* Зарегистрироваться{requestRegister ? <Loader /> : `Войти`} */}
+                    Зарегистрироваться{requestRegister ? <Loader /> : `Войти`}
                 </Button>
 
                 <div className={s.option}>
