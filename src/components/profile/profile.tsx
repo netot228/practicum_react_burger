@@ -17,7 +17,7 @@ import {
     refreshToken,
     logOut,
     getUserData,
-    updateUserData
+    updateUserData,
 } from "../../services/actions/auth";
 
 function Profile() {
@@ -37,30 +37,12 @@ function Profile() {
             Number(localStorage.tokenTimeout) > timeOut
         ) {
             console.log("token действителен get userData");
-
-            dispatch(getUserData(localStorage.accessToken)).then((res) => {
-                if (res.success) {
-                    console.log("getUserData DONE");
-                } else {
-                    console.log("getUserData ERROR");
-                }
-                console.dir(res);
-            });
+            dispatch(getUserData(localStorage.accessToken));
         } else {
             console.log("token просрочен рефреш");
-
-            dispatch(refreshToken(localStorage.refreshToken)).then(
-                (res) => {
-                    if (res.success) {
-                        console.log("refreshToken DONE");
-                    } else {
-                        console.log("refreshToken ERROR");
-                    }
-                    console.dir(res);
-                }
-            );
+            dispatch(refreshToken(localStorage.refreshToken));
         }
-    }, [accessToken,dispatch]);
+    }, [accessToken, dispatch]);
 
     const newUserDataInitState = {
         name: userData?.name,
@@ -85,15 +67,16 @@ function Profile() {
         setIsEditData(false);
     };
 
-    const updateNewUserData = () => {
-        dispatch(updateUserData(localStorage.accessToken, newUserData)).then(
-            (res) => {
+    const updateNewUserData = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (window.confirm("сменить данные?")) {
+            dispatch(
+                updateUserData(localStorage.accessToken, newUserData)
+            ).then((res) => {
                 if (res.success) {
                     console.log("updateUserData DONE");
                     setIsEditData(false);
-
-                    let a = atob(localStorage.cosmicSecret);
-                    console.dir(a);
 
                     setNewUserData({
                         name: res.user?.name,
@@ -106,16 +89,14 @@ function Profile() {
                     console.log("updateUserData ERROR");
                 }
                 console.dir(res);
-            }
-        );
+            });
+        } else {
+            resetNewData();
+        }
     };
 
     const logOutHandler = () => {
-        dispatch(logOut(localStorage.refreshToken)).then((res) => {
-            if (!res.success) {
-                setErrorDispatch(res.message);
-            }
-        });
+        dispatch(logOut(localStorage.refreshToken));
     };
 
     // fix UI bug for pointEvents
@@ -158,7 +139,7 @@ function Profile() {
                 </div>
             </nav>
 
-            <form className={s.form}>
+            <form onSubmit={updateNewUserData} className={s.form}>
                 <Input
                     type={"text"}
                     placeholder={"Имя"}
@@ -193,7 +174,7 @@ function Profile() {
                     <div className={s.row}>
                         <Button
                             extraClass={s.btn}
-                            htmlType="reset"
+                            htmlType="button"
                             type="primary"
                             size="large"
                             onClick={resetNewData}
@@ -202,10 +183,9 @@ function Profile() {
                         </Button>
                         <Button
                             extraClass={s.btn}
-                            htmlType="button"
+                            htmlType="submit"
                             type="primary"
                             size="large"
-                            onClick={updateNewUserData}
                         >
                             Сохранить <CheckMarkIcon type="primary" />
                         </Button>

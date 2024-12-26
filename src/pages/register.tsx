@@ -5,28 +5,21 @@ import {
     Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { UserData } from "../utils/types";
-
 import s from "./pages.module.css";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
 import { regNewUser } from "..//services/actions/auth";
-
-import { REGISTER_USER_SUCCESS } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
 function RegistrationForm() {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
-    const successAuth = useAppSelector((state) => state.auth.success);
     const requestRegister = useAppSelector(
         (state) => state.auth.requestRegister
     );
-    
+
     const [form, setValue] = useState({ name: "", email: "", password: "" });
     const [errorAuth, setErrorAuth] = useState("");
 
@@ -37,15 +30,12 @@ function RegistrationForm() {
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
-    const RegistrationFormHolder = () => {
-        dispatch(regNewUser(form))
-        .then(res=>{
-            if(res.success){
-                navigate("/profile");
-            } else {
-                setErrorAuth(res.message);
-            }
-        })
+    const RegistrationFormHolder = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        dispatch(regNewUser(form)).catch((err) => {
+            setErrorAuth(err);
+        });
     };
 
     // fix UI bug for pointEvents
@@ -53,15 +43,9 @@ function RegistrationForm() {
         console.dir(e);
     };
 
-    useEffect(() => {
-        if (successAuth) {
-            navigate("/");
-        }
-    });
-
     return (
         <div className={s.wrapper}>
-            <form className={s.form}>
+            <form onSubmit={RegistrationFormHolder} className={s.form}>
                 <h1 className={`text_type_main-medium ${s.title}`}>
                     Регистрация
                 </h1>
@@ -95,12 +79,11 @@ function RegistrationForm() {
 
                 <Button
                     extraClass={s.btn}
-                    htmlType="button"
+                    htmlType="submit"
                     type="primary"
                     size="large"
-                    onClick={RegistrationFormHolder}
                 >
-                    Зарегистрироваться{requestRegister ? <Loader /> : `Войти`}
+                    {requestRegister ? <Loader /> : `Зарегистрироваться`}
                 </Button>
 
                 <div className={s.option}>

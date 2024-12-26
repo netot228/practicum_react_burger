@@ -25,8 +25,8 @@ function ResetPassword() {
         setValue({ ...form, [e.target.name]: e.target.value });
     };
 
-    const ResetPasswordHolder = () => {
-        // dispatch(resetPassword(form));
+    const ResetPasswordHolder = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         setIsRequest(true);
         dispatch(resetPassword(form)).then((res) => {
@@ -49,17 +49,16 @@ function ResetPassword() {
     const successAuth = useAppSelector((state) => state.auth.success);
 
     useEffect(() => {
-        if(!sessionStorage.sendedRestoreMessage){
+        if (!sessionStorage.sendedRestoreMessage) {
             navigate("/forgot-password");
-        } 
-        else if (successAuth) {
+        } else if (successAuth) {
             navigate("/");
         }
     });
 
     return (
         <div className={s.wrapper}>
-            <section className={s.form}>
+            <form onSubmit={ResetPasswordHolder} className={s.form}>
                 <h1 className={`text_type_main-medium ${s.title}`}>Вход</h1>
                 <PasswordInput
                     placeholder={"Введите новый пароль"}
@@ -83,10 +82,9 @@ function ResetPassword() {
 
                 <Button
                     extraClass={s.btn}
-                    htmlType="button"
+                    htmlType="submit"
                     type="primary"
                     size="large"
-                    onClick={ResetPasswordHolder}
                 >
                     {isRequest ? <Loader /> : `Сохранить`}
                 </Button>
@@ -97,7 +95,7 @@ function ResetPassword() {
                         Войти
                     </Link>
                 </div>
-            </section>
+            </form>
         </div>
     );
 }

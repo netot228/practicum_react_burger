@@ -4,18 +4,16 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import s from "./pages.module.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
+import { useAppDispatch } from "../hooks/useAppSelector";
 import { sendMailToResetPassword } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
-function ForgotPass() {
+export default function ForgotPass() {
     const dispatch = useAppDispatch();
-
-    const successAuth = useAppSelector((state) => state.auth.success);
 
     const [email, setEmail] = useState("");
 
@@ -28,7 +26,8 @@ function ForgotPass() {
         setEmail(e.target.value);
     };
 
-    const ForgotPassHolder = () => {
+    const ForgotPassHolder = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         setIsRequest(true);
         dispatch(sendMailToResetPassword(email)).then((res) => {
             if (res.success) {
@@ -42,15 +41,9 @@ function ForgotPass() {
         });
     };
 
-    useEffect(() => {
-        if (successAuth) {
-            navigate("/");
-        }
-    });
-
     return (
         <div className={s.wrapper}>
-            <form className={s.form}>
+            <form onSubmit={ForgotPassHolder} className={s.form}>
                 <h1 className={`text_type_main-medium ${s.title}`}>
                     Восстановление пароля
                 </h1>
@@ -68,10 +61,9 @@ function ForgotPass() {
 
                 <Button
                     extraClass={s.btn}
-                    htmlType="button"
+                    htmlType="submit"
                     type="primary"
                     size="large"
-                    onClick={ForgotPassHolder}
                 >
                     {isRequest ? <Loader /> : `Восстановить`}
                 </Button>
@@ -86,5 +78,3 @@ function ForgotPass() {
         </div>
     );
 }
-
-export default ForgotPass;

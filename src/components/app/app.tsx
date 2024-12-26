@@ -22,7 +22,7 @@ import {
     RegistrationForm,
     ForgotPass,
     ResetPassword,
-    Page404
+    Page404,
 } from "../../pages";
 
 import Profile from "../profile/profile";
@@ -78,11 +78,12 @@ function App() {
 
     useEffect(() => {
         if (!isUserDetected && localStorage.userData) {
-            const userData = JSON.parse(localStorage.userData);
-
             dispatch({
                 type: LOGIN_USER,
-                payload: { user: userData, success: true },
+                payload: {
+                    user: JSON.parse(localStorage.userData),
+                    success: true,
+                },
             });
 
             const timeOut = new Date().getTime() - 5 * 60 * 1000;
@@ -129,10 +130,45 @@ function App() {
             <AppHeader />
             <main className={style.mainarea}>
                 <Routes location={background || location}>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<RegistrationForm />} />
-                    <Route path="/forgot-password" element={<ForgotPass />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route
+                        path="/login"
+                        element={
+                            <ProtectedRouteElement
+                                anonymOnlyEntrance={true}
+                                element={<Login />}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/register"
+                        element={
+                            <ProtectedRouteElement
+                                anonymOnlyEntrance={true}
+                                element={<RegistrationForm />}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <ProtectedRouteElement
+                                anonymOnlyEntrance={true}
+                                element={<ForgotPass />}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/reset-password"
+                        element={
+                            <ProtectedRouteElement
+                                anonymOnlyEntrance={true}
+                                element={<ResetPassword />}
+                            />
+                        }
+                    />
 
                     <Route
                         path="/profile"

@@ -5,25 +5,20 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import s from "./pages.module.css";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { authUser, REGISTER_USER_FAILED } from "../services/actions/auth";
-import { useNavigate } from "react-router-dom";
+import { authUser } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
 function Login() {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
-    const successAuth = useAppSelector((state) => state.auth.success);
     const requestRegister = useAppSelector(
         (state) => state.auth.requestRegister
     );
-
-    console.log("reload Login");
 
     const [form, setValue] = useState({ email: "", password: "" });
     const [errorAuth, setErrorAuth] = useState("");
@@ -47,30 +42,14 @@ function Login() {
             setErrorAuth("password required");
             return;
         }
-
-        dispatch(authUser(form)).then((res) => {
-            if (!res.success) {
-                setErrorAuth(res.message);
-                dispatch({
-                    type: REGISTER_USER_FAILED,
-                });
-            }
+        dispatch(authUser(form)).catch((err) => {
+            setErrorAuth(err);
         });
     };
 
-    useEffect(() => {
-        if (successAuth) {
-            if (localStorage.destination) {
-                navigate(localStorage.destination);
-            } else {
-                navigate("/");
-            }
-        }
-    });
-
     return (
         <div className={s.wrapper}>
-            <form className={s.form}>
+            <form onSubmit={signInForm} className={s.form}>
                 <h1 className={`text_type_main-medium ${s.title}`}>Вход</h1>
                 <EmailInput
                     onChange={onChangeHolder}
@@ -95,7 +74,6 @@ function Login() {
                     htmlType="submit"
                     type="primary"
                     size="large"
-                    onClick={signInForm}
                 >
                     {requestRegister ? <Loader /> : `Войти`}
                 </Button>
