@@ -1,20 +1,15 @@
 import {
     SEND_REQUEST,
-
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAILED,
-
     RESET_PASSWORD,
-    RESET_PASSWORD_SUCCESS,
-
     GET_USER_DATA,
     SET_TOKEN,
-
     LOGIN_USER,
     LOGOUT_USER
 } from '../actions/auth';
 
-import { UserData, UserState, UserAction } from '../../utils/types';
+import { UserState, UserAction } from '../../utils/types';
 
 const initState = {
     success: false,

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../hooks/useAppSelector";
 import { useEffect } from "react";
 
@@ -11,8 +11,12 @@ type ProtectedElementProp = {
 function ProtectedRouteElement(props: ProtectedElementProp) {
     const isUserDetected = useAppSelector((state) => state.auth.success);
 
+    const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    console.log('location')
+    console.dir(location);
 
     useEffect(() => {
         if (!isUserDetected && localStorage.userData) {
