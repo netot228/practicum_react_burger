@@ -1,18 +1,15 @@
-import React, { useRef, useState, SyntheticEvent } from "react";
+import React, { useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { IngredientData } from "../../utils/types";
+import { BurgerProps } from "../../utils/types";
 
 import style from "./burger-ingredients.module.css";
 
 import IngredientBlock from "./ingredient-block/ingredient-block";
 
-interface BurgerProps {
-    ingredients: IngredientData[];
-}
+const BurgerIngredients: React.FC<BurgerProps> = (props) => {
 
-function BurgerIngredients(props: BurgerProps) {
-    const [currentType, setCurrentType] = useState("bun");
+    const [currentType, setCurrentType] = useState<string>("bun");
 
     const bunRef = useRef<HTMLUListElement>(null);
     const sauceRef = useRef<HTMLUListElement>(null);
@@ -41,7 +38,8 @@ function BurgerIngredients(props: BurgerProps) {
     };
 
     const ingredientBoxRef = useRef<HTMLDivElement>(null);
-    const onWheelHandler = (e: SyntheticEvent) => {
+    
+    const onWheelHandler = () => {
         const curScroll = ingredientBoxRef.current?.scrollTop || 0;
 
         const sauceAnchor = bunRef.current

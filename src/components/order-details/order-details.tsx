@@ -3,7 +3,7 @@ import { useAppSelector } from "../../hooks/useAppSelector";
 
 import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-function OrderDetails() {
+export default function OrderDetails() {
     const { notice, orderData, success } = useAppSelector(
         (state) => state.order
     );
@@ -50,4 +50,4 @@ function OrderDetails() {
     );
 }
 
-export default OrderDetails;
+

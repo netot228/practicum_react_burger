@@ -8,7 +8,8 @@ import { ModalProps } from "../../utils/types";
 
 const modalsRoot = document.getElementById("modals") as HTMLElement;
 
-function Modal(props: ModalProps) {
+const Modal: React.FC<ModalProps> = (props) => {
+    
     const closeModal = props.onClose;
     const keyBoardHandler = (e: KeyboardEvent) => {
         if (e.key === "Escape") {

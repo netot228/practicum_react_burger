@@ -1,14 +1,8 @@
-import { IngredientData } from "../../../utils/types";
+import { IngredientBlockData } from "../../../utils/types";
 import React, { useMemo } from "react";
 import IngredientItem from "../ingredient-item/ingredient-item";
 
 import style from "../burger-ingredients.module.css";
-
-interface IngredientBlockData {
-    ingredients: IngredientData[];
-    value: string;
-    title: string;
-}
 
 const IngredientBlock = React.forwardRef(
     (props: IngredientBlockData, ref: React.ForwardedRef<HTMLUListElement>) => {

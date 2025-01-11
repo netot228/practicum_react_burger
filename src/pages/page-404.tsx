@@ -1,7 +1,7 @@
 import s from "./pages.module.css";
 import { Link } from "react-router-dom";
 
-function Page404() {
+export default function Page404() {
     return (
         <>
             <div className={s.wrapper404}>
@@ -18,4 +18,4 @@ function Page404() {
     );
 }
 
-export default Page404;
+

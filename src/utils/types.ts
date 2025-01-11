@@ -46,7 +46,6 @@ export interface ConstructorAction {
     uid?: string | number | undefined;
     moveItemFromPos: number;
     moveItemToPos: number;
-    // endPos: number
 }
 
 export interface DragItem {
@@ -119,4 +118,41 @@ export interface UserAction {
 export interface ResetPassData {
     token: string;
     password: string;
+}
+
+export interface BunProps {
+    type?: "bottom" | "top" | undefined;
+    bun?: IngredientData | null;
+}
+
+export interface ToppingBlockProps {
+    topping: IngredientData[] | [];
+    decreaseItem: (item: IngredientData | undefined) => void;
+}
+
+export interface ToppingProps {
+    topping: IngredientData | null;
+    index: number;
+    removeTopping?: (uid: string | number | undefined) => void;
+    moveTopping?: (dragIndex: number, hoverIndex: number) => void;
+}
+
+export interface IngredientBlockData {
+    ingredients: IngredientData[];
+    value: string;
+    title: string;
+}
+
+export interface IngredientProps {
+    data: IngredientData;
+    key?: string | number;
+}
+
+export interface BurgerProps {
+    ingredients: IngredientData[];
+}
+
+export interface IngredientDetailsItemPops {
+    title: string;
+    value: number;
 }

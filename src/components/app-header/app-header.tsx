@@ -1,11 +1,9 @@
 import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "./app-header.module.css";
-
-import HeaderButton from "./app-header-button/app-header-button";
-
+import {HeaderButton} from "./app-header-button/app-header-button";
 import { useAppSelector } from "../../hooks/useAppSelector";
 
-function AppHeader() {
+export default function AppHeader() {
     const name = useAppSelector((state) => state.auth.user?.name);
 
     return (
@@ -40,4 +38,4 @@ function AppHeader() {
     );
 }
 
-export default AppHeader;
+

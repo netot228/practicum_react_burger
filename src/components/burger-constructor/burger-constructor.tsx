@@ -98,7 +98,6 @@ function BurgerConstructor() {
             console.log("confirmOrder - CLEAR_ORDER_DETAILS");
             closeModal();
             dispatch({ type: CLEAR_ORDER_DETAILS });
-            // dispatch({ type: CLEAR_BURGER });
         } else {
             let sendOrderData = topping.map((el) => el._id);
 

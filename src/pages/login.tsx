@@ -13,15 +13,15 @@ import { authUser } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
-function Login() {
+export default function Login() {
     const dispatch = useAppDispatch();
 
     const requestRegister = useAppSelector(
         (state) => state.auth.requestRegister
     );
 
-    const [form, setValue] = useState({ email: "", password: "" });
-    const [errorAuth, setErrorAuth] = useState("");
+    const [form, setValue] = useState<{ email: string, password: string }>({ email: "", password: "" });
+    const [errorAuth, setErrorAuth] = useState<string>("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (errorAuth) {
@@ -96,4 +96,3 @@ function Login() {
     );
 }
 
-export default Login;

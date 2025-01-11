@@ -13,13 +13,13 @@ import { resetPassword } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
-function ResetPassword() {
+export default function ResetPassword() {
     const dispatch = useAppDispatch();
 
-    const [form, setValue] = useState({ token: "", password: "" });
+    const [form, setValue] = useState<{ token: string, password: string }>({ token: "", password: "" });
 
-    const [errorAuth, setErrorAuth] = useState("");
-    const [isRequest, setIsRequest] = useState(false);
+    const [errorAuth, setErrorAuth] = useState<string>("");
+    const [isRequest, setIsRequest] = useState<boolean>(false);
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue({ ...form, [e.target.name]: e.target.value });
@@ -100,4 +100,4 @@ function ResetPassword() {
     );
 }
 
-export default ResetPassword;
+
