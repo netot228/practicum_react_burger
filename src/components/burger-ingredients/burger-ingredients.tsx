@@ -9,7 +9,7 @@ import IngredientBlock from "./ingredient-block/ingredient-block";
 
 const BurgerIngredients: React.FC<BurgerProps> = (props) => {
 
-    const [currentType, setCurrentType] = useState<string>("bun");
+    const [currentType, setCurrentType] = useState("bun");
 
     const bunRef = useRef<HTMLUListElement>(null);
     const sauceRef = useRef<HTMLUListElement>(null);

@@ -13,6 +13,11 @@ import { authUser } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
+type TLoginForm = {
+    email: string; 
+    password: string;
+}
+
 export default function Login() {
     const dispatch = useAppDispatch();
 
@@ -20,8 +25,8 @@ export default function Login() {
         (state) => state.auth.requestRegister
     );
 
-    const [form, setValue] = useState<{ email: string, password: string }>({ email: "", password: "" });
-    const [errorAuth, setErrorAuth] = useState<string>("");
+    const [form, setValue] = useState<TLoginForm>({ email: "", password: "" });
+    const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (errorAuth) {

@@ -13,13 +13,18 @@ import { resetPassword } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
+type TResetForm = {
+    token: string; 
+    password: string;
+}
+
 export default function ResetPassword() {
     const dispatch = useAppDispatch();
 
-    const [form, setValue] = useState<{ token: string, password: string }>({ token: "", password: "" });
+    const [form, setValue] = useState<TResetForm>({ token: "", password: "" });
 
-    const [errorAuth, setErrorAuth] = useState<string>("");
-    const [isRequest, setIsRequest] = useState<boolean>(false);
+    const [errorAuth, setErrorAuth] = useState("");
+    const [isRequest, setIsRequest] = useState(false);
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue({ ...form, [e.target.name]: e.target.value });

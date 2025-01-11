@@ -15,12 +15,12 @@ import Loader from "../ui/loader";
 export default function ForgotPass() {
     const dispatch = useAppDispatch();
 
-    const [email, setEmail] = useState<string>("");
+    const [email, setEmail] = useState("");
 
     const navigate = useNavigate();
 
-    const [errorAuth, setErrorAuth] = useState<string>("");
-    const [isRequest, setIsRequest] = useState<boolean>(false);
+    const [errorAuth, setErrorAuth] = useState("");
+    const [isRequest, setIsRequest] = useState(false);
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);

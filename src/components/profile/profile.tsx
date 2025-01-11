@@ -28,7 +28,7 @@ export default function Profile() {
     const userData = useAppSelector((state) => state.auth.user);
     const accessToken = useAppSelector((state) => state.auth.accessToken);
 
-    const [errorDispatch, setErrorDispatch] = useState<string>("");
+    const [errorDispatch, setErrorDispatch] = useState("");
 
     useEffect(() => {
         const timeOut = new Date().getTime() - 5 * 60 * 1000;
@@ -60,7 +60,7 @@ export default function Profile() {
     };
     const [newUserData, setNewUserData] = useState<UserData>(newUserDataInitState);
 
-    const [isEditData, setIsEditData] = useState<boolean>(false);
+    const [isEditData, setIsEditData] = useState(false);
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!isEditData) {
