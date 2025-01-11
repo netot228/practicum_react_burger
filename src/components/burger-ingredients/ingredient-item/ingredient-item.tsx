@@ -1,4 +1,4 @@
-import { IngredientData } from "../../../utils/types";
+import { IngredientProps } from "../../../utils/types";
 
 import {
     Counter,
@@ -8,12 +8,9 @@ import { useDrag } from "react-dnd";
 import style from "../burger-ingredients.module.css";
 import { Link, useLocation } from "react-router-dom";
 
-interface IngredientProps {
-    data: IngredientData;
-    key?: string | number;
-}
 
-const IngredientItem = (props: IngredientProps) => {
+
+const IngredientItem: React.FC<IngredientProps> = (props) => {
     const location = useLocation();
     const { _id, image, name, price, qnt } = props.data;
     const [, dragRef] = useDrag(

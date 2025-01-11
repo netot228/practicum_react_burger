@@ -1,4 +1,4 @@
-import { IngredientData } from "../../../utils/types";
+import { ToppingBlockProps } from "../../../utils/types";
 import { useMemo } from "react";
 import { useAppDispatch } from "../../../hooks/useAppSelector";
 import { REMOVE_INGREDIENT } from "../../../services/actions/burger-constructor";
@@ -6,14 +6,7 @@ import ToppingItem from "../topping-item/topping-item";
 import style from "../burger-constructor.module.css";
 import { v4 as uuid } from "uuid";
 
-interface ToppingBlockProps {
-    topping: IngredientData[] | [];
-    decreaseItem: (item: IngredientData | undefined) => void;
-}
-
-const ToppingBlock: React.FC<ToppingBlockProps> = (
-    props: ToppingBlockProps
-) => {
+const ToppingBlock: React.FC<ToppingBlockProps> = (props) => {
     const dispatch = useAppDispatch();
     const { topping, decreaseItem } = props;
 

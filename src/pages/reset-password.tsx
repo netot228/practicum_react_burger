@@ -13,10 +13,15 @@ import { resetPassword } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
-function ResetPassword() {
+type TResetForm = {
+    token: string; 
+    password: string;
+}
+
+export default function ResetPassword() {
     const dispatch = useAppDispatch();
 
-    const [form, setValue] = useState({ token: "", password: "" });
+    const [form, setValue] = useState<TResetForm>({ token: "", password: "" });
 
     const [errorAuth, setErrorAuth] = useState("");
     const [isRequest, setIsRequest] = useState(false);
@@ -100,4 +105,4 @@ function ResetPassword() {
     );
 }
 
-export default ResetPassword;
+

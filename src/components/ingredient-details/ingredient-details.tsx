@@ -2,7 +2,7 @@ import { useAppSelector } from "../../hooks/useAppSelector";
 import style from "./ingredient-details.module.css";
 import IngredientDetailsItem from "./ingredient-details-item/ingredient-details-item";
 
-function IngredientDetails() {
+export default function IngredientDetails() {
     const ingredient = useAppSelector((state) => state.detail.ingredient);
 
     return (
@@ -43,4 +43,4 @@ function IngredientDetails() {
     );
 }
 
-export default IngredientDetails;
+

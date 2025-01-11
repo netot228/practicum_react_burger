@@ -15,7 +15,7 @@ type BtnPops = {
     path: string;
 };
 
-function HeaderButton(props: BtnPops) {
+export const HeaderButton: React.FC<BtnPops> = (props) => {
     let Icon;
     switch (props.icon) {
         case "burger":
@@ -47,5 +47,3 @@ function HeaderButton(props: BtnPops) {
         </NavLink>
     );
 }
-
-export default HeaderButton;

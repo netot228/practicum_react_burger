@@ -14,13 +14,21 @@ import { regNewUser } from "..//services/actions/auth";
 
 import Loader from "../ui/loader";
 
-function RegistrationForm() {
+
+type TRegForm = {
+    name: string;
+    email: string;
+    password: string
+}
+
+export default function RegistrationForm() {
     const dispatch = useAppDispatch();
     const requestRegister = useAppSelector(
         (state) => state.auth.requestRegister
     );
 
-    const [form, setValue] = useState({ name: "", email: "", password: "" });
+    const [form, setValue] = useState<TRegForm>({ name: "", email: "", password: "" });
+    
     const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,4 +105,4 @@ function RegistrationForm() {
     );
 }
 
-export default RegistrationForm;
+

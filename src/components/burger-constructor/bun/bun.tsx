@@ -1,15 +1,10 @@
-import { IngredientData } from "../../../utils/types";
+import { BunProps } from "../../../utils/types";
 
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import style from "../burger-constructor.module.css";
 
-interface BunProps {
-    type?: "bottom" | "top" | undefined;
-    bun?: IngredientData | null;
-}
-
-const Bun: React.FC<BunProps> = (props: BunProps) => {
+const Bun: React.FC<BunProps> = (props) => {
     const { name, price, image } = props.bun
         ? props.bun
         : {

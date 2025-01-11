@@ -1,10 +1,7 @@
+import {IngredientDetailsItemPops} from '../../../utils/types';
 import style from "../ingredient-details.module.css";
 
-interface IngredientDetailsItemPops {
-    title: string;
-    value: number;
-}
-const IngredientDetailsItem = (props: IngredientDetailsItemPops) => {
+const IngredientDetailsItem: React.FC<IngredientDetailsItemPops> = (props) => {
     return (
         <div className={style.content_item}>
             <span className={`text_type_main-default ${style.content_title}`}>

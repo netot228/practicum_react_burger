@@ -13,14 +13,19 @@ import { authUser } from "../services/actions/auth";
 
 import Loader from "../ui/loader";
 
-function Login() {
+type TLoginForm = {
+    email: string; 
+    password: string;
+}
+
+export default function Login() {
     const dispatch = useAppDispatch();
 
     const requestRegister = useAppSelector(
         (state) => state.auth.requestRegister
     );
 
-    const [form, setValue] = useState({ email: "", password: "" });
+    const [form, setValue] = useState<TLoginForm>({ email: "", password: "" });
     const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,4 +101,3 @@ function Login() {
     );
 }
 
-export default Login;

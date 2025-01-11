@@ -1,6 +1,6 @@
 import { ModalProps } from "../../utils/types";
 
-function ModalOverlay(props: ModalProps) {
+const ModalOverlay: React.FC<ModalProps> = (props) => {
     return (
         <div className={props.className} onClick={props.onClose}>
             {props.children}

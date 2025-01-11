@@ -1,3 +1,4 @@
+import { UserData } from "../../utils/types";
 import s from "./profile.module.css";
 import {
     PasswordInput,
@@ -20,9 +21,9 @@ import {
     updateUserData,
 } from "../../services/actions/auth";
 
-function Profile() {
+export default function Profile() {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const userData = useAppSelector((state) => state.auth.user);
     const accessToken = useAppSelector((state) => state.auth.accessToken);
@@ -37,21 +38,27 @@ function Profile() {
             Number(localStorage.tokenTimeout) > timeOut
         ) {
             console.log("token действителен get userData");
-            dispatch(getUserData(localStorage.accessToken));
+            dispatch(getUserData(localStorage.accessToken))
+            .then(res=>{
+                if(res.message==="jwt expired"){
+                    dispatch(refreshToken(localStorage.refreshToken));
+                }
+            });
         } else {
             console.log("token просрочен рефреш");
             dispatch(refreshToken(localStorage.refreshToken));
         }
     }, [accessToken, dispatch]);
 
-    const newUserDataInitState = {
+    
+    const newUserDataInitState: UserData = {
         name: userData?.name,
         email: userData?.email,
         password: localStorage.cosmicSecret
             ? atob(localStorage.cosmicSecret)
             : "",
     };
-    const [newUserData, setNewUserData] = useState(newUserDataInitState);
+    const [newUserData, setNewUserData] = useState<UserData>(newUserDataInitState);
 
     const [isEditData, setIsEditData] = useState(false);
 
@@ -196,4 +203,4 @@ function Profile() {
     );
 }
 
-export default Profile;
+
