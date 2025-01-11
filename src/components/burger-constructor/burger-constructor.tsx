@@ -24,6 +24,7 @@ import {
 import {
     ADD_INGREDIENT,
     ADD_BUN,
+    CLEAR_BURGER,
 } from "../../services/actions/burger-constructor";
 
 import style from "./burger-constructor.module.css";
@@ -33,7 +34,14 @@ import Bun from "./bun/bun";
 
 import ToppingBlock from "./topping-block/topping-block";
 
+import { useNavigate } from "react-router-dom";
+
 function BurgerConstructor() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const isUserDetected = useAppSelector((state) => state.auth.success);
+
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
     );
@@ -44,8 +52,6 @@ function BurgerConstructor() {
         (state) => state.order
     );
 
-    const dispatch = useAppDispatch();
-
     const decreaseItem = (item: IngredientData | undefined) => {
         dispatch({
             type: DECREASE_INGREDIENT_ITEM,
@@ -55,7 +61,6 @@ function BurgerConstructor() {
 
     const dropHandler = (item: DragItem) => {
         const ingredient = ingredients.find((el) => el._id === item._id);
-        // const uid = `${ingredient?._id}__${Math.floor(Math.random()*10000)}`;
         const uid = uuid();
 
         if (ingredient?.type === "bun" && bun && bun !== ingredient) {
@@ -86,9 +91,14 @@ function BurgerConstructor() {
 
     const { isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = () => {
+        if (!isUserDetected) {
+            return navigate("/login");
+        }
         if (isModalOpen) {
+            console.log("confirmOrder - CLEAR_ORDER_DETAILS");
             closeModal();
             dispatch({ type: CLEAR_ORDER_DETAILS });
+            // dispatch({ type: CLEAR_BURGER });
         } else {
             let sendOrderData = topping.map((el) => el._id);
 

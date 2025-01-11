@@ -1,0 +1,130 @@
+.wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.form {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+.title {
+    margin-bottom: 24px;
+}
+.input {
+    margin-bottom: 24px;
+}
+.btn {
+    margin-bottom: 80px;
+    min-width: 128px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option {
+    display: flex;
+    flex-flow: row;
+    font-family: 'Jet Brains Mono';
+	font-size: 16px;
+	line-height: 1.5;
+	font-weight: normal;
+    color: var(--text-inactive-color);
+    margin-bottom: 16px;
+}
+.link {
+    display: inline-block;
+    color: var(--colors-interface-accent);
+    margin-left: 8px;
+}
+
+.notice {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-family: 'Jet Brains Mono';
+	font-size: 16px;
+	line-height: 1.5;
+	font-weight: normal;
+    color: var(--colors-interface-error);
+}
+
+.wrapper404 {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-flow: column;
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    padding: 120px 60px 0 0;
+    align-items: end;
+    justify-content: start;
+}
+.bg404 {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/404.svg) no-repeat 50% 50%;
+    background-size: cover;
+    mix-blend-mode: color-dodge;
+    opacity: .35;
+}
+.title404 {
+    font-family: 'Iceland';
+	font-weight: normal;
+	font-size: 144px;
+	line-height: .83;
+    color: #fff;
+    text-shadow: 0 0 30px red;
+    margin-bottom: 16px;
+}
+.title404_subtitle {
+    font-family: 'Jet Brains Mono';
+	font-size: 20px;
+	line-height: 1.5;
+	font-weight: normal;
+    color: var(--text-inactive-color);
+    margin-bottom: 120px;
+}
+
+.link404 {
+    position: relative;
+    font-family: 'Jet Brains Mono';
+	font-size: 20px;
+	line-height: 1.5;
+    display: inline-block;
+    color: var(--colors-interface-accent);
+    transition: all 0.3s ease;
+
+    padding-left: 20px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        bottom: 0;
+        margin: auto;
+        width: 0;
+        height: 0;
+        border-right: 5px solid var(--colors-interface-accent);
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    &:hover {
+        color: #fff;
+
+        &:before {
+            left: 0;
+            border-right: 5px solid #fff;
+        }
+    }
+}

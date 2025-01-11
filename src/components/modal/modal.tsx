@@ -21,7 +21,7 @@ function Modal(props: ModalProps) {
         return () => {
             document.removeEventListener("keydown", keyBoardHandler);
         };
-    }, []);
+    });
 
     return createPortal(
         <div className={style.modal}>

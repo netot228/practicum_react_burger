@@ -5,11 +5,14 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "../app-header.module.css";
 
+import { NavLink } from "react-router-dom";
+
 type BtnPops = {
     type: "secondary" | "primary" | "error" | "success" | "disabled";
     icon?: string;
     text?: string;
     className?: string;
+    path: string;
 };
 
 function HeaderButton(props: BtnPops) {
@@ -29,14 +32,19 @@ function HeaderButton(props: BtnPops) {
     }
 
     return (
-        <button className={style.button}>
+        <NavLink
+            className={({ isActive }) =>
+                isActive ? style.activebtn : style.button
+            }
+            to={props.path}
+        >
             {props.icon && Icon}
             <span
                 className={`text text_type_main-default ${style[props.type]}`}
             >
                 {props.text}
             </span>
-        </button>
+        </NavLink>
     );
 }
 

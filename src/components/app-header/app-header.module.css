@@ -1,5 +1,6 @@
 .header {
     position: relative;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,17 +13,34 @@
     align-items: center;
     margin-left: 20px;
     cursor: pointer;
+
+    color: var(--text-inactive-color)
 }
-.button:first-child {
+.activebtn {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 20px;
+    cursor: pointer;
+    color: #FFF;
+    fill: #fff;
+
+    & span {
+        color: #fff;
+    }
+    & svg {
+        fill: #fff;
+    }
+}
+.button:first-child, .activebtn:first-child {
     margin-left: 0;
 }
 
 .primary {
-    color: var(--text-primary-color)
+    /* color: var(--text-primary-color) */
 }
-.secondary {
+/* .secondary {
     color: var(--text-inactive-color)
-}
+} */
 
 .icon {
     display: inline-block;

@@ -1,5 +1,5 @@
 import {ConstructorState, ConstructorAction} from '../../utils/types';
-import {ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT, SORT_TOPPING} from '../actions/burger-constructor';
+import {ADD_INGREDIENT, ADD_BUN, REMOVE_INGREDIENT, SORT_TOPPING, CLEAR_BURGER } from '../actions/burger-constructor';
 
 const constructorState: ConstructorState = {
     topping: [],
@@ -36,6 +36,13 @@ export const constructorReducer = (state: ConstructorState = constructorState, a
                 topping: newToppingOrder
             }
 
+        }
+        case CLEAR_BURGER: {
+            return {
+                ...state,
+                topping: [],
+                bun: null
+            }
         }
         default: {
             return state;
