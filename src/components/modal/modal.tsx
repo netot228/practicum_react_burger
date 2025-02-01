@@ -4,12 +4,11 @@ import { createPortal } from "react-dom";
 import style from "./modal.module.css";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 
-import { ModalProps } from "../../utils/types";
+import { ModalProps } from "../../service/types";
 
 const modalsRoot = document.getElementById("modals") as HTMLElement;
 
 const Modal: React.FC<ModalProps> = (props) => {
-    
     const closeModal = props.onClose;
     const keyBoardHandler = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
@@ -43,6 +42,6 @@ const Modal: React.FC<ModalProps> = (props) => {
         </div>,
         modalsRoot
     );
-}
+};
 
 export default Modal;

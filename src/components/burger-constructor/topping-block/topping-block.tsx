@@ -1,7 +1,7 @@
-import { ToppingBlockProps } from "../../../utils/types";
+import { ToppingBlockProps } from "../../../service/types";
 import { useMemo } from "react";
 import { useAppDispatch } from "../../../hooks/useAppSelector";
-import { REMOVE_INGREDIENT } from "../../../services/actions/burger-constructor";
+import { REMOVE_INGREDIENT } from "../../../redux/actions/burger-constructor";
 import ToppingItem from "../topping-item/topping-item";
 import style from "../burger-constructor.module.css";
 import { v4 as uuid } from "uuid";

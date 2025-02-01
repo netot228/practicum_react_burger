@@ -1,4 +1,4 @@
-import { IngredientData, DragItem } from "../../utils/types";
+import { IngredientData, DragItem } from "../../service/types";
 
 import { useMemo } from "react";
 import { useDrop } from "react-dnd";
@@ -14,18 +14,18 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 import {
     sendOrder,
     CLEAR_ORDER_DETAILS,
-} from "../../services/actions/order-details";
+} from "../../redux/actions/order-details";
 import OrderDetails from "../order-details/order-details";
 
 import {
     INCREASE_INGREDIENT_ITEM,
     DECREASE_INGREDIENT_ITEM,
-} from "../../services/actions/burger-ingredients";
+} from "../../redux/actions/burger-ingredients";
 import {
     ADD_INGREDIENT,
     ADD_BUN,
     CLEAR_BURGER,
-} from "../../services/actions/burger-constructor";
+} from "../../redux/actions/burger-constructor";
 
 import style from "./burger-constructor.module.css";
 

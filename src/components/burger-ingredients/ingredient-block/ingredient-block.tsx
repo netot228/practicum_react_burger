@@ -1,4 +1,4 @@
-import { IngredientBlockData } from "../../../utils/types";
+import { IngredientBlockData } from "../../../service/types";
 import React, { useMemo } from "react";
 import IngredientItem from "../ingredient-item/ingredient-item";
 

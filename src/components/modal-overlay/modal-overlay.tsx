@@ -1,4 +1,4 @@
-import { ModalProps } from "../../utils/types";
+import { ModalProps } from "../../service/types";
 
 const ModalOverlay: React.FC<ModalProps> = (props) => {
     return (
@@ -6,6 +6,6 @@ const ModalOverlay: React.FC<ModalProps> = (props) => {
             {props.children}
         </div>
     );
-}
+};
 
 export default ModalOverlay;

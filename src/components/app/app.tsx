@@ -5,7 +5,7 @@ import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 
-import { getIngredients } from "../../services/actions/burger-ingredients";
+import { getIngredients } from "../../redux/actions/burger-ingredients";
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
 import { DndProvider } from "react-dnd";
@@ -28,16 +28,14 @@ import {
 import Profile from "../profile/profile";
 import ProtectedRouteElement from "../protected-route-element/protected-route-element";
 
-import {
-    LOGIN_USER,
-    SET_TOKEN,
-    refreshToken,
-} from "../../services/actions/auth";
+import Feed from "../feed/feed";
+
+import { LOGIN_USER, SET_TOKEN, refreshToken } from "../../redux/actions/auth";
 
 import {
     CLEAR_SELECTED_INGREDIENT,
     SET_SELECTED_INGREDIENT,
-} from "../../services/actions/ingredient-details";
+} from "../../redux/actions/ingredient-details";
 
 function App() {
     const { closeModal } = useModal(false);
@@ -189,6 +187,8 @@ function App() {
                             </Modal>
                         }
                     />
+
+                    <Route path="/feed" element={<Feed />} />
 
                     <Route
                         path="/"

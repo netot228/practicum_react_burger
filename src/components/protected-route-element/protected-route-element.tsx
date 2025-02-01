@@ -2,7 +2,7 @@ import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../hooks/useAppSelector";
 import { useEffect } from "react";
 
-import { LOGIN_USER } from "../../services/actions/auth";
+import { LOGIN_USER } from "../../redux/actions/auth";
 
 type ProtectedElementProp = {
     element: React.ReactElement;

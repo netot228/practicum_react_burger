@@ -1,4 +1,4 @@
-import { BunProps } from "../../../utils/types";
+import { BunProps } from "../../../service/types";
 
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 

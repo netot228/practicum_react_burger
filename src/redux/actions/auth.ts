@@ -1,5 +1,5 @@
-import { AppDispatch } from "../../utils/store";
-import { UserData, ResetPassData } from "../../utils/types";
+import { AppDispatch } from "../../service/store";
+import { UserData, ResetPassData } from "../../service/types";
 import {
     AUTH_LOGIN_ENDPOINT,
     AUTH_REGISTER_ENDPOINT,
@@ -8,9 +8,9 @@ import {
     AUTH_FORGOT_PASSWORD_ENDPOINT,
     AUTH_RESET_PASSWORD_ENDPOINT,
     GET_AUTH_USER,
-} from "../../utils/api-endpoints";
+} from "../../service/api-endpoints";
 
-import { requestHandler } from "../../utils/request-api";
+import { requestHandler } from "../../service/request-api";
 
 export const SEND_REQUEST = "SEND_REQUEST";
 export const REGISTER_USER_REQUEST = "REGISTER_USER_REQUEST";

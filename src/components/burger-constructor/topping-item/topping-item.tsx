@@ -1,4 +1,4 @@
-import { ToppingProps, DragItem } from "../../../utils/types";
+import { ToppingProps, DragItem } from "../../../service/types";
 import { useDrop, useDrag } from "react-dnd";
 import { useRef } from "react";
 import {
@@ -6,7 +6,7 @@ import {
     DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useAppDispatch } from "../../../hooks/useAppSelector";
-import { SORT_TOPPING } from "../../../services/actions/burger-constructor";
+import { SORT_TOPPING } from "../../../redux/actions/burger-constructor";
 import style from "../burger-constructor.module.css";
 
 const ToppingItem: React.FC<ToppingProps> = (props) => {

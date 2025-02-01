@@ -1,4 +1,4 @@
-import { UserData } from "../../utils/types";
+import { UserData } from "../../service/types";
 import s from "./profile.module.css";
 import {
     PasswordInput,
@@ -19,7 +19,7 @@ import {
     logOut,
     getUserData,
     updateUserData,
-} from "../../services/actions/auth";
+} from "../../redux/actions/auth";
 
 export default function Profile() {
     const dispatch = useAppDispatch();
@@ -38,9 +38,8 @@ export default function Profile() {
             Number(localStorage.tokenTimeout) > timeOut
         ) {
             console.log("token действителен get userData");
-            dispatch(getUserData(localStorage.accessToken))
-            .then(res=>{
-                if(res.message==="jwt expired"){
+            dispatch(getUserData(localStorage.accessToken)).then((res) => {
+                if (res.message === "jwt expired") {
                     dispatch(refreshToken(localStorage.refreshToken));
                 }
             });
@@ -50,7 +49,6 @@ export default function Profile() {
         }
     }, [accessToken, dispatch]);
 
-    
     const newUserDataInitState: UserData = {
         name: userData?.name,
         email: userData?.email,
@@ -58,7 +56,8 @@ export default function Profile() {
             ? atob(localStorage.cosmicSecret)
             : "",
     };
-    const [newUserData, setNewUserData] = useState<UserData>(newUserDataInitState);
+    const [newUserData, setNewUserData] =
+        useState<UserData>(newUserDataInitState);
 
     const [isEditData, setIsEditData] = useState(false);
 
@@ -202,5 +201,3 @@ export default function Profile() {
         </div>
     );
 }
-
-

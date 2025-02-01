@@ -9,14 +9,14 @@ import { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { authUser } from "../services/actions/auth";
+import { authUser } from "../redux/actions/auth";
 
 import Loader from "../ui/loader";
 
 type TLoginForm = {
-    email: string; 
+    email: string;
     password: string;
-}
+};
 
 export default function Login() {
     const dispatch = useAppDispatch();
@@ -100,4 +100,3 @@ export default function Login() {
         </div>
     );
 }
-

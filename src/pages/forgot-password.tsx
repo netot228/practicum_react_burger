@@ -8,7 +8,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from "../hooks/useAppSelector";
-import { sendMailToResetPassword } from "../services/actions/auth";
+import { sendMailToResetPassword } from "../redux/actions/auth";
 
 import Loader from "../ui/loader";
 
