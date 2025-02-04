@@ -1,11 +1,11 @@
 import { AppDispatch } from "../../service/store";
 import { SEND_ORDER_ENDPOINT } from "../../service/api-endpoints";
 
-export const SEND_ORDER_REQUEST = "SEND_ORDER_REQUEST";
-export const SEND_ORDER_SUCCESS = "SEND_ORDER_SUCCESS";
-export const SEND_ORDER_FAILED = "SEND_ORDER_FAILED";
+export const SEND_ORDER_REQUEST: "SEND_ORDER_REQUEST" = "SEND_ORDER_REQUEST";
+export const SEND_ORDER_SUCCESS: "SEND_ORDER_SUCCESS" = "SEND_ORDER_SUCCESS";
+export const SEND_ORDER_FAILED: "SEND_ORDER_FAILED" = "SEND_ORDER_FAILED";
 
-export const CLEAR_ORDER_DETAILS = "CLEAR_ORDER_DETAILS";
+export const CLEAR_ORDER_DETAILS: "CLEAR_ORDER_DETAILS" = "CLEAR_ORDER_DETAILS";
 
 export function sendOrder(order: (string | number)[]) {
     return function (dispatch: AppDispatch) {

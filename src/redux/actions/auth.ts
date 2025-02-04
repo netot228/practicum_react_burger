@@ -12,15 +12,18 @@ import {
 
 import { requestHandler } from "../../service/request-api";
 
-export const SEND_REQUEST = "SEND_REQUEST";
-export const REGISTER_USER_REQUEST = "REGISTER_USER_REQUEST";
-export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED";
-export const LOGIN_USER = "LOGIN_USER";
-export const LOGOUT_USER = "LOGOUT_USER";
-export const SET_TOKEN = "SET_TOKEN";
-export const RESET_PASSWORD = "RESET_PASSWORD";
-export const RESET_PASSWORD_SUCCESS = "RESET_PASSWORD_SUCCESS";
-export const GET_USER_DATA = "GET_USER_DATA";
+export const SEND_REQUEST: "SEND_REQUEST" = "SEND_REQUEST";
+export const REGISTER_USER_REQUEST: "REGISTER_USER_REQUEST" =
+    "REGISTER_USER_REQUEST";
+export const REGISTER_USER_FAILED: "REGISTER_USER_FAILED" =
+    "REGISTER_USER_FAILED";
+export const LOGIN_USER: "LOGIN_USER" = "LOGIN_USER";
+export const LOGOUT_USER: "LOGOUT_USER" = "LOGOUT_USER";
+export const SET_TOKEN: "SET_TOKEN" = "SET_TOKEN";
+export const RESET_PASSWORD: "RESET_PASSWORD" = "RESET_PASSWORD";
+export const RESET_PASSWORD_SUCCESS: "RESET_PASSWORD_SUCCESS" =
+    "RESET_PASSWORD_SUCCESS";
+export const GET_USER_DATA: "GET_USER_DATA" = "GET_USER_DATA";
 
 export const regNewUser = (data: UserData) => async (dispatch: AppDispatch) => {
     dispatch({

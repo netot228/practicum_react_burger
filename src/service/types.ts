@@ -157,8 +157,7 @@ export interface IngredientDetailsItemPops {
     value: number;
 }
 
-
-// sprint 5 
+// sprint 5
 
 export interface OrderItem {
     ingredients: [];
@@ -175,3 +174,16 @@ export interface WS_FeedState {
     total: number;
     totalToday: number;
 }
+
+export interface WS_FeedAction {
+    type: string;
+    payload?: {};
+}
+
+export type TAppAction =
+    | IngredientsAction
+    | ConstructorAction
+    | OrderAction
+    | SelectedIngredientAction
+    | UserAction
+    | WS_FeedAction;
