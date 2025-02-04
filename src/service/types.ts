@@ -156,3 +156,22 @@ export interface IngredientDetailsItemPops {
     title: string;
     value: number;
 }
+
+
+// sprint 5 
+
+export interface OrderItem {
+    ingredients: [];
+    _id: string;
+    status: string;
+    number: number;
+    createdAt: string;
+    updatedAt: string;
+}
+export interface WS_FeedState {
+    success: boolean;
+    error: boolean;
+    orders: OrderItem[];
+    total: number;
+    totalToday: number;
+}
