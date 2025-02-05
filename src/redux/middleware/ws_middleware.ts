@@ -1,6 +1,8 @@
 import type { Middleware, MiddlewareAPI } from "redux";
 import type { RootState, AppDispatch } from "../../service/store";
 
+import { WS_FEED_CONNECT } from "../actions/feed";
+
 import { TAppAction } from "../../service/types";
 
 type TWS_options = {
@@ -47,7 +49,7 @@ export const createWSMiddleware = (options: TWS_options): Middleware => {
 
                         socket.onopen = (event) => {
                             console.log("socket is open");
-                            console.dir(event);
+                            // console.dir(event);
 
                             dispatch({ type: twActions.connect });
                             // options.onOpen?.(event);
@@ -56,23 +58,31 @@ export const createWSMiddleware = (options: TWS_options): Middleware => {
 
                         socket.onclose = (event) => {
                             console.log("socket is close");
-                            console.dir(event);
+                            // console.dir(event);
 
                             dispatch({ type: twActions.close });
                         };
 
                         socket.onmessage = (event) => {
                             console.log("ws has message");
-                            console.dir(event);
+                            // console.dir(event);
 
                             if (!event.data) return;
                             let data = JSON.parse(event.data);
 
-                            console.dir(data);
-                            dispatch({
-                                type: twActions.getMessage,
-                                payload: data,
-                            });
+                            // console.dir(data);
+
+                            // console.dir("socket");
+                            // console.dir(socket);
+
+                            if (socket?.readyState === 3) {
+                                dispatch({ type: WS_FEED_CONNECT });
+                            } else {
+                                dispatch({
+                                    type: twActions.getMessage,
+                                    payload: data,
+                                });
+                            }
                         };
 
                         socket.onerror = (event) => {

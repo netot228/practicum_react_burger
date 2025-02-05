@@ -166,6 +166,7 @@ export interface OrderItem {
     number: number;
     createdAt: string;
     updatedAt: string;
+    name: string;
 }
 export interface WS_FeedState {
     success: boolean;
@@ -177,6 +178,10 @@ export interface WS_FeedState {
 
 export interface FeedListProps {
     orders: OrderItem[];
+}
+
+export interface FeedListItemProps {
+    order: OrderItem;
 }
 
 export interface WS_FeedAction {

@@ -24,11 +24,7 @@ const WSFeedMiddleware = createWSMiddleware({
 
 const store = configureStore({
     reducer: rootReducer,
-    // middleware: (getDefaultMiddleware) =>
-    // getDefaultMiddleware({
-    //     serializableCheck: false,
-    // }),
-    // getDefaultMiddleware().concat(WSFeedMiddleware),
+
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(WSFeedMiddleware),
 });

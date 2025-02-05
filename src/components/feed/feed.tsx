@@ -20,35 +20,32 @@ import FeedList from "./feed-list/feed-list";
 
 const OrderFeedItem: React.FC<{ number: number }> = (props) => {
     const { number } = props;
-    return (
-        <li className={style.board_list_item}>{number}</li>
-    );
+    return <li className={style.board_list_item}>{number}</li>;
 };
 
 const Feed: React.FC = () => {
     const dispatch = useAppDispatch();
 
-    const { orders, totalToday, total } = useAppSelector(
-        (state) => state.feed
-    );
+    const { orders, totalToday, total } = useAppSelector((state) => state.feed);
 
     const readyOrders = useMemo(() => {
-
         let items = orders
-        .filter(el=>el.status==='done')
-        .map((el,i)=><OrderFeedItem key={`${i}__${el._id}`} number={el.number} />)
+            .filter((el) => el.status === "done")
+            .map((el, i) => (
+                <OrderFeedItem key={`${i}__${el._id}`} number={el.number} />
+            ));
 
-        return items.length > 10 ? items.slice(0,10) : items;
-
+        return items.length > 10 ? items.slice(0, 10) : items;
     }, [orders]);
 
     const awaitOrders = useMemo(() => {
-
         let items = orders
-        .filter(el=>el.status==='created' || el.status==='pending')
-        .map((el,i)=><OrderFeedItem key={`${i}__${el._id}`} number={el.number} />)
+            .filter((el) => el.status === "created" || el.status === "pending")
+            .map((el, i) => (
+                <OrderFeedItem key={`${i}__${el._id}`} number={el.number} />
+            ));
 
-        return items.length > 10 ? items.slice(0,10) : items;
+        return items.length > 10 ? items.slice(0, 10) : items;
     }, [orders]);
 
     useEffect(() => {
@@ -66,75 +63,7 @@ const Feed: React.FC = () => {
                     Лента заказов
                 </div>
 
-                <div className={style.container}>
-                    {/* orderItem */}
-
-                    { orders.length > 0 && <FeedList orders={orders}/>}
-
-                    <div className={style.order}>
-                        <div className={style.order_hat}>
-                            <div className={style.order_number}>#232324314</div>
-                            <div className={style.order_date}>Вчера, 13:50</div>
-                        </div>
-                        <div className={style.order_title}>
-                            Black Hole Singularity острый бургер
-                        </div>
-                        <div className={style.order_footer}>
-                            <div className={style.order_details}>
-                                <div className={style.order_item}>
-                                    <img
-                                        src="https://code.s3.yandex.net/react/code/sauce-01.png"
-                                        alt=""
-                                    />
-                                    <div className={style.order_item_more}>
-                                        +25
-                                    </div>
-                                </div>
-                                <div className={style.order_item}>
-                                    <img
-                                        src="https://code.s3.yandex.net/react/code/sauce-04.png"
-                                        alt=""
-                                    />
-                                </div>
-                                <div className={style.order_item}>
-                                    <img
-                                        src="https://code.s3.yandex.net/react/code/sp_1.png"
-                                        alt=""
-                                    />
-                                </div>
-                                <div className={style.order_item}>
-                                    <img
-                                        src="https://code.s3.yandex.net/react/code/core.png"
-                                        alt=""
-                                    />
-                                </div>
-                                <div className={style.order_item}>
-                                    <img
-                                        src="https://code.s3.yandex.net/react/code/sauce-01.png"
-                                        alt=""
-                                    />
-                                </div>
-                                <div className={style.order_item}>
-                                    <img
-                                        src="https://code.s3.yandex.net/react/code/bun-01.png"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                            <div className={style.order_cost}>
-                                <span
-                                    className={`${style.order_cost_sum} text_type_digits-medium`}
-                                >
-                                    {510}
-                                </span>
-                                <CurrencyIcon
-                                    className={style.order_cost_icon}
-                                    type="primary"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {orders.length > 0 && <FeedList orders={orders} />}
             </section>
 
             <section className={style.wrapper}>
@@ -146,16 +75,14 @@ const Feed: React.FC = () => {
                             <ul className={style.board_list_wrapper}>
                                 {readyOrders}
                             </ul>
-
                         </div>
 
                         <div className={style.board_col}>
                             <div className={style.board_title}>В работе:</div>
-                            
+
                             <ul className={style.board_list_wrapper}>
                                 {awaitOrders}
                             </ul>
-
                         </div>
                     </div>
 
@@ -180,6 +107,6 @@ const Feed: React.FC = () => {
             </section>
         </>
     );
-}
+};
 
 export default Feed;

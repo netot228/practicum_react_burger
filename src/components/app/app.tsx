@@ -56,6 +56,10 @@ function App() {
         ingredientID = location.pathname.replace(/^\/ingredients\/:/, "");
     }
 
+    console.log("location");
+
+    console.dir(location);
+
     if (ingredients.length > 0 && ingredientID) {
         const ingredient = ingredients.find((el) => el._id === ingredientID);
         if (ingredient) {
@@ -176,8 +180,9 @@ function App() {
                     />
 
                     <Route
-                        path="ingredients/:id"
+                        path="/ingredients/:id"
                         element={
+                            // убрать модалку отсюда
                             <Modal
                                 onClose={closeModalHandler}
                                 title="Детали ингредиента"
