@@ -175,6 +175,10 @@ export interface WS_FeedState {
     totalToday: number;
 }
 
+export interface FeedListProps {
+    orders: OrderItem[];
+}
+
 export interface WS_FeedAction {
     type: string;
     payload?: {};

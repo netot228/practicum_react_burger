@@ -16,32 +16,39 @@ import {
     WS_FEED_SEND_MESSAGE,
 } from "../../redux/actions/feed";
 
+import FeedList from "./feed-list/feed-list";
+
 const OrderFeedItem: React.FC<{ number: number }> = (props) => {
     const { number } = props;
     return (
-        // <div className={style.board_list_wrapper}>
         <li className={style.board_list_item}>{number}</li>
-        // </div>
     );
 };
 
-function Feed() {
+const Feed: React.FC = () => {
     const dispatch = useAppDispatch();
 
-    const { orders, totalToday, total, success } = useAppSelector(
+    const { orders, totalToday, total } = useAppSelector(
         (state) => state.feed
     );
 
     const readyOrders = useMemo(() => {
-        let items = orders.map((el, i) => {
-            if (el.status === "done") {
-                return (
-                    <OrderFeedItem key={`${i}__${el._id}`} number={el.number} />
-                );
-            }
-            return false;
-        });
-        return items;
+
+        let items = orders
+        .filter(el=>el.status==='done')
+        .map((el,i)=><OrderFeedItem key={`${i}__${el._id}`} number={el.number} />)
+
+        return items.length > 10 ? items.slice(0,10) : items;
+
+    }, [orders]);
+
+    const awaitOrders = useMemo(() => {
+
+        let items = orders
+        .filter(el=>el.status==='created' || el.status==='pending')
+        .map((el,i)=><OrderFeedItem key={`${i}__${el._id}`} number={el.number} />)
+
+        return items.length > 10 ? items.slice(0,10) : items;
     }, [orders]);
 
     useEffect(() => {
@@ -61,6 +68,8 @@ function Feed() {
 
                 <div className={style.container}>
                     {/* orderItem */}
+
+                    { orders.length > 0 && <FeedList orders={orders}/>}
 
                     <div className={style.order}>
                         <div className={style.order_hat}>
@@ -137,15 +146,16 @@ function Feed() {
                             <ul className={style.board_list_wrapper}>
                                 {readyOrders}
                             </ul>
+
                         </div>
 
                         <div className={style.board_col}>
                             <div className={style.board_title}>В работе:</div>
-                            <div className={style.board_list_wrapper}>
-                                <div className={style.board_list_item}>
-                                    034533
-                                </div>
-                            </div>
+                            
+                            <ul className={style.board_list_wrapper}>
+                                {awaitOrders}
+                            </ul>
+
                         </div>
                     </div>
 
