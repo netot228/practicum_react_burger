@@ -189,10 +189,20 @@ export interface WS_FeedAction {
     payload?: {};
 }
 
+export interface SelectedOrderState {
+    order: OrderItem | null;
+}
+
+export interface SelectedOrderAction {
+    type: string;
+    order?: OrderItem;
+}
+
 export type TAppAction =
     | IngredientsAction
     | ConstructorAction
     | OrderAction
     | SelectedIngredientAction
     | UserAction
-    | WS_FeedAction;
+    | WS_FeedAction
+    | SelectedOrderAction;

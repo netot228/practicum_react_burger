@@ -38,7 +38,7 @@
     }
 }
 
-.order {
+.feed_item {
     position: relative;
     width: calc(100% - 16px);
     margin-top: 16px;
@@ -51,33 +51,101 @@
         margin-top: 0;
     }
 }
+.feedDetails {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    padding: 24px;
+    min-width: 640px;
+    max-width: 720px;
+    align-self: center;
+    position: relative;
+    margin: auto;
 
-.order_hat, .order_footer {
+    .feed_item_number {
+        font-size: 28px;
+        line-height: 24px;
+        margin-bottom: 40px;
+    }
+    .feed_item_title {
+        margin-bottom: 12px;
+        width: 100%;
+    }
+    .feed_item_status {
+        margin-bottom: 60px;
+        width: 100%;
+    }
+    .container {
+        max-height: calc(80px*4 + 3*16px);
+        padding: 0 16px 0 0;
+        overflow: auto;
+        display: flex;
+        flex-flow: column;
+        gap: 16px;
+        margin: 24px 0 40px;
+    }
+    .feed_item_footer {
+        width: 100%;
+    }
+
+    .feedDetails_row {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .feedDetails_rowPart {
+        display: inline-flex;
+        align-items: center;
+    }
+    .feedDetails_rowName {
+        display: inline-flex;
+        font: 400 16px/24px 'Jet Brains Mono', sans-serif;
+        color: #fff;
+        margin-left: 16px;
+        max-width: 320px;
+    }
+    .feed_item_cost_sum {
+        font: 400 28px/0.86 'Iceland', sans-serif;
+        color: #fff;
+    }
+    .feed_item_ingredient {
+        margin-left: 0;
+    }
+
+}
+
+.feed_item_hat, .feed_item_footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.order_hat {
+.feed_item_hat {
     margin-bottom: 24px;
 }
 
-.order_number {
+.feed_item_number {
     font: 400 28px/0.86 'Iceland', sans-serif;
     color: #fff;
 }
-.order_date {
+.feed_item_date {
     font: 400 16px/1.5 'Jet Brains Mono', sans-serif;
     color: var(--text-inactive-color);
 }
 
-.order_title {
+.feed_item_title {
     font: 700 24px/1.25 'Jet Brains Mono', sans-serif;
     color: #fff;
     margin-bottom: 24px;
 }
 
-.order_details {
+.feed_item_status {
+    font: 400 16px/24px 'Jet Brains Mono', sans-serif;
+    color: var(--colors-interface-success)
+}
+
+.feed_item_details {
     position: relative;
     display: flex;
     flex-flow: row-reverse;
@@ -87,7 +155,7 @@
     padding-left: 16px;
 }
 
-.order_item {
+.feed_item_ingredient {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -125,7 +193,7 @@
     }
 }
 
-.order_item_more {
+.feed_item_more {
     position: absolute;
     right: 0;
     top: 0;
@@ -141,7 +209,7 @@
     background: rgba(28,28,33,.6);
 }
 
-.order_cost {
+.feed_item_cost {
     display: inline-flex;
     align-items: center;
     justify-content: end;

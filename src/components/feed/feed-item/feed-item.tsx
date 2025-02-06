@@ -16,13 +16,13 @@ type TFeedIconProps = {
     moreQnt?: number;
 };
 
-const FeedListItemIcon: React.FC<TFeedIconProps> = (props) => {
+export const FeedListItemIcon: React.FC<TFeedIconProps> = (props) => {
     const { icon, moreQnt, alt } = props;
 
     return (
-        <div className={style.order_item}>
+        <div className={style.feed_item_ingredient}>
             <img src={icon} alt={alt} />
-            {moreQnt && <div className={style.order_item_more}>+{moreQnt}</div>}
+            {moreQnt && <div className={style.feed_item_more}>+{moreQnt}</div>}
         </div>
     );
 };
@@ -79,29 +79,34 @@ const FeedListItem: React.FC<FeedListItemProps> = (props) => {
     });
 
     return (
-        <li className={style.order}>
+        <li className={style.feed_item}>
             <Link
-                to={`./:${_id}`}
-                state={{ background: location, feed_id: _id }}
+                to={`./:${number}`}
+                state={{ background: location, feed_number: number }}
             >
-                <div className={style.order_hat}>
-                    <div className={style.order_number}>#{number}</div>
-                    <div className={style.order_date} data-check={createdAt}>
+                <div className={style.feed_item_hat}>
+                    <div className={style.feed_item_number}>#{number}</div>
+                    <div
+                        className={style.feed_item_date}
+                        data-check={createdAt}
+                    >
                         {/* FormattedDate - некорректно отрабатывает даты (вчера/сегодня) */}
                         <FormattedDate date={new Date(createdAt)} />
                     </div>
                 </div>
-                <div className={style.order_title}>{name}</div>
-                <div className={style.order_footer}>
-                    <div className={style.order_details}>{ingredientIcons}</div>
-                    <div className={style.order_cost}>
+                <div className={style.feed_item_title}>{name}</div>
+                <div className={style.feed_item_footer}>
+                    <div className={style.feed_item_details}>
+                        {ingredientIcons}
+                    </div>
+                    <div className={style.feed_item_cost}>
                         <span
-                            className={`${style.order_cost_sum} text_type_digits-medium`}
+                            className={`${style.feed_item_cost_sum} text_type_digits-medium`}
                         >
                             {burgerCost}
                         </span>
                         <CurrencyIcon
-                            className={style.order_cost_icon}
+                            className={style.feed_item_cost_icon}
                             type="primary"
                         />
                     </div>

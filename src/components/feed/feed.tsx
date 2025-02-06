@@ -8,6 +8,8 @@ import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components
 import style from "./feed.module.css";
 import { useEffect, useMemo } from "react";
 
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+
 import {
     WS_FEED_CONNECT,
     WS_FEED_ERROR,

@@ -14,6 +14,7 @@ import Modal from "../modal/modal";
 import { useModal } from "../../hooks/useModal";
 
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import FeedDetails from "../feed/feed-details/feed-details";
 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
@@ -37,6 +38,11 @@ import {
     SET_SELECTED_INGREDIENT,
 } from "../../redux/actions/ingredient-details";
 
+import {
+    SET_SELECTED_ORDER,
+    CLEAR_SELECTED_ORDER,
+} from "../../redux/actions/selected-order";
+
 function App() {
     const { closeModal } = useModal(false);
 
@@ -56,10 +62,6 @@ function App() {
         ingredientID = location.pathname.replace(/^\/ingredients\/:/, "");
     }
 
-    console.log("location");
-
-    console.dir(location);
-
     if (ingredients.length > 0 && ingredientID) {
         const ingredient = ingredients.find((el) => el._id === ingredientID);
         if (ingredient) {
@@ -71,6 +73,29 @@ function App() {
             navigate("/");
         }
     }
+
+    // console.dir("load APPP");
+    // const feedOrders = useAppSelector((state) => state.feed.orders);
+
+    // let feedItemNumber = location.state?.feed_number
+    //     ? location.state.feed_number
+    //     : "";
+    // if (feedItemNumber === "" && location.pathname.match("/feed/:")) {
+    //     feedItemNumber = location.pathname.replace(/^\/feed\/:/, "");
+    // }
+
+    // if (feedOrders.length > 0 && feedItemNumber) {
+    //     const feedItem = feedOrders.find((el) => el.number === feedItemNumber);
+
+    //     if (feedItem) {
+    //         dispatch({
+    //             type: SET_SELECTED_ORDER,
+    //             order: feedItem,
+    //         });
+    //     } else {
+    //         navigate("/feed");
+    //     }
+    // }
 
     useEffect(() => {
         if (!ingredients.length) {
@@ -87,15 +112,12 @@ function App() {
                     success: true,
                 },
             });
-
             const timeOut = new Date().getTime() - 5 * 60 * 1000;
-
             if (
                 localStorage.tokenTimeout &&
                 Number(localStorage.tokenTimeout) < timeOut
             ) {
                 console.log("token просрочен рефреш");
-
                 dispatch(refreshToken(localStorage.refreshToken)).then(
                     (res) => {
                         if (res.success) {
@@ -123,7 +145,15 @@ function App() {
         dispatch({
             type: CLEAR_SELECTED_INGREDIENT,
         });
-        navigate("/");
+        dispatch({
+            type: CLEAR_SELECTED_ORDER,
+        });
+
+        if (background?.pathname) {
+            navigate(background.pathname);
+        } else {
+            navigate("/");
+        }
         closeModal();
     };
 
@@ -193,6 +223,19 @@ function App() {
                         }
                     />
 
+                    <Route
+                        path="/feed/:id"
+                        element={
+                            // убрать модалку отсюда
+                            // <Modal
+                            //     onClose={closeModalHandler}
+                            //     title="Детали заказа"
+                            //     data-test="ss"
+                            // >
+                            <FeedDetails />
+                            // </Modal>
+                        }
+                    />
                     <Route path="/feed" element={<Feed />} />
 
                     <Route
@@ -219,6 +262,15 @@ function App() {
                                     data-test="ss"
                                 >
                                     <IngredientDetails />
+                                </Modal>
+                            }
+                        />
+
+                        <Route
+                            path="/feed/:id"
+                            element={
+                                <Modal onClose={closeModalHandler} title="">
+                                    <FeedDetails />
                                 </Modal>
                             }
                         />
