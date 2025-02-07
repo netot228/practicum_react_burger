@@ -1,13 +1,13 @@
 import { WS_FeedState, WS_FeedAction } from "../../service/types";
 
 import {
-    WS_FEED_CONNECT,
-    WS_FEED_ERROR,
-    WS_FEED_CLOSE,
-    WS_FEED_GET_MESSAGE,
-} from "../actions/feed";
+    WS_USER_FEED_CONNECT,
+    WS_USER_FEED_ERROR,
+    WS_USER_FEED_CLOSE,
+    WS_USER_FEED_GET_MESSAGE,
+} from "../actions/user-feed";
 
-const wsFeedState: WS_FeedState = {
+const wsUserFeedState: WS_FeedState = {
     success: false,
     error: false,
     orders: [],
@@ -15,30 +15,30 @@ const wsFeedState: WS_FeedState = {
     totalToday: 0,
 };
 
-export const feedReduscer = (
-    state: WS_FeedState = wsFeedState,
+export const userFeedReduscer = (
+    state: WS_FeedState = wsUserFeedState,
     action: WS_FeedAction
 ) => {
     switch (action.type) {
-        case WS_FEED_CONNECT: {
+        case WS_USER_FEED_CONNECT: {
             return {
                 ...state,
                 error: false,
                 success: true,
             };
         }
-        case WS_FEED_GET_MESSAGE: {
+        case WS_USER_FEED_GET_MESSAGE: {
             return {
                 ...state,
                 ...action.payload,
             };
         }
-        case WS_FEED_CLOSE: {
+        case WS_USER_FEED_CLOSE: {
             return {
-                ...wsFeedState,
+                ...wsUserFeedState,
             };
         }
-        case WS_FEED_ERROR: {
+        case WS_USER_FEED_ERROR: {
             return {
                 ...state,
                 error: true,

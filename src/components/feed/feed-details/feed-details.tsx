@@ -81,6 +81,11 @@ export default function FeedDetails() {
                 feedItemNumber = location.state.feed_number;
             } else if (location.pathname.match("/feed/:")) {
                 feedItemNumber = location.pathname.replace(/^\/feed\/:/, "");
+            } else if (location.pathname.match("/profile/orders/:")) {
+                feedItemNumber = location.pathname.replace(
+                    /^\/profile\/orders\/:/,
+                    ""
+                );
             }
 
             if (feedItemNumber) {

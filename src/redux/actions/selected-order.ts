@@ -36,12 +36,3 @@ export const getOrder =
                 return error;
             });
     };
-
-/*
-        let requestUrl = `${GET_CURRENT_ORDER}?token=${localStorage.accessToken.replace(
-            /^Bearer /,
-            ""
-        )}`;
-
-        return await requestHandler(requestUrl, {})
-    */

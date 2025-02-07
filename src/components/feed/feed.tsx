@@ -1,23 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
-import Modal from "../modal/modal";
-import { useModal } from "../../hooks/useModal";
 import Loader from "../../ui/loader";
-
-import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-
 import style from "./feed.module.css";
 import { useEffect, useMemo } from "react";
-
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-
-import {
-    WS_FEED_CONNECT,
-    WS_FEED_ERROR,
-    WS_FEED_CLOSE,
-    WS_FEED_GET_MESSAGE,
-    WS_FEED_SEND_MESSAGE,
-} from "../../redux/actions/feed";
-
+import { WS_FEED_CONNECT, WS_FEED_CLOSE } from "../../redux/actions/feed";
 import FeedList from "./feed-list/feed-list";
 
 const OrderFeedItem: React.FC<{ number: number }> = (props) => {
@@ -27,7 +12,6 @@ const OrderFeedItem: React.FC<{ number: number }> = (props) => {
 
 const Feed: React.FC = () => {
     const dispatch = useAppDispatch();
-
     const { orders, totalToday, total } = useAppSelector((state) => state.feed);
 
     const readyOrders = useMemo(() => {

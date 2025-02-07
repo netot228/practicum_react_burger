@@ -17,6 +17,7 @@ export function sendOrder(order: (string | number)[]) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
+                Authorization: localStorage.accessToken,
             },
             body: JSON.stringify({ ingredients: order }),
         })
@@ -28,6 +29,9 @@ export function sendOrder(order: (string | number)[]) {
                 }
             })
             .then((json) => {
+                console.dir("SEND_ORDER_SUCCESS");
+                console.dir(json);
+
                 dispatch({
                     type: SEND_ORDER_SUCCESS,
                     json,

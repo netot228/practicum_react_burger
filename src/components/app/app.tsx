@@ -38,10 +38,7 @@ import {
     SET_SELECTED_INGREDIENT,
 } from "../../redux/actions/ingredient-details";
 
-import {
-    SET_SELECTED_ORDER,
-    CLEAR_SELECTED_ORDER,
-} from "../../redux/actions/selected-order";
+import { CLEAR_SELECTED_ORDER } from "../../redux/actions/selected-order";
 
 function App() {
     const { closeModal } = useModal(false);
@@ -73,29 +70,6 @@ function App() {
             navigate("/");
         }
     }
-
-    // console.dir("load APPP");
-    // const feedOrders = useAppSelector((state) => state.feed.orders);
-
-    // let feedItemNumber = location.state?.feed_number
-    //     ? location.state.feed_number
-    //     : "";
-    // if (feedItemNumber === "" && location.pathname.match("/feed/:")) {
-    //     feedItemNumber = location.pathname.replace(/^\/feed\/:/, "");
-    // }
-
-    // if (feedOrders.length > 0 && feedItemNumber) {
-    //     const feedItem = feedOrders.find((el) => el.number === feedItemNumber);
-
-    //     if (feedItem) {
-    //         dispatch({
-    //             type: SET_SELECTED_ORDER,
-    //             order: feedItem,
-    //         });
-    //     } else {
-    //         navigate("/feed");
-    //     }
-    // }
 
     useEffect(() => {
         if (!ingredients.length) {
@@ -203,7 +177,7 @@ function App() {
                     />
 
                     <Route
-                        path="/profile"
+                        path="/profile/*"
                         element={
                             <ProtectedRouteElement element={<Profile />} />
                         }
@@ -223,19 +197,7 @@ function App() {
                         }
                     />
 
-                    <Route
-                        path="/feed/:id"
-                        element={
-                            // убрать модалку отсюда
-                            // <Modal
-                            //     onClose={closeModalHandler}
-                            //     title="Детали заказа"
-                            //     data-test="ss"
-                            // >
-                            <FeedDetails />
-                            // </Modal>
-                        }
-                    />
+                    <Route path="/feed/:id" element={<FeedDetails />} />
                     <Route path="/feed" element={<Feed />} />
 
                     <Route
@@ -274,6 +236,15 @@ function App() {
                                 </Modal>
                             }
                         />
+
+                        {/* <Route
+                            path="/profile/orders/:id"
+                            element={
+                                <Modal onClose={closeModalHandler} title="">
+                                    <FeedDetails />
+                                </Modal>
+                            }
+                        /> */}
                     </Routes>
                 )}
             </main>

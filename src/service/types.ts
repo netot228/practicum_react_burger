@@ -178,6 +178,7 @@ export interface WS_FeedState {
 
 export interface FeedListProps {
     orders: OrderItem[];
+    extraClass?: string | undefined;
 }
 
 export interface FeedListItemProps {

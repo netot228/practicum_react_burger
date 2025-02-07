@@ -20,6 +20,7 @@ import OrderDetails from "../order-details/order-details";
 import {
     INCREASE_INGREDIENT_ITEM,
     DECREASE_INGREDIENT_ITEM,
+    getIngredients,
 } from "../../redux/actions/burger-ingredients";
 import {
     ADD_INGREDIENT,
@@ -98,6 +99,8 @@ function BurgerConstructor() {
             console.log("confirmOrder - CLEAR_ORDER_DETAILS");
             closeModal();
             dispatch({ type: CLEAR_ORDER_DETAILS });
+            dispatch(getIngredients());
+            dispatch({ type: CLEAR_BURGER });
         } else {
             let sendOrderData = topping.map((el) => el._id);
 

@@ -69,3 +69,21 @@
 	font-weight: normal;
     color: var(--colors-interface-error);
 }
+
+.feed {
+    max-width: 720px;
+
+    .feedContainer {
+        display: flex;
+        flex-flow: column-reverse;
+        max-height: calc(100vh - 200px);
+        padding: 0;
+
+        li:first-child {
+            margin-top: 16px;
+        }
+        li:last-child{
+            margin-top: 0 !important;
+        }
+    }
+}
