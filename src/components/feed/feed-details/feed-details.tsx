@@ -8,8 +8,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import {
-    getOrder,
-    CLEAR_SELECTED_ORDER,
+    getOrder
 } from "../../../redux/actions/selected-order";
 
 import style from "../feed.module.css";
@@ -58,16 +57,13 @@ const FeedDetailsListItem: React.FC<TFeedDetailsList> = (props) => {
 };
 
 export default function FeedDetails() {
-    console.dir("refresh FeedDetails");
-
+    
     const dispatch = useAppDispatch();
 
     const order = useAppSelector((state) => state.selectedOrder.order);
 
     const location = useLocation();
     const navigate = useNavigate();
-
-    // console.dir(location);
 
     const ingredients = useAppSelector(
         (store) => store.ingredients.ingredients
@@ -90,7 +86,6 @@ export default function FeedDetails() {
 
             if (feedItemNumber) {
                 dispatch(getOrder(feedItemNumber)).then((res) => {
-                    // console.dir(res);
                     if (
                         !res.success ||
                         res.orders.length > 1 ||
@@ -98,17 +93,9 @@ export default function FeedDetails() {
                     ) {
                         navigate("*");
                     }
-                    // // if(res)
-                    // console.log("dispatch(getOrder)");
-                    // console.dir(res);
                 });
             }
         }
-        // return () => {
-        //     dispatch({
-        //         type: CLEAR_SELECTED_ORDER,
-        //     });
-        // };
     }, [order, location]);
 
     const {
@@ -152,8 +139,6 @@ export default function FeedDetails() {
             }
         }
     });
-
-    // !!!! if incorrect order
 
     return (
         <div className={style.feedDetails}>

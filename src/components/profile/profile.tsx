@@ -3,12 +3,9 @@ import { useEffect } from "react";
 import {
     Routes,
     Route,
-    NavLink,
-    useLocation,
-    useNavigate,
+    NavLink
 } from "react-router-dom";
-import Modal from "../modal/modal";
-import { useModal } from "../../hooks/useModal";
+
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
 import { refreshToken, logOut, getUserData } from "../../redux/actions/auth";
@@ -21,17 +18,9 @@ import {
     WS_USER_FEED_CLOSE,
 } from "../../redux/actions/user-feed";
 
-import { CLEAR_SELECTED_ORDER } from "../../redux/actions/selected-order";
-
-import FeedDetails from "../feed/feed-details/feed-details";
-
 export default function Profile() {
     const dispatch = useAppDispatch();
     const accessToken = useAppSelector((state) => state.auth.accessToken);
-
-    const location = useLocation();
-    const background = location.state && location.state.background;
-    const navigate = useNavigate();
 
     useEffect(() => {
         const timeOut = new Date().getTime() - 5 * 60 * 1000;
@@ -66,25 +55,13 @@ export default function Profile() {
         dispatch(logOut(localStorage.refreshToken));
     };
 
-    const { closeModal } = useModal(false);
-    const closeModalHandler = () => {
-        dispatch({
-            type: CLEAR_SELECTED_ORDER,
-        });
-
-        if (background?.pathname) {
-            navigate(background.pathname);
-        } else {
-            navigate("/");
-        }
-        closeModal();
-    };
-
+    
     return (
         <div className={s.profile}>
             <nav className={s.navigation}>
                 <NavLink
-                    to="/profile/"
+                    to=""
+                    end
                     className={({ isActive }) =>
                         isActive ? s.activelink : s.link
                     }
@@ -92,13 +69,15 @@ export default function Profile() {
                     Профиль
                 </NavLink>
                 <NavLink
-                    to="/profile/orders"
+                    to="./orders"
+                    end
                     className={({ isActive }) =>
                         isActive ? s.activelink : s.link
                     }
                 >
                     История заказов
                 </NavLink>
+                
                 <NavLink
                     to="/"
                     className={({ isActive }) =>
@@ -116,24 +95,11 @@ export default function Profile() {
                 </div>
             </nav>
 
-            <Routes location={background || location}>
-                {/* <Routes> */}
-                <Route path="/orders/:id" element={<FeedDetails />} />
-                <Route path="/orders" element={<ProfileOrders />} />
-                <Route path="/" element={<ProfileInfo />} />
+             <Routes>
+                <Route path="orders" element={<ProfileOrders />} />
+                <Route path="" element={<ProfileInfo />} />
             </Routes>
-            {background && (
-                <Routes>
-                    <Route
-                        path="/orders/:id"
-                        element={
-                            <Modal onClose={closeModalHandler} title="">
-                                <FeedDetails />
-                            </Modal>
-                        }
-                    />
-                </Routes>
-            )}
+            
         </div>
     );
 }

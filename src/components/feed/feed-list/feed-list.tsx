@@ -1,7 +1,5 @@
 import style from "../feed.module.css";
 
-import { useEffect, useMemo } from "react";
-
 import { FeedListProps } from "../../../service/types";
 import FeedListItem from "../feed-item/feed-item";
 

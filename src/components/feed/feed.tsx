@@ -42,6 +42,8 @@ const Feed: React.FC = () => {
         };
     }, []);
 
+    
+
     return (
         <>
             <section className={style.wrapper}>

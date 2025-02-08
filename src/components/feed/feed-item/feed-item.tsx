@@ -1,10 +1,9 @@
-import { useAppDispatch, useAppSelector } from "../../../hooks/useAppSelector";
+import { useAppSelector } from "../../../hooks/useAppSelector";
 import {
     CurrencyIcon,
     FormattedDate,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "../feed.module.css";
-import { useEffect, useMemo } from "react";
 
 import { FeedListItemProps } from "../../../service/types";
 
@@ -38,8 +37,7 @@ const FeedListItem: React.FC<FeedListItemProps> = (props) => {
         number,
         createdAt,
         ingredients: orderIngredients,
-        name,
-        _id,
+        name
     } = props.order;
 
     const burgerCost = orderIngredients.reduce((sum, el) => {

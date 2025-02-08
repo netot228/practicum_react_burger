@@ -38,6 +38,8 @@
         padding-top: 80px;
         color: var(--text-inactive-color);
     }
+
+    
 }
 .link {
     display: inline-flex;
@@ -49,6 +51,20 @@
     display: inline-flex;
     font: 700 24px/30px 'Jet Brains Mono', sans-serif;
     color: var(--text-primary-color);
+    margin-bottom: 20px;
+}
+
+.pendinglink {
+    display: inline-flex;
+    font: 700 24px/30px 'Jet Brains Mono', sans-serif;
+    color: rgb(103, 176, 255);
+    margin-bottom: 20px;
+}
+
+.transitionlink {
+    display: inline-flex;
+    font: 700 24px/30px 'Jet Brains Mono', sans-serif;
+    color: rgb(245, 103, 255);
     margin-bottom: 20px;
 }
 

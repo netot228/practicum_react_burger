@@ -176,6 +176,10 @@ function App() {
                         }
                     />
 
+                    <Route path="/profile/orders/:id" element={
+                        <ProtectedRouteElement element={<FeedDetails />} />
+                        }
+                    />
                     <Route
                         path="/profile/*"
                         element={
@@ -237,14 +241,14 @@ function App() {
                             }
                         />
 
-                        {/* <Route
+                        <Route
                             path="/profile/orders/:id"
                             element={
                                 <Modal onClose={closeModalHandler} title="">
                                     <FeedDetails />
                                 </Modal>
                             }
-                        /> */}
+                        />
                     </Routes>
                 )}
             </main>

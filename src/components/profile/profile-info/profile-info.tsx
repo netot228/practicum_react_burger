@@ -9,13 +9,10 @@ import {
     CheckMarkIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useAppSelector";
 
 import {
-    refreshToken,
-    logOut,
-    getUserData,
     updateUserData,
 } from "../../../redux/actions/auth";
 
