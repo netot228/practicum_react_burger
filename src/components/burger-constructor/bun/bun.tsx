@@ -18,10 +18,12 @@ const Bun: React.FC<BunProps> = (props) => {
                         ${props.type === "top" ? style.topbun : style.btmbun}
                         ${props.bun === null && style.undefinedBun}
                         `;
+    const correctedName = `${name} ${props.type === "top" ? '(верх)' : '(низ)'}`;
     return (
         <div>
             <ConstructorElement
-                text={name}
+                // text={name}
+                text={correctedName}
                 price={price}
                 thumbnail={image}
                 type={type}

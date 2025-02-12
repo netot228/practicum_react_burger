@@ -11,6 +11,7 @@ export interface IngredientData {
     carbohydrates?: number;
     calories?: number;
     image_large?: string;
+    image_mobile?: string;
     __v?: number;
     uid?: string | number;
 }

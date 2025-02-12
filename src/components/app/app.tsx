@@ -54,6 +54,7 @@ function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
 
+    // let ingredientID = location.state?.id ? location.state.id : "";
     let ingredientID = location.state?.id ? location.state.id : "";
     if (ingredientID === "" && location.pathname.match("/ingredients/:")) {
         ingredientID = location.pathname.replace(/^\/ingredients\/:/, "");
@@ -62,6 +63,7 @@ function App() {
     if (ingredients.length > 0 && ingredientID) {
         const ingredient = ingredients.find((el) => el._id === ingredientID);
         if (ingredient) {
+            console.dir('dispatch');
             dispatch({
                 type: SET_SELECTED_INGREDIENT,
                 ingredient: ingredient,
@@ -189,16 +191,7 @@ function App() {
 
                     <Route
                         path="/ingredients/:id"
-                        element={
-                            // убрать модалку отсюда
-                            <Modal
-                                onClose={closeModalHandler}
-                                title="Детали ингредиента"
-                                data-test="ss"
-                            >
-                                <IngredientDetails />
-                            </Modal>
-                        }
+                        element={<IngredientDetails />}
                     />
 
                     <Route path="/feed/:id" element={<FeedDetails />} />
@@ -209,7 +202,7 @@ function App() {
                         element={
                             <DndProvider backend={HTML5Backend}>
                                 <BurgerIngredients ingredients={ingredients} />
-                                <BurgerConstructor />
+                                {/* <BurgerConstructor /> */}
                             </DndProvider>
                         }
                     ></Route>
