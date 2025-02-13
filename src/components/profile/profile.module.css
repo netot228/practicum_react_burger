@@ -28,6 +28,8 @@
     width: 100%;
 }
 .navigation {
+    position: relative;
+    z-index: 2;
     display: inline-flex;
     flex-flow: column;
     align-items: start;
@@ -39,7 +41,7 @@
         color: var(--text-inactive-color);
     }
 
-    
+
 }
 .link {
     display: inline-flex;
@@ -87,19 +89,23 @@
 }
 
 .feed {
+    width: 100%;
     max-width: 720px;
+    text-align: center;
 
     .feedContainer {
         display: flex;
-        flex-flow: column-reverse;
+        flex-flow: column;
         max-height: calc(100vh - 200px);
         padding: 0;
+        padding-bottom: 80px;
+        text-align: left;
 
-        li:first-child {
+        /* li:first-child {
             margin-top: 16px;
         }
         li:last-child{
             margin-top: 0 !important;
-        }
+        } */
     }
 }

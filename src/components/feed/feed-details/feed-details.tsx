@@ -7,9 +7,7 @@ import {
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import {
-    getOrder
-} from "../../../redux/actions/selected-order";
+import { getOrder } from "../../../redux/actions/selected-order";
 
 import style from "../feed.module.css";
 
@@ -57,7 +55,6 @@ const FeedDetailsListItem: React.FC<TFeedDetailsList> = (props) => {
 };
 
 export default function FeedDetails() {
-    
     const dispatch = useAppDispatch();
 
     const order = useAppSelector((state) => state.selectedOrder.order);
@@ -92,6 +89,9 @@ export default function FeedDetails() {
                         res.orders.length === 0
                     ) {
                         navigate("*");
+                    } else {
+                        // console.dir("result feedDetails done");
+                        // console.dir(res);
                     }
                 });
             }

@@ -37,7 +37,7 @@ const FeedListItem: React.FC<FeedListItemProps> = (props) => {
         number,
         createdAt,
         ingredients: orderIngredients,
-        name
+        name,
     } = props.order;
 
     const burgerCost = orderIngredients.reduce((sum, el) => {

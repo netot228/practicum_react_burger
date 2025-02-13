@@ -42,8 +42,6 @@ const Feed: React.FC = () => {
         };
     }, []);
 
-    
-
     return (
         <>
             <section className={style.wrapper}>
@@ -51,7 +49,7 @@ const Feed: React.FC = () => {
                     Лента заказов
                 </div>
 
-                {orders.length > 0 && <FeedList orders={orders} />}
+                {orders.length > 0 ? <FeedList orders={orders} /> : <Loader />}
             </section>
 
             <section className={style.wrapper}>

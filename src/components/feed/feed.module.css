@@ -58,9 +58,10 @@
     padding: 24px;
     min-width: 640px;
     max-width: 720px;
-    align-self: center;
+    /* align-self: center; */
     position: relative;
-    margin: auto;
+    /* margin: auto; */
+    margin: 0 auto;
 
     .feed_item_number {
         font-size: 28px;

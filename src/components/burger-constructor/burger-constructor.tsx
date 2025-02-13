@@ -17,6 +17,8 @@ import {
 } from "../../redux/actions/order-details";
 import OrderDetails from "../order-details/order-details";
 
+import { refreshToken } from "../../redux/actions/auth";
+
 import {
     INCREASE_INGREDIENT_ITEM,
     DECREASE_INGREDIENT_ITEM,
@@ -36,12 +38,14 @@ import Bun from "./bun/bun";
 import ToppingBlock from "./topping-block/topping-block";
 
 import { useNavigate } from "react-router-dom";
+import Loader from "../../ui/loader";
 
 function BurgerConstructor() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const isUserDetected = useAppSelector((state) => state.auth.success);
+    const orderPocessing = useAppSelector((state) => state.order.processing);
 
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
@@ -107,9 +111,28 @@ function BurgerConstructor() {
             if (bun) {
                 sendOrderData.push(bun._id);
             }
-
-            dispatch(sendOrder(sendOrderData));
-            openModal();
+            const timeOut = new Date().getTime() - 5 * 60 * 1000;
+            if (
+                localStorage.tokenTimeout &&
+                Number(localStorage.tokenTimeout) < timeOut
+            ) {
+                console.log("token просрочен рефреш");
+                dispatch(refreshToken(localStorage.refreshToken)).then(
+                    (res) => {
+                        if (res.success) {
+                            console.log("refreshToken DONE");
+                            dispatch(sendOrder(sendOrderData));
+                            openModal();
+                        } else {
+                            console.log("refreshToken ERROR");
+                        }
+                        console.dir(res);
+                    }
+                );
+            } else {
+                dispatch(sendOrder(sendOrderData));
+                openModal();
+            }
         }
     };
 
@@ -153,7 +176,11 @@ function BurgerConstructor() {
                             size="large"
                             onClick={confirmOrder}
                         >
-                            Оформить заказ
+                            {orderPocessing ? (
+                                <Loader text={"Оформляю...."} />
+                            ) : (
+                                "Оформить заказ"
+                            )}
                         </Button>
                     </div>
 

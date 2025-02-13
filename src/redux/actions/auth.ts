@@ -114,6 +114,7 @@ export const refreshToken =
                         type: SET_TOKEN,
                         payload: { ...json },
                     });
+                    dispatch(getUserData(json.accessToken));
                 }
                 return json;
             })

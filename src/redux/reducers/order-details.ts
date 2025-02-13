@@ -12,6 +12,7 @@ const orderState: OrderState = {
     orderData: { name: "", order: { number: 0 }, success: false },
     notice: "",
     success: false,
+    processing: false,
 };
 
 export const orderReducer = (
@@ -23,6 +24,7 @@ export const orderReducer = (
             return {
                 ...state,
                 ingredients: action.order,
+                processing: true,
             };
         }
         case SEND_ORDER_SUCCESS: {
@@ -30,6 +32,7 @@ export const orderReducer = (
                 ...state,
                 orderData: action.json,
                 success: true,
+                processing: false,
             };
         }
         case SEND_ORDER_FAILED: {
@@ -38,6 +41,7 @@ export const orderReducer = (
                 orderData: { name: "", order: { number: 0 }, success: false },
                 notice: action.notice,
                 success: false,
+                processing: false,
             };
         }
         case CLEAR_ORDER_DETAILS: {
@@ -47,6 +51,7 @@ export const orderReducer = (
                 notice: "",
                 error: "",
                 success: false,
+                processing: false,
             };
         }
         default: {

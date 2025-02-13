@@ -1,7 +1,8 @@
 import s from "./loader.module.css";
-export default function Loader() {
+export default function Loader(props: { text?: string }) {
     return (
-        <div className={s.loader}></div>
+        <div className={s.loader}>
+            {props.text && <span>{props.text}</span>}
+        </div>
     );
 }
-

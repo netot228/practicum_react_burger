@@ -66,6 +66,7 @@ export interface OrderState {
     orderData: OrderData | null;
     notice: string | null;
     success: boolean;
+    processing: boolean;
 }
 export interface OrderAction {
     type: string;

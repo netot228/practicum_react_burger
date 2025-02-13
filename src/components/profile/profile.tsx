@@ -1,61 +1,63 @@
 import s from "./profile.module.css";
 import { useEffect } from "react";
-import {
-    Routes,
-    Route,
-    NavLink
-} from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
-import { refreshToken, logOut, getUserData } from "../../redux/actions/auth";
+import { refreshToken, logOut } from "../../redux/actions/auth";
 
 import ProfileInfo from "./profile-info/profile-info";
 import ProfileOrders from "./profile-orders/profile-orders";
+
+import { Page404 } from "../../pages";
 
 import {
     WS_USER_FEED_CONNECT,
     WS_USER_FEED_CLOSE,
 } from "../../redux/actions/user-feed";
 
+import FeedDetails from "../feed/feed-details/feed-details";
+
 export default function Profile() {
     const dispatch = useAppDispatch();
+
     const accessToken = useAppSelector((state) => state.auth.accessToken);
+    const isUserDetected = useAppSelector((state) => state.auth.success);
 
     useEffect(() => {
-        const timeOut = new Date().getTime() - 5 * 60 * 1000;
+        if (isUserDetected) {
+            const timeOut = new Date().getTime() - 15 * 60 * 1000;
 
-        if (
-            localStorage.tokenTimeout &&
-            Number(localStorage.tokenTimeout) > timeOut
-        ) {
-            console.log("token действителен get userData");
-            dispatch(getUserData(localStorage.accessToken)).then((res) => {
-                if (res.message === "jwt expired") {
-                    console.dir("jwt expired");
-                    console.dir(res);
-                    dispatch(refreshToken(localStorage.refreshToken));
-                }
-            });
-        } else {
-            console.log("token просрочен рефреш");
-            dispatch(refreshToken(localStorage.refreshToken));
+            if (
+                localStorage.tokenTimeout &&
+                Number(localStorage.tokenTimeout) < timeOut
+            ) {
+                // console.log("___PROFILE token просрочен рефреш");
+                dispatch(refreshToken(localStorage.refreshToken)).then(
+                    (res) => {
+                        if (res.success) {
+                            // console.log("___PROFILE refreshToken DONE");
+                            dispatch({ type: WS_USER_FEED_CONNECT });
+                        } else {
+                            // console.log("___PROFILE refreshToken ERROR");
+                        }
+                        console.dir(res);
+                    }
+                );
+            } else if (localStorage.accessToken) {
+                dispatch({ type: WS_USER_FEED_CONNECT });
+            }
         }
-    }, [accessToken, dispatch]);
-
-    useEffect(() => {
-        dispatch({ type: WS_USER_FEED_CONNECT });
 
         return () => {
             dispatch({ type: WS_USER_FEED_CLOSE });
         };
-    }, []);
+    }, [isUserDetected, accessToken]);
 
     const logOutHandler = () => {
         dispatch(logOut(localStorage.refreshToken));
     };
 
-    
     return (
         <div className={s.profile}>
             <nav className={s.navigation}>
@@ -77,7 +79,7 @@ export default function Profile() {
                 >
                     История заказов
                 </NavLink>
-                
+
                 <NavLink
                     to="/"
                     className={({ isActive }) =>
@@ -95,11 +97,12 @@ export default function Profile() {
                 </div>
             </nav>
 
-             <Routes>
+            <Routes>
+                <Route path="orders/:id" element={<FeedDetails />} />
                 <Route path="orders" element={<ProfileOrders />} />
                 <Route path="" element={<ProfileInfo />} />
+                <Route path="*" element={<Page404 />} />
             </Routes>
-            
         </div>
     );
 }

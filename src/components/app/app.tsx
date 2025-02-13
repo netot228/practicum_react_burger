@@ -31,7 +31,11 @@ import ProtectedRouteElement from "../protected-route-element/protected-route-el
 
 import Feed from "../feed/feed";
 
-import { LOGIN_USER, SET_TOKEN, refreshToken } from "../../redux/actions/auth";
+import {
+    LOGIN_USER,
+    refreshToken,
+    getUserData,
+} from "../../redux/actions/auth";
 
 import {
     CLEAR_SELECTED_INGREDIENT,
@@ -54,24 +58,25 @@ function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
 
-    // let ingredientID = location.state?.id ? location.state.id : "";
-    let ingredientID = location.state?.id ? location.state.id : "";
-    if (ingredientID === "" && location.pathname.match("/ingredients/:")) {
-        ingredientID = location.pathname.replace(/^\/ingredients\/:/, "");
-    }
-
-    if (ingredients.length > 0 && ingredientID) {
-        const ingredient = ingredients.find((el) => el._id === ingredientID);
-        if (ingredient) {
-            console.dir('dispatch');
-            dispatch({
-                type: SET_SELECTED_INGREDIENT,
-                ingredient: ingredient,
-            });
-        } else {
-            navigate("/");
+    useEffect(() => {
+        let ingredientID = location.state?.id ? location.state.id : "";
+        if (ingredientID === "" && location.pathname.match("/ingredients/:")) {
+            ingredientID = location.pathname.replace(/^\/ingredients\/:/, "");
         }
-    }
+        if (ingredients.length > 0 && ingredientID) {
+            const ingredient = ingredients.find(
+                (el) => el._id === ingredientID
+            );
+            if (ingredient) {
+                dispatch({
+                    type: SET_SELECTED_INGREDIENT,
+                    ingredient: ingredient,
+                });
+            } else {
+                navigate("/");
+            }
+        }
+    }, [location, ingredients]);
 
     useEffect(() => {
         if (!ingredients.length) {
@@ -88,31 +93,48 @@ function App() {
                     success: true,
                 },
             });
-            const timeOut = new Date().getTime() - 5 * 60 * 1000;
+
             if (
+                localStorage.userData &&
                 localStorage.tokenTimeout &&
-                Number(localStorage.tokenTimeout) < timeOut
+                localStorage.refreshToken
             ) {
-                console.log("token просрочен рефреш");
-                dispatch(refreshToken(localStorage.refreshToken)).then(
-                    (res) => {
-                        if (res.success) {
-                            console.log("refreshToken DONE");
-                        } else {
-                            console.log("refreshToken ERROR");
+                const timeOut = new Date().getTime() - 15 * 60 * 1000;
+
+                if (
+                    localStorage.tokenTimeout &&
+                    Number(localStorage.tokenTimeout) < timeOut
+                ) {
+                    console.log("token просрочен рефреш");
+
+                    dispatch(refreshToken(localStorage.refreshToken)).then(
+                        (res) => {
+                            if (res.success) {
+                                console.log("refreshToken DONE");
+                            } else {
+                                console.log("refreshToken ERROR");
+                            }
+                            console.dir(res);
                         }
-                        console.dir(res);
-                    }
-                );
-            } else {
-                console.log("установка токена");
-                dispatch({
-                    type: SET_TOKEN,
-                    payload: {
-                        accessToken: localStorage.accessToken,
-                        refreshToken: localStorage.refreshToken,
-                    },
-                });
+                    );
+                } else {
+                    console.log("APP пользователь");
+
+                    dispatch(getUserData(localStorage.accessToken)).then(
+                        (res) => {
+                            if (res.message === "jwt expired") {
+                                console.dir("jwt expired");
+                                console.dir(res);
+                                dispatch(
+                                    refreshToken(localStorage.refreshToken)
+                                );
+                            } else if (res.success) {
+                                // console.dir("getUserData SUCCESS");
+                                // console.dir(res);
+                            }
+                        }
+                    );
+                }
             }
         }
     }, [dispatch, isUserDetected]);
@@ -178,10 +200,6 @@ function App() {
                         }
                     />
 
-                    <Route path="/profile/orders/:id" element={
-                        <ProtectedRouteElement element={<FeedDetails />} />
-                        }
-                    />
                     <Route
                         path="/profile/*"
                         element={
@@ -202,7 +220,7 @@ function App() {
                         element={
                             <DndProvider backend={HTML5Backend}>
                                 <BurgerIngredients ingredients={ingredients} />
-                                {/* <BurgerConstructor /> */}
+                                <BurgerConstructor />
                             </DndProvider>
                         }
                     ></Route>

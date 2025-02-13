@@ -9,14 +9,10 @@ export const CLEAR_SELECTED_ORDER: "CLEAR_SELECTED_ORDER" =
 
 export const getOrder =
     (number: string | number) => async (dispatch: AppDispatch) => {
-        
         let requestUrl = `${GET_CURRENT_ORDER}${number}/`;
 
         return await requestHandler(requestUrl, {})
             .then((json) => {
-                // console.dir("GET_CURRENT_ORDER");
-                // console.dir(json);
-
                 if (json.success && json.orders.length === 1) {
                     let order = json.orders[0];
                     dispatch({

@@ -1,4 +1,4 @@
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../hooks/useAppSelector";
 import { useEffect } from "react";
 
@@ -13,34 +13,32 @@ export default function ProtectedRouteElement(props: ProtectedElementProp) {
     const isUserDetected = useAppSelector((state) => state.auth.success);
 
     const location = useLocation();
+    const navigate = useNavigate();
     const from = location.state?.from || "/";
 
     const anonymOnlyEntrance = props.anonymOnlyEntrance || false;
 
-    // const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (!isUserDetected && localStorage.userData) {
-            const userData = JSON.parse(localStorage.userData);
-            dispatch({
-                type: LOGIN_USER,
-                payload: { user: userData, success: true },
-            });
-            // } else if (!isUserDetected && !anonymOnlyEntrance) {
-            //     navigate("/login", {state:{ from: location });
-            // } else if (anonymOnlyEntrance && isUserDetected) {
-            //     navigate(from);
+        if (anonymOnlyEntrance && isUserDetected) {
+            navigate(from);
         }
-    });
 
-    if (anonymOnlyEntrance && isUserDetected) {
-        return <Navigate to={from} />;
-    }
-
-    if (!anonymOnlyEntrance && !isUserDetected) {
-        return <Navigate to="/login" state={{ from: location }} />;
-    }
+        if (!anonymOnlyEntrance && !isUserDetected) {
+            if (localStorage.userData) {
+                dispatch({
+                    type: LOGIN_USER,
+                    payload: {
+                        user: JSON.parse(localStorage.userData),
+                        success: true,
+                    },
+                });
+            } else {
+                navigate("/login", { state: { from: location } });
+            }
+        }
+    }, [isUserDetected]);
 
     if (!isUserDetected && !anonymOnlyEntrance) {
         return null;
