@@ -76,7 +76,7 @@ function App() {
                 navigate("/");
             }
         }
-    }, [location, ingredients]);
+    }, [location, ingredients, dispatch, navigate]);
 
     useEffect(() => {
         if (!ingredients.length) {

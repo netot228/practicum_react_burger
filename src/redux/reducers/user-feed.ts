@@ -7,7 +7,7 @@ import {
     WS_USER_FEED_GET_MESSAGE,
 } from "../actions/user-feed";
 
-const wsUserFeedState: WS_FeedState = {
+export const wsUserFeedState: WS_FeedState = {
     success: false,
     error: false,
     orders: [],
@@ -15,7 +15,7 @@ const wsUserFeedState: WS_FeedState = {
     totalToday: 0,
 };
 
-export const userFeedReduscer = (
+export const userFeedReducer = (
     state: WS_FeedState = wsUserFeedState,
     action: WS_FeedAction
 ) => {

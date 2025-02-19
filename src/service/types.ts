@@ -57,16 +57,20 @@ export interface DragItem {
 
 export interface OrderData {
     name: string;
-    order: { number: number };
+    order: {
+        number: number;
+        ingredients?: IngredientData[] | [] | null;
+    };
     success: boolean;
 }
 
 export interface OrderState {
     ingredients: string[];
-    orderData: OrderData | null;
-    notice: string | null;
+    notice?: string | null;
     success: boolean;
-    processing: boolean;
+    processing?: boolean;
+
+    orderData: OrderData | null;
 }
 export interface OrderAction {
     type: string;
@@ -172,7 +176,7 @@ export interface OrderItem {
 }
 export interface WS_FeedState {
     success: boolean;
-    error: boolean;
+    error?: boolean;
     orders: OrderItem[];
     total: number;
     totalToday: number;

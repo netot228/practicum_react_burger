@@ -4,9 +4,9 @@ import { constructorReducer } from "./burger-constructor";
 import { orderReducer } from "./order-details";
 import { selectedIngredientReducer } from "./ingredient-details";
 import { authReducer } from "./auth";
-import { feedReduscer } from "./feed";
+import { feedReducer } from "./feed";
 import { selectedOrderReducer } from "./selected-order";
-import { userFeedReduscer } from "./user-feed";
+import { userFeedReducer } from "./user-feed";
 
 export const rootReducer = combineReducers({
     ingredients: ingredientsReducer,
@@ -14,7 +14,7 @@ export const rootReducer = combineReducers({
     order: orderReducer,
     detail: selectedIngredientReducer,
     auth: authReducer,
-    feed: feedReduscer,
+    feed: feedReducer,
     selectedOrder: selectedOrderReducer,
-    userFeed: userFeedReduscer,
+    userFeed: userFeedReducer,
 });
