@@ -41,6 +41,7 @@ export const HeaderButton: React.FC<BtnPops> = (props) => {
             {props.icon && Icon}
             <span
                 className={`text text_type_main-default ${style[props.type]}`}
+                data-testid={`check-header-btn_${props.path.replace(/^\//, '')}`}
             >
                 {props.text}
             </span>

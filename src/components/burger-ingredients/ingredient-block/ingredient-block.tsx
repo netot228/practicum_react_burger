@@ -18,7 +18,7 @@ const IngredientBlock = React.forwardRef(
         }, [props.ingredients, props.value]);
 
         return (
-            <ul ref={ref} className={style.tabcontent}>
+            <ul ref={ref} className={style.tabcontent} data-testid={`ingredient_type_${props.value}`}>
                 <li
                     key={0}
                     className={`text_type_main-medium ${style.tabcontent_title}`}

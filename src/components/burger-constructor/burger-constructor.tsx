@@ -136,20 +136,25 @@ function BurgerConstructor() {
         }
     };
 
-    const [{ isHover }, dropTarget] = useDrop({
+    const [{ isOver }, dropTarget] = useDrop({
         accept: "ingredient",
         drop(item: DragItem) {
             dropHandler(item);
         },
         collect: (monitor) => ({
-            isHover: monitor.isOver(),
+            // isHover: monitor.isOver(),
+            isOver: !!monitor.isOver()
         }),
+        hover(item, monitor) {
+            // isOver: monitor.isOver()
+        }
     });
 
     return (
         <section
             ref={dropTarget}
-            className={`${style.wrapper}  ${isHover && style.canAccepted} `}
+            className={`${style.wrapper}  ${isOver && style.canAccepted} `}
+            data-testid='burger_constructor_droptarget'
         >
             <Bun bun={bun} type="top" />
 
@@ -159,7 +164,7 @@ function BurgerConstructor() {
 
             {topping.length > 0 && bun && (
                 <>
-                    <div className={style.confirm_order}>
+                    <div data-testid="order_btn_wrapper" className={style.confirm_order}>
                         <span
                             className={`${style.confirm_order_total} text_type_digits-medium`}
                         >

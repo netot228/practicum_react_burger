@@ -11,11 +11,17 @@ import { Link, useLocation } from "react-router-dom";
 const IngredientItem: React.FC<IngredientProps> = (props) => {
     const location = useLocation();
     const { _id, image, name, price, qnt } = props.data;
-    const [, dragRef] = useDrag(
+    const [{ opacity, isDragging }, dragRef] = useDrag(
         {
             type: "ingredient",
             item: { _id },
+            canDrag: true,
+            collect: (monitor) => ({
+                isDragging: monitor.isDragging(),
+                opacity: monitor.isDragging() ? 0 : 1,
+            }),
         },
+        
         []
     );
 
