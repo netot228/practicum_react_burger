@@ -29,8 +29,6 @@ export function sendOrder(order: (string | number)[]) {
                 }
             })
             .then((json) => {
-                // console.dir("SEND_ORDER_SUCCESS");
-                
                 dispatch({
                     type: SEND_ORDER_SUCCESS,
                     json,

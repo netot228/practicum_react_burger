@@ -97,6 +97,7 @@ function BurgerConstructor() {
     const { isModalOpen, closeModal, openModal } = useModal(false);
     const confirmOrder = () => {
         if (!isUserDetected) {
+            console.dir("!isUserDetected");
             return navigate("/login");
         }
         if (isModalOpen) {
@@ -106,6 +107,7 @@ function BurgerConstructor() {
             dispatch(getIngredients());
             dispatch({ type: CLEAR_BURGER });
         } else {
+            console.dir("fetch");
             let sendOrderData = topping.map((el) => el._id);
 
             if (bun) {
@@ -143,18 +145,19 @@ function BurgerConstructor() {
         },
         collect: (monitor) => ({
             // isHover: monitor.isOver(),
-            isOver: !!monitor.isOver()
+            isOver: !!monitor.isOver(),
         }),
         hover(item, monitor) {
             // isOver: monitor.isOver()
-        }
+        },
     });
 
     return (
         <section
             ref={dropTarget}
             className={`${style.wrapper}  ${isOver && style.canAccepted} `}
-            data-testid='burger_constructor_droptarget'
+            data-testid="burger_constructor_droptarget"
+            data-clear={topping.length > 0 ? "not" : ""}
         >
             <Bun bun={bun} type="top" />
 
@@ -164,7 +167,10 @@ function BurgerConstructor() {
 
             {topping.length > 0 && bun && (
                 <>
-                    <div data-testid="order_btn_wrapper" className={style.confirm_order}>
+                    <div
+                        data-testid="order_btn_wrapper"
+                        className={style.confirm_order}
+                    >
                         <span
                             className={`${style.confirm_order_total} text_type_digits-medium`}
                         >

@@ -1,7 +1,7 @@
 {
-    "success": true,
-    "user": {
-      "email": "ignat.bocharnikov@gmail.com",
-      "name": "netot"
-    }
+  "success": true,
+  "user": {
+    "email": "ignat.bocharnikov@gmail.com",
+    "name": "netot"
+  }
 }

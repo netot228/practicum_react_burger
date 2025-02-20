@@ -12,7 +12,10 @@ export default function OrderDetails() {
         <div className={style.order}>
             {success && orderData !== null ? (
                 <>
-                    <h4 className={`text_type_digits-large ${style.order_id}`}>
+                    <h4
+                        data-testid="order_num"
+                        className={`text_type_digits-large ${style.order_id}`}
+                    >
                         {orderData?.order.number}
                     </h4>
                     <span className={`text_type_main-medium ${style.title}`}>
@@ -49,5 +52,3 @@ export default function OrderDetails() {
         </div>
     );
 }
-
-

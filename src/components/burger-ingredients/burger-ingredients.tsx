@@ -93,6 +93,7 @@ const BurgerIngredients: React.FC<BurgerProps> = (props) => {
                     className={`${style.container}`}
                     ref={ingredientBoxRef}
                     onWheel={onWheelHandler}
+                    data-testid="ingredients_section"
                 >
                     <IngredientBlock
                         ref={bunRef}

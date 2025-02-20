@@ -392,3 +392,13 @@ export const DATA_LoginUser: UserState = {
         name: "Zlo",
     },
 };
+
+export const DATA_localStorage = {
+    success: true,
+    userData: {
+        email: "ignat.bocharnikov@gmail.com",
+        name: "netot",
+    },
+    accessToken: "Bearer ...12121",
+    refreshToken: "12121",
+};
