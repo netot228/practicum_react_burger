@@ -10,16 +10,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { regNewUser } from "..//services/actions/auth";
+import { regNewUser } from "../redux/actions/auth";
 
 import Loader from "../ui/loader";
-
 
 type TRegForm = {
     name: string;
     email: string;
-    password: string
-}
+    password: string;
+};
 
 export default function RegistrationForm() {
     const dispatch = useAppDispatch();
@@ -27,8 +26,12 @@ export default function RegistrationForm() {
         (state) => state.auth.requestRegister
     );
 
-    const [form, setValue] = useState<TRegForm>({ name: "", email: "", password: "" });
-    
+    const [form, setValue] = useState<TRegForm>({
+        name: "",
+        email: "",
+        password: "",
+    });
+
     const [errorAuth, setErrorAuth] = useState("");
 
     const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,5 +107,3 @@ export default function RegistrationForm() {
         </div>
     );
 }
-
-

@@ -9,14 +9,14 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../hooks/useAppSelector";
-import { resetPassword } from "../services/actions/auth";
+import { resetPassword } from "../redux/actions/auth";
 
 import Loader from "../ui/loader";
 
 type TResetForm = {
-    token: string; 
+    token: string;
     password: string;
-}
+};
 
 export default function ResetPassword() {
     const dispatch = useAppDispatch();
@@ -104,5 +104,3 @@ export default function ResetPassword() {
         </div>
     );
 }
-
-

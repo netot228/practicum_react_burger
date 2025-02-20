@@ -105,6 +105,13 @@
 .confirm_order_icon {
     margin: 0 40px 0 12px;
 }
+.confirm_order_btn {
+    display: flex;
+    min-width: 240px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
 
 .drug_btn {
     cursor: grab;

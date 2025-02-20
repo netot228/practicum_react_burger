@@ -11,6 +11,7 @@ export interface IngredientData {
     carbohydrates?: number;
     calories?: number;
     image_large?: string;
+    image_mobile?: string;
     __v?: number;
     uid?: string | number;
 }
@@ -65,6 +66,7 @@ export interface OrderState {
     orderData: OrderData | null;
     notice: string | null;
     success: boolean;
+    processing: boolean;
 }
 export interface OrderAction {
     type: string;
@@ -156,3 +158,54 @@ export interface IngredientDetailsItemPops {
     title: string;
     value: number;
 }
+
+// sprint 5
+
+export interface OrderItem {
+    ingredients: [];
+    _id: string;
+    status: string;
+    number: number;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+}
+export interface WS_FeedState {
+    success: boolean;
+    error: boolean;
+    orders: OrderItem[];
+    total: number;
+    totalToday: number;
+}
+
+export interface FeedListProps {
+    orders: OrderItem[];
+    extraClass?: string | undefined;
+}
+
+export interface FeedListItemProps {
+    order: OrderItem;
+}
+
+export interface WS_FeedAction {
+    type: string;
+    payload?: {};
+}
+
+export interface SelectedOrderState {
+    order: OrderItem | null;
+}
+
+export interface SelectedOrderAction {
+    type: string;
+    order?: OrderItem;
+}
+
+export type TAppAction =
+    | IngredientsAction
+    | ConstructorAction
+    | OrderAction
+    | SelectedIngredientAction
+    | UserAction
+    | WS_FeedAction
+    | SelectedOrderAction;

@@ -1,7 +1,8 @@
 import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "./app-header.module.css";
-import {HeaderButton} from "./app-header-button/app-header-button";
+import { HeaderButton } from "./app-header-button/app-header-button";
 import { useAppSelector } from "../../hooks/useAppSelector";
+import { NavLink } from "react-router-dom";
 
 export default function AppHeader() {
     const name = useAppSelector((state) => state.auth.user?.name);
@@ -20,7 +21,7 @@ export default function AppHeader() {
                         text="Лента заказов"
                         icon="list"
                         type="secondary"
-                        path="/order-feed"
+                        path="/feed"
                     />
                 </div>
 
@@ -33,9 +34,9 @@ export default function AppHeader() {
                     />
                 </div>
             </nav>
-            <Logo className={style.logo} />
+            <NavLink to="/">
+                <Logo className={style.logo} />
+            </NavLink>
         </header>
     );
 }
-
-

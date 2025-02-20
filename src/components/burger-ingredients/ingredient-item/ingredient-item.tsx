@@ -1,4 +1,4 @@
-import { IngredientProps } from "../../../utils/types";
+import { IngredientProps } from "../../../service/types";
 
 import {
     Counter,
@@ -7,8 +7,6 @@ import {
 import { useDrag } from "react-dnd";
 import style from "../burger-ingredients.module.css";
 import { Link, useLocation } from "react-router-dom";
-
-
 
 const IngredientItem: React.FC<IngredientProps> = (props) => {
     const location = useLocation();
@@ -27,10 +25,7 @@ const IngredientItem: React.FC<IngredientProps> = (props) => {
                 to={`ingredients/:${_id}`}
                 state={{ background: location, id: _id }}
             >
-                <figure
-                    ref={dragRef}
-                    className={style.ingredient}
-                >
+                <figure ref={dragRef} className={style.ingredient}>
                     <img src={image} alt={name} />
                     <p
                         className={`${style.ingredient_price} text_type_digits-default`}

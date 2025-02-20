@@ -1,4 +1,4 @@
-import { IngredientData, DragItem } from "../../utils/types";
+import { IngredientData, DragItem } from "../../service/types";
 
 import { useMemo } from "react";
 import { useDrop } from "react-dnd";
@@ -14,18 +14,21 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 import {
     sendOrder,
     CLEAR_ORDER_DETAILS,
-} from "../../services/actions/order-details";
+} from "../../redux/actions/order-details";
 import OrderDetails from "../order-details/order-details";
+
+import { refreshToken } from "../../redux/actions/auth";
 
 import {
     INCREASE_INGREDIENT_ITEM,
     DECREASE_INGREDIENT_ITEM,
-} from "../../services/actions/burger-ingredients";
+    getIngredients,
+} from "../../redux/actions/burger-ingredients";
 import {
     ADD_INGREDIENT,
     ADD_BUN,
     CLEAR_BURGER,
-} from "../../services/actions/burger-constructor";
+} from "../../redux/actions/burger-constructor";
 
 import style from "./burger-constructor.module.css";
 
@@ -35,12 +38,14 @@ import Bun from "./bun/bun";
 import ToppingBlock from "./topping-block/topping-block";
 
 import { useNavigate } from "react-router-dom";
+import Loader from "../../ui/loader";
 
 function BurgerConstructor() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const isUserDetected = useAppSelector((state) => state.auth.success);
+    const orderPocessing = useAppSelector((state) => state.order.processing);
 
     const ingredients = useAppSelector(
         (state) => state.ingredients.ingredients
@@ -98,15 +103,36 @@ function BurgerConstructor() {
             console.log("confirmOrder - CLEAR_ORDER_DETAILS");
             closeModal();
             dispatch({ type: CLEAR_ORDER_DETAILS });
+            dispatch(getIngredients());
+            dispatch({ type: CLEAR_BURGER });
         } else {
             let sendOrderData = topping.map((el) => el._id);
 
             if (bun) {
                 sendOrderData.push(bun._id);
             }
-
-            dispatch(sendOrder(sendOrderData));
-            openModal();
+            const timeOut = new Date().getTime() - 5 * 60 * 1000;
+            if (
+                localStorage.tokenTimeout &&
+                Number(localStorage.tokenTimeout) < timeOut
+            ) {
+                console.log("token просрочен рефреш");
+                dispatch(refreshToken(localStorage.refreshToken)).then(
+                    (res) => {
+                        if (res.success) {
+                            console.log("refreshToken DONE");
+                            dispatch(sendOrder(sendOrderData));
+                            openModal();
+                        } else {
+                            console.log("refreshToken ERROR");
+                        }
+                        console.dir(res);
+                    }
+                );
+            } else {
+                dispatch(sendOrder(sendOrderData));
+                openModal();
+            }
         }
     };
 
@@ -150,7 +176,11 @@ function BurgerConstructor() {
                             size="large"
                             onClick={confirmOrder}
                         >
-                            Оформить заказ
+                            {orderPocessing ? (
+                                <Loader text={"Оформляю...."} />
+                            ) : (
+                                "Оформить заказ"
+                            )}
                         </Button>
                     </div>
 

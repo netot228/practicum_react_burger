@@ -1,14 +1,13 @@
 import React, { useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { BurgerProps } from "../../utils/types";
+import { BurgerProps } from "../../service/types";
 
 import style from "./burger-ingredients.module.css";
 
 import IngredientBlock from "./ingredient-block/ingredient-block";
 
 const BurgerIngredients: React.FC<BurgerProps> = (props) => {
-
     const [currentType, setCurrentType] = useState("bun");
 
     const bunRef = useRef<HTMLUListElement>(null);
@@ -38,7 +37,7 @@ const BurgerIngredients: React.FC<BurgerProps> = (props) => {
     };
 
     const ingredientBoxRef = useRef<HTMLDivElement>(null);
-    
+
     const onWheelHandler = () => {
         const curScroll = ingredientBoxRef.current?.scrollTop || 0;
 
@@ -117,6 +116,6 @@ const BurgerIngredients: React.FC<BurgerProps> = (props) => {
             )}
         </section>
     );
-}
+};
 
 export default BurgerIngredients;

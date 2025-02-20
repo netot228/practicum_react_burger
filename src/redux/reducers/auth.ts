@@ -8,7 +8,7 @@ import {
     LOGOUT_USER,
 } from "../actions/auth";
 
-import { UserState, UserAction } from "../../utils/types";
+import { UserState, UserAction } from "../../service/types";
 
 const initState = {
     success: false,

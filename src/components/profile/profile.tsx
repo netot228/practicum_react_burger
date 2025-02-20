@@ -1,120 +1,69 @@
-import { UserData } from "../../utils/types";
 import s from "./profile.module.css";
-import {
-    PasswordInput,
-    EmailInput,
-    Input,
-    Button,
-    CloseIcon,
-    CheckMarkIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, NavLink } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppSelector";
 
+import { refreshToken, logOut } from "../../redux/actions/auth";
+
+import ProfileInfo from "./profile-info/profile-info";
+import ProfileOrders from "./profile-orders/profile-orders";
+
+import { Page404 } from "../../pages";
+
 import {
-    refreshToken,
-    logOut,
-    getUserData,
-    updateUserData,
-} from "../../services/actions/auth";
+    WS_USER_FEED_CONNECT,
+    WS_USER_FEED_CLOSE,
+} from "../../redux/actions/user-feed";
+
+import FeedDetails from "../feed/feed-details/feed-details";
 
 export default function Profile() {
     const dispatch = useAppDispatch();
-    // const navigate = useNavigate();
 
-    const userData = useAppSelector((state) => state.auth.user);
     const accessToken = useAppSelector((state) => state.auth.accessToken);
-
-    const [errorDispatch, setErrorDispatch] = useState("");
+    const isUserDetected = useAppSelector((state) => state.auth.success);
 
     useEffect(() => {
-        const timeOut = new Date().getTime() - 5 * 60 * 1000;
+        if (isUserDetected) {
+            const timeOut = new Date().getTime() - 15 * 60 * 1000;
 
-        if (
-            localStorage.tokenTimeout &&
-            Number(localStorage.tokenTimeout) > timeOut
-        ) {
-            console.log("token действителен get userData");
-            dispatch(getUserData(localStorage.accessToken))
-            .then(res=>{
-                if(res.message==="jwt expired"){
-                    dispatch(refreshToken(localStorage.refreshToken));
-                }
-            });
-        } else {
-            console.log("token просрочен рефреш");
-            dispatch(refreshToken(localStorage.refreshToken));
+            if (
+                localStorage.tokenTimeout &&
+                Number(localStorage.tokenTimeout) < timeOut
+            ) {
+                // console.log("___PROFILE token просрочен рефреш");
+                dispatch(refreshToken(localStorage.refreshToken)).then(
+                    (res) => {
+                        if (res.success) {
+                            // console.log("___PROFILE refreshToken DONE");
+                            dispatch({ type: WS_USER_FEED_CONNECT });
+                        } else {
+                            // console.log("___PROFILE refreshToken ERROR");
+                        }
+                        console.dir(res);
+                    }
+                );
+            } else if (localStorage.accessToken) {
+                dispatch({ type: WS_USER_FEED_CONNECT });
+            }
         }
-    }, [accessToken, dispatch]);
 
-    
-    const newUserDataInitState: UserData = {
-        name: userData?.name,
-        email: userData?.email,
-        password: localStorage.cosmicSecret
-            ? atob(localStorage.cosmicSecret)
-            : "",
-    };
-    const [newUserData, setNewUserData] = useState<UserData>(newUserDataInitState);
-
-    const [isEditData, setIsEditData] = useState(false);
-
-    const onChangeHolder = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!isEditData) {
-            setIsEditData(true);
-        }
-        setNewUserData({ ...newUserData, [e.target.name]: e.target.value });
-    };
-
-    const resetNewData = () => {
-        setNewUserData(newUserDataInitState);
-        setIsEditData(false);
-    };
-
-    const updateNewUserData = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (window.confirm("сменить данные?")) {
-            dispatch(
-                updateUserData(localStorage.accessToken, newUserData)
-            ).then((res) => {
-                if (res.success) {
-                    console.log("updateUserData DONE");
-                    setIsEditData(false);
-
-                    setNewUserData({
-                        name: res.user?.name,
-                        email: res.user?.email,
-                        password: localStorage.cosmicSecret
-                            ? atob(localStorage.cosmicSecret)
-                            : "",
-                    });
-                } else {
-                    console.log("updateUserData ERROR");
-                }
-                console.dir(res);
-            });
-        } else {
-            resetNewData();
-        }
-    };
+        return () => {
+            dispatch({ type: WS_USER_FEED_CLOSE });
+        };
+    }, [isUserDetected, accessToken]);
 
     const logOutHandler = () => {
         dispatch(logOut(localStorage.refreshToken));
     };
 
-    // fix UI bug for pointEvents
-    const pointEventHandler = (e: React.PointerEvent<HTMLInputElement>) => {
-        console.dir(e);
-    };
     return (
         <div className={s.profile}>
             <nav className={s.navigation}>
                 <NavLink
-                    to="/profile"
+                    to=""
+                    end
                     className={({ isActive }) =>
                         isActive ? s.activelink : s.link
                     }
@@ -122,13 +71,15 @@ export default function Profile() {
                     Профиль
                 </NavLink>
                 <NavLink
-                    to="/profile/orders"
+                    to="./orders"
+                    end
                     className={({ isActive }) =>
                         isActive ? s.activelink : s.link
                     }
                 >
                     История заказов
                 </NavLink>
+
                 <NavLink
                     to="/"
                     className={({ isActive }) =>
@@ -146,61 +97,12 @@ export default function Profile() {
                 </div>
             </nav>
 
-            <form onSubmit={updateNewUserData} className={s.form}>
-                <Input
-                    type={"text"}
-                    placeholder={"Имя"}
-                    onChange={onChangeHolder}
-                    value={newUserData?.name ? newUserData.name : ""}
-                    name={"name"}
-                    extraClass={s.input}
-                    onPointerEnterCapture={pointEventHandler}
-                    onPointerLeaveCapture={pointEventHandler}
-                    icon={"EditIcon"}
-                />
-                <EmailInput
-                    onChange={onChangeHolder}
-                    value={newUserData?.email ? newUserData.email : ""}
-                    name={"email"}
-                    placeholder="Логин"
-                    isIcon={true}
-                    extraClass={s.input}
-                />
-                <PasswordInput
-                    onChange={onChangeHolder}
-                    value={newUserData?.password ? newUserData.password : ""}
-                    name={"password"}
-                    extraClass={s.input}
-                    icon={"EditIcon"}
-                    autoComplete={"true"}
-                />
-
-                {errorDispatch && <p className={s.notice}>{errorDispatch}</p>}
-
-                {isEditData && (
-                    <div className={s.row}>
-                        <Button
-                            extraClass={s.btn}
-                            htmlType="button"
-                            type="primary"
-                            size="large"
-                            onClick={resetNewData}
-                        >
-                            Отмена <CloseIcon type="primary" />
-                        </Button>
-                        <Button
-                            extraClass={s.btn}
-                            htmlType="submit"
-                            type="primary"
-                            size="large"
-                        >
-                            Сохранить <CheckMarkIcon type="primary" />
-                        </Button>
-                    </div>
-                )}
-            </form>
+            <Routes>
+                <Route path="orders/:id" element={<FeedDetails />} />
+                <Route path="orders" element={<ProfileOrders />} />
+                <Route path="" element={<ProfileInfo />} />
+                <Route path="*" element={<Page404 />} />
+            </Routes>
         </div>
     );
 }
-
-

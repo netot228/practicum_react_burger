@@ -1,4 +1,4 @@
-import {IngredientDetailsItemPops} from '../../../utils/types';
+import { IngredientDetailsItemPops } from "../../../service/types";
 import style from "../ingredient-details.module.css";
 
 const IngredientDetailsItem: React.FC<IngredientDetailsItemPops> = (props) => {
