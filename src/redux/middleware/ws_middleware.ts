@@ -35,57 +35,57 @@ export const createWSMiddleware = (options: TWS_options): Middleware => {
 
                     const connectToSocket = () => {
                         if (needToken) {
-                            
                             let token = localStorage.accessToken.replace(
                                 /^Bearer /,
                                 ""
                             );
                             socket = new WebSocket(`${url}?token=${token}`);
-    
                         } else {
                             socket = new WebSocket(url);
                         }
-    
+
                         if (socket) {
                             keepConnection = true;
                             socket.onopen = (event) => {
                                 console.log("socket is open");
                                 dispatch({ type: twActions.connect });
                             };
-    
+
                             socket.onclose = (event) => {
                                 console.log("socket is close");
                                 dispatch({ type: twActions.close });
 
-                                if(keepConnection){
-                                    reconnectTimeout = window.setTimeout(()=>{
+                                if (keepConnection) {
+                                    reconnectTimeout = window.setTimeout(() => {
                                         connectToSocket();
-                                    }, 1000)
+                                    }, 1000);
                                 }
                             };
-    
+
                             socket.onmessage = (event) => {
-                                // console.log("ws has message");
-                                // console.dir(event);
-    
+                                console.log("ws has message");
+                                // console.dir(event.data);
+
                                 if (!event.data) return;
                                 let data = JSON.parse(event.data);
-    
+
+                                console.dir(data);
+
                                 dispatch({
                                     type: twActions.getMessage,
                                     payload: data,
                                 });
                             };
-    
+
                             socket.onerror = (event) => {
                                 console.error("socket has error");
                                 console.dir(event);
-    
+
                                 dispatch({ type: twActions.error });
                             };
                         }
-                    }
-                    
+                    };
+
                     connectToSocket();
                     break;
                 }

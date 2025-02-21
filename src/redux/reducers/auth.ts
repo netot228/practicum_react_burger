@@ -10,7 +10,7 @@ import {
 
 import { UserState, UserAction } from "../../service/types";
 
-const initState = {
+export const initState = {
     success: false,
     accessToken: "",
     refreshToken: "",

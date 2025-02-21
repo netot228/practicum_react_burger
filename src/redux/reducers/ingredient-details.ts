@@ -7,7 +7,7 @@ import {
     CLEAR_SELECTED_INGREDIENT,
 } from "../actions/ingredient-details";
 
-const selectedIngredient: SelectedIngredientState = {
+export const selectedIngredient: SelectedIngredientState = {
     ingredient: null,
 };
 

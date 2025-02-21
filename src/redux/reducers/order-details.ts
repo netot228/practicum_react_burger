@@ -7,9 +7,10 @@ import {
     CLEAR_ORDER_DETAILS,
 } from "../actions/order-details";
 
-const orderState: OrderState = {
+export const orderState: OrderState = {
     ingredients: [],
-    orderData: { name: "", order: { number: 0 }, success: false },
+    // orderData: { name: "", order: { number: 0 }, success: false },
+    orderData: null,
     notice: "",
     success: false,
     processing: false,
@@ -37,21 +38,12 @@ export const orderReducer = (
         }
         case SEND_ORDER_FAILED: {
             return {
-                ingredients: [],
-                orderData: { name: "", order: { number: 0 }, success: false },
-                notice: action.notice,
-                success: false,
-                processing: false,
+                ...orderState,
             };
         }
         case CLEAR_ORDER_DETAILS: {
             return {
-                ingredients: [],
-                orderData: { name: "", order: { number: 0 }, success: false },
-                notice: "",
-                error: "",
-                success: false,
-                processing: false,
+                ...orderState,
             };
         }
         default: {

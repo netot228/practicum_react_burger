@@ -5,7 +5,7 @@ import {
 
 import { SelectedOrderState, SelectedOrderAction } from "../../service/types";
 
-const selectedOrder: SelectedOrderState = {
+export const selectedOrder: SelectedOrderState = {
     order: null,
 };
 

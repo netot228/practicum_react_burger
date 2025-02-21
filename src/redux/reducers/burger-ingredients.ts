@@ -8,7 +8,7 @@ import {
     DECREASE_INGREDIENT_ITEM,
 } from "../actions/burger-ingredients";
 
-const ingredientsState: IngredientsState = {
+export const ingredientsState: IngredientsState = {
     ingredients: [],
     ingredientsRequest: false,
     ingredientsFailed: false,

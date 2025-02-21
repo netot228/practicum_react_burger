@@ -17,7 +17,10 @@ export default function IngredientDetails() {
                 className={style.image}
             />
 
-            <figcaption className={`${style.caption} text_type_main-medium`}>
+            <figcaption
+                data-testid="ingredient_name"
+                className={`${style.caption} text_type_main-medium`}
+            >
                 {ingredient?.name}
             </figcaption>
 
@@ -42,5 +45,3 @@ export default function IngredientDetails() {
         </figure>
     );
 }
-
-

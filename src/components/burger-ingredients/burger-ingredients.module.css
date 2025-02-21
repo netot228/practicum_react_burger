@@ -113,6 +113,10 @@
 
 .ingredient_list_item {
     list-style-type: none;
+
+    & a {
+        display: block;
+    }
 }
 
 @media screen and (max-height: 800px) {

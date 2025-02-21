@@ -24,15 +24,15 @@ const Modal: React.FC<ModalProps> = (props) => {
     });
 
     return createPortal(
-        <div className={style.modal}>
+        <div data-testid="modal" className={style.modal}>
             <ModalOverlay
                 className={style.modal_overlay}
                 onClose={closeModal}
             />
-            <div className={style.wrapper}>
+            <div data-testid="modal_wrapper" className={style.wrapper}>
                 <h4 className={`text_type_main-large ${style.title}`}>
                     <span>{props.title}</span>
-                    <button onClick={closeModal}>
+                    <button data-testid="modal_closebtn" onClick={closeModal}>
                         <CloseIcon className={style.close} type="primary" />
                     </button>
                 </h4>

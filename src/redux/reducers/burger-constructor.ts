@@ -7,7 +7,7 @@ import {
     CLEAR_BURGER,
 } from "../actions/burger-constructor";
 
-const constructorState: ConstructorState = {
+export const constructorState: ConstructorState = {
     topping: [],
     bun: null,
 };
