@@ -1,5 +1,5 @@
 import { DATA_localStorage } from '../../src/service/data'
-
+import { selectors } from '../support/selector-constants';
 describe("Проверяем конструктор", () => {
     beforeEach(() => {
 
@@ -12,7 +12,7 @@ describe("Проверяем конструктор", () => {
         cy.intercept("GET", "/api/auth/user", { fixture: "user.json" }).as("getUser");
         cy.intercept('POST', "api/orders", { fixture: "order.json" }).as('createOrder');
 
-        cy.viewport(1440, 900);
+        // cy.viewport(1440, 900);
         cy.visit("/");
         cy.wait('@getIngredients');
         cy.wait('@getUser');
@@ -25,39 +25,39 @@ describe("Проверяем конструктор", () => {
     it('Соберем бургер', () => {
 
         // тащим булку
-        cy.get('[data-testid="ingredient_type_bun"]')
-            .contains('Краторная булка N-200i')
+        cy.get(selectors.bun)
+            .contains(selectors.bunName)
             .trigger('dragstart');
 
-        cy.get('[data-testid="burger_constructor_droptarget"]')
+        cy.get(selectors.constructor)
             .trigger('drop');
 
         // проверяем, что счетчик изменился для ингредиента
-        cy.get('[data-testid="ingredient_type_bun"]')
-            .contains('Краторная булка N-200i')
+        cy.get(selectors.bun)
+            .contains(selectors.bunName)
             .find('.counter__num').contains('1')
 
         // добавляем пару соусов и проверяем что счетчик также изменился
-        cy.get('[data-testid="ingredient_type_sauce"]')
-            .contains('Соус Spicy-X')
+        cy.get(selectors.sauce)
+            .contains(selectors.souceName)
             .trigger('dragstart');
 
-        cy.get('[data-testid="burger_constructor_droptarget"]')
+        cy.get(selectors.constructor)
             .trigger('drop');
 
-        cy.get('[data-testid="ingredient_type_sauce"]')
-            .contains('Соус Spicy-X')
+        cy.get(selectors.sauce)
+            .contains(selectors.souceName)
             .find('.counter__num').contains('1');
 
-        cy.get('[data-testid="ingredient_type_sauce"]')
-            .contains('Соус Spicy-X')
+        cy.get(selectors.sauce)
+            .contains(selectors.souceName)
             .trigger('dragstart');
 
-        cy.get('[data-testid="burger_constructor_droptarget"]')
+        cy.get(selectors.constructor)
             .trigger('drop');
 
-        cy.get('[data-testid="ingredient_type_sauce"]')
-            .contains('Соус Spicy-X')
+        cy.get(selectors.sauce)
+            .contains(selectors.souceName)
             .find('.counter__num').contains('2');
 
         // кликаем создать заказ
@@ -67,14 +67,14 @@ describe("Проверяем конструктор", () => {
 
         // ждем подменного ответа
         cy.wait('@createOrder');
-        cy.get('[data-testid="modal"]').should('be.visible');
+        cy.get(selectors.modal).should('be.visible');
 
         cy.get('[data-testid="order_num"]').should('have.text', '68938');
 
-        cy.get('[data-testid="modal_closebtn"]').should('be.visible');
-        cy.get('[data-testid="modal_closebtn"]').click();
+        cy.get(selectors.modalClosebtn).should('be.visible');
+        cy.get(selectors.modalClosebtn).click();
 
-        cy.get('[data-testid="modal"]').should("not.exist");
+        cy.get(selectors.modal).should("not.exist");
 
     })
 
